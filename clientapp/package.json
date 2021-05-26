@@ -58,6 +58,7 @@
         "queue-microtask": "^1.2.3",
         "react": "17.0.0",
         "react-dom": "17.0.0",
+        "react-grid-layout": "^1.2.5",
         "react-icons": "^4.1.0",
         "react-router-dom": "^5.2.0",
         "recharts": "^1.8.5",
@@ -66,6 +67,7 @@
         "web-vitals": "^0.2.4"
     },
     "devDependencies": {
+        "@types/react-grid-layout": "^1.1.1",
         "@types/recharts": "^1.8.17",
         "@typescript-eslint/eslint-plugin": "^4.9.1",
         "@typescript-eslint/parser": "^4.9.1",
