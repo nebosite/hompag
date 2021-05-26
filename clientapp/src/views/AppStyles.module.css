@@ -1,0 +1,122 @@
+/************************************************
+    General Styles
+************************************************/
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+/* Tooltip container */
+.tooltip {
+    position: relative;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    font-size: 150%;
+    background-color: lightyellow;
+    color: rgb(25, 24, 87);
+    text-align: center;
+    padding: 10px;
+    margin-left: 30px;
+    border-radius: 6px;
+
+    position: absolute;
+    z-index: 1;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+/************************************************
+    DivTable
+************************************************/
+.divTable {
+    display: table;         
+    width: auto;         
+  }
+  .divTableRow {
+    display: table-row;
+    width: auto;
+    clear: both;
+  }
+  .divTableCol {
+    float: left; /* fix for  buggy browsers */
+    display: table-column;          
+  }
+
+  /* Just for div where we want horizontal growth */
+.divRow {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+/************************************************
+    Home Page
+************************************************/
+.homepage {
+    font-size: 20px;
+}
+
+
+
+
+/************************************************
+  Table
+************************************************/
+
+.rowheader {
+    color:black;
+    text-align: left;
+    font-weight: 500;
+}
+
+
+
+.hashCell {
+    font-size: 80%;
+    text-align: left;
+    padding-left: 5px;
+    width: 220px;
+    overflow: hidden;
+}
+
+.userNotesCell {
+    font-size: 80%;
+    text-align: left;
+    padding-left: 5px;
+    width: 300px;
+    overflow: hidden;
+}
+
+.wordCLassHeader {
+    text-align: left;
+    display: flex;
+    align-items: flex-end;
+    width: 12px;
+    height: 80px;
+    padding-bottom: 5px;
+}
+
+.wordClassText {
+    font-weight: 400;
+    transform: rotate(-90deg);
+    transform-origin: 5px center;
+    /* transition: 1s ease-in-out; */
+}
+
+.fullNotesText {
+    max-width: 300px;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    text-align: left;
+}
+
+/* .wordClassText:hover {
+    transform: rotate(0deg);
+} */
