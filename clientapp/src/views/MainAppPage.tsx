@@ -2,10 +2,37 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import styles from './AppStyles.module.css';
-import { AppModel } from "models/AppModel";
+import { AppModel, PageItem } from "models/AppModel";
 import '../../node_modules/react-grid-layout/css/styles.css'
 import '../../node_modules/react-resizable/css/styles.css'
-import GridLayout from 'react-grid-layout';
+import ReactGridLayout from 'react-grid-layout';
+
+
+@inject("appModel")
+@observer
+export class GridItem 
+extends React.Component<{appModel?: AppModel, pageItem: PageItem}> 
+{    
+  // -------------------------------------------------------------------
+  // render
+  // -------------------------------------------------------------------
+  render() {
+    const {appModel, pageItem} = this.props;
+    const handleClick = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.stopPropagation();
+    }
+
+    return (
+        <div className={styles.gridItem} 
+            style={{width: `${pageItem.w * appModel.columnWidth}px`,height: `${pageItem.h * appModel.rowHeight}px`}}
+            onClick={handleClick}>
+            <div className={styles.gridItemInterior}>
+                {this.props.children}
+            </div>
+        </div>
+    );
+  };
+}
 
 @inject("appModel")
 @observer
@@ -14,22 +41,35 @@ extends React.Component<{appModel?: AppModel}>
 {    
   // -------------------------------------------------------------------
   // render
+  // Docs on grid layout:  https://www.npmjs.com/package/react-grid-layout
   // -------------------------------------------------------------------
   render() {
-    const layout = [
-        {i: 'a', x: 0, y: 0, w: 1, h: 2, static: true},
-        {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
-        {i: 'c', x: 4, y: 0, w: 1, h: 2}
-      ];
+    const {appModel} = this.props;
+    
+    const handleClick = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        const gridElement = document.getElementById("theGrid") as HTMLCanvasElement; 
+        var rect = gridElement.getBoundingClientRect();
+        appModel.addItem(e.clientX - rect.left, e.clientY - rect.top)
+        e.stopPropagation();
+    }
 
     return (
-      <div className={styles.MainAppPage}>
-         <GridLayout className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
-            <div key="a" style={{background: "white"}}>a</div>
-            <div key="b" style={{background: "white"}}>b</div>
-            <div key="c" style={{background: "white"}}>c</div>
-        </GridLayout>
-      </div>
+        <div id="theGrid" 
+            className={styles.MainAppPage} 
+            onClick={handleClick}
+            style={{width: `${appModel.pageWidth}px`, height:"5000px"}}
+        >
+            <ReactGridLayout 
+                className="layout" 
+                cols={appModel.columnCount} rowHeight={appModel.rowHeight} width={appModel.pageWidth}
+                containerPadding={[0,0]}
+                margin={[0,0]}
+            >
+                {appModel.pageItems.map(pi => <div key={pi.i} data-grid={pi}><GridItem pageItem={pi}>{pi.i}</GridItem></div>)}  
+
+            </ReactGridLayout> 
+
+        </div>
     );
   };
 }

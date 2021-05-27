@@ -3,7 +3,7 @@
 ************************************************/
 
 .MainAppPage {
-    background: red;
+    background: lightblue;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -65,8 +65,14 @@
     font-size: 20px;
 }
 
+.gridItem {
+    background: lightgoldenrodyellow;
+}
 
+.gridItemInterior {
+    background:blue;
 
+}
 
 /************************************************
   Table
