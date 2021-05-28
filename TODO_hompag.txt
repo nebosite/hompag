@@ -1,6 +1,9 @@
     [ ] React grid layout: https://www.npmjs.com/package/react-grid-layout
         [x] Add new grid items
-        [ ] compact on column
+        [x] compact on column
+        [ ] Instead of a click - drag an area
+        [ ] Don't count the click after a recent drag
+        [ ] Don't count the click on recent focus
         [ ] Update PageItems with item resizes
         [ ] Remember grid setup
     [ ] Google analytics https://developers.google.com/analytics/devguides/reporting/core/v4/quickstart/web-js

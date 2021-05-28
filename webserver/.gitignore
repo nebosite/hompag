@@ -1,6 +1,5 @@
 lobby
 sql_auth.json
-crashcowapp*/
 dist*/
 
 config.ts

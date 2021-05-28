@@ -6,7 +6,7 @@ import { AppModel } from "models/AppModel";
 const packageInfo = require("../package.json");
 export class GLOBALS {
      static Version = packageInfo.version;
-     static Title = `CrashCow ${(process.env.NODE_ENV === "development") ? "DEV": "" } ${GLOBALS.Version} `;
+     static Title = `hompag ${(process.env.NODE_ENV === "development") ? "DEV": "" } ${GLOBALS.Version} `;
 }
 
 document.title = GLOBALS.Title;

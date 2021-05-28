@@ -99,7 +99,7 @@ export class LocalStorageIndexedDB implements ILocalStorage {
         this._dbFactory = window.indexedDB;
 
         this._database = new Promise<IDBDatabase>((resolve, reject) =>{
-            var request = this._dbFactory.open("CrashCowStorage");
+            var request = this._dbFactory.open("hompagStorage");
             request.onerror = (event: any) => {
                 console.log("IndexDB Fail")
                 reject();

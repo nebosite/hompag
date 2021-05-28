@@ -47,7 +47,7 @@ app.get("/api/am_i_healthy", showHealth);
 
 
 // ---------------------------------------------------------------------------------
-// Crashcow app hosting
+// app hosting
 // ---------------------------------------------------------------------------------
 const clientAppRoot = process.env.ISDEV 
     ? path.join(__dirname, "../../clientapp/build/")
