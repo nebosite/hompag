@@ -3,13 +3,6 @@ import { makeObservable, observable } from "mobx";
 import { PageModel } from "./PageModel";
 
 
-export class PageItem {
-    i: string;
-    @observable x: number;
-    @observable y: number;
-    @observable w: number;
-    @observable h: number; 
-}
 
 
 // -------------------------------------------------------------------

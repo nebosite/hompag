@@ -7,6 +7,7 @@ import styles from '../AppStyles.module.css';
 import '../../../node_modules/react-grid-layout/css/styles.css'
 import '../../../node_modules/react-resizable/css/styles.css'
 import { GridItem } from "./GridItem";
+import { ColorIndex, ColorValue } from "helpers/ColorTool";
 
 interface FungiblePageProps
 {
@@ -35,8 +36,30 @@ extends React.Component<FungiblePageProps>
         }
 
         const mouseDown =  (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            if(!draggingOK) return;
+            if(!draggingOK) {
+                console.log(`Not Allowed! ${this.state.dragging}`)
+                this.setState({dragging:false})
+                return;
+            }
             const pos = mouseCoords(e);
+            for(const item of pageModel.pageItems)
+            {
+                const ix = item.x * pageModel.columnWidth;
+                const iy = item.y * pageModel.rowHeight;
+                const iw = item.w * pageModel.columnWidth;
+                const ih = item.h * pageModel.rowHeight;
+
+                if(    pos.x >= ix 
+                    && pos.x <= (ix + iw)
+                    && pos.y >= iy
+                    && pos.y <= iy + ih) 
+                {
+                    console.log(`Inside! ${this.state.dragging}`)
+                    this.setState({dragging:false})
+                    return;
+                }
+            }
+            console.log("Let's Drag...")
             this.setState({ dragging: true, x1:pos.x, y1: pos.y, x2:pos.x, y2: pos.y})
             e.stopPropagation();
         }
@@ -53,6 +76,7 @@ extends React.Component<FungiblePageProps>
         }
 
         const mouseUp =  (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            console.log(`UP: ${this.state.dragging}`)
             if(!dragging) return;
             const pos = mouseCoords(e);
             this.setState({ dragging: false})
@@ -100,7 +124,10 @@ extends React.Component<FungiblePageProps>
                 onMouseDown={mouseDown}
                 onMouseMove={mouseMove}
                 onMouseUp={mouseUp}
-                style={{width: `${pageModel.pageWidth}px`, height:"5000px"}}
+                style={{
+                    width: `${pageModel.pageWidth}px`, 
+                    height:"5000px", 
+                    background: pageModel.colorTheme.color(ColorIndex.Background, ColorValue.V5_Lightened)}}
             >
                 <div 
                     id="dragArea" 
@@ -118,8 +145,18 @@ extends React.Component<FungiblePageProps>
                     compactType={null}
                     containerPadding={[0,0]}
                     margin={[0,0]}
+                    draggableHandle={".gridItemDragHandleTag"}
                 >
-                    {pageModel.pageItems.map(pi => <div key={pi.i} data-grid={pi}><GridItem pageItem={pi}>{pi.i}</GridItem></div>)}  
+                    {pageModel.pageItems.map(pi => (
+                        <div key={pi.i} data-grid={pi}>
+                            <GridItem pageItem={pi}>
+                                Lorem Ipsum <a href="http://google.com">Link here</a> wow.<br/>
+                                twas brilling and the slithy toves<br/>
+                                Did gyre and gimble in the wabe<br/>
+                                all mimsy were the borogroves<br/>
+                                and the momewraths outgrabe
+                            </GridItem>
+                        </div>))}  
 
                 </ReactGridLayout> 
 

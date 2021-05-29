@@ -1,10 +1,34 @@
-    [ ] React grid layout: https://www.npmjs.com/package/react-grid-layout
-        [x] Add new grid items
-        [x] compact on column
-        [ ] Instead of a click - drag an area
-        [ ] Don't count the click after a recent drag
-        [ ] Don't count the click on recent focus
-        [ ] Update PageItems with item resizes
-        [ ] Remember grid setup
+
+TODO
+    [x] Formatting tweaks
+        [x] Trim up margins
+        [x] 5-color palette scheme with pastel backgrounds
+            https://color.adobe.com/search?q=most-popular
+                #020659
+                #D9B504
+                #D97904
+                #BF0404
+                #590202
+    [ ] Only move the item if we drag in the move handle
+    [ ] WSIWIG Editor
+    [ ] Remember grid setup
+
+NEW
+
+IMPORTANT
+   
+BACKLOG
     [ ] Google analytics https://developers.google.com/analytics/devguides/reporting/core/v4/quickstart/web-js
     [ ] Feature: Rule-base homepage:  Work page shows from 8am-5pm M-F
+
+MAYBE NEVER
+
+
+-- DONE ---------------------------------------------------------------------
+    [x] React grid layout: https://www.npmjs.com/package/react-grid-layout
+        [x] Add new grid items
+        [x] compact on column
+        [x] Instead of a click - drag an area
+        
+        
+        

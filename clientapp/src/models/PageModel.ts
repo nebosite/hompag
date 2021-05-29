@@ -1,5 +1,15 @@
+import { ColorTool } from "helpers/ColorTool";
 import { action, makeObservable, observable } from "mobx";
-import { PageItem } from "./AppModel";
+
+export class PageItem {
+    i: string;
+    @observable x: number;
+    @observable y: number;
+    @observable w: number;
+    @observable h: number; 
+
+    parentPage: PageModel;
+}
 
 // -------------------------------------------------------------------
 // Represents a single changeable page 
@@ -11,6 +21,7 @@ export class PageModel
     @observable columnCount = 12;
     @observable rowHeight = 30;
     @observable pageWidth = 1200; 
+    @observable colorTheme: ColorTool;  
 
     // -------------------------------------------------------------------
     // ctor 
@@ -19,11 +30,14 @@ export class PageModel
     {
         makeObservable(this);
 
-        this.pageItems.push({i: 'a', x: 0, y: 0, w: 1, h: 2})
-        this.pageItems.push({i: 'b', x: 1, y: 0, w: 3, h: 2})
-        this.pageItems.push({i: 'c', x: 4, y: 0, w: 1, h: 2})  
+        this.pageItems.push({i: 'a', x: 0, y: 0, w: 1, h: 2, parentPage: this})
+        this.pageItems.push({i: 'b', x: 1, y: 0, w: 3, h: 2, parentPage: this})
+        this.pageItems.push({i: 'c', x: 4, y: 0, w: 1, h: 2, parentPage: this})  
 
+        this.colorTheme = new ColorTool(["#FFA100","#FFCF00","#FF0051","#007DFF","#0004FF"]  )
     }
+
+
 
     // -------------------------------------------------------------------
     // ctor 
@@ -49,6 +63,7 @@ export class PageModel
         newItem.y = row1;
         newItem.w = columns;
         newItem.h = rows;
+        newItem.parentPage = this;
         action(() => this.pageItems.push(newItem) )();
         
     }
