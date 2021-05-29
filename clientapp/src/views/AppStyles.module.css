@@ -183,12 +183,25 @@
     display:flex; 
     position:absolute; 
     right:0;
-    font-size:10px;
+    font-size:8px;
+    opacity: .5;
 }
 .gridItemDragHandle:hover {
-    cursor: pointer;
+    cursor:move;
 }
 
+.gridItemResizeHandle {
+    background: #00000000;
+    display:flex; 
+    position:absolute; 
+    right:0;
+    bottom:0;
+    font-size:12px;
+    opacity: .5;
+}
+.gridItemResizeHandle:hover {
+    cursor:nwse-resize;
+}
 
 /* .wordClassText:hover {
     transform: rotate(0deg);

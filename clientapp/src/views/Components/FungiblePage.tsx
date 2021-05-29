@@ -37,7 +37,6 @@ extends React.Component<FungiblePageProps>
 
         const mouseDown =  (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             if(!draggingOK) {
-                console.log(`Not Allowed! ${this.state.dragging}`)
                 this.setState({dragging:false})
                 return;
             }
@@ -54,12 +53,10 @@ extends React.Component<FungiblePageProps>
                     && pos.y >= iy
                     && pos.y <= iy + ih) 
                 {
-                    console.log(`Inside! ${this.state.dragging}`)
                     this.setState({dragging:false})
                     return;
                 }
             }
-            console.log("Let's Drag...")
             this.setState({ dragging: true, x1:pos.x, y1: pos.y, x2:pos.x, y2: pos.y})
             e.stopPropagation();
         }
@@ -76,7 +73,6 @@ extends React.Component<FungiblePageProps>
         }
 
         const mouseUp =  (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            console.log(`UP: ${this.state.dragging}`)
             if(!dragging) return;
             const pos = mouseCoords(e);
             this.setState({ dragging: false})
@@ -118,6 +114,8 @@ extends React.Component<FungiblePageProps>
             dragStyle.opacity = 0;
         }
 
+        const resizeHandle = <div className={styles.gridItemResizeHandle}>╯</div>
+
         return (
             <div id="theGrid" 
                 className={styles.FungiblePage} 
@@ -146,6 +144,7 @@ extends React.Component<FungiblePageProps>
                     containerPadding={[0,0]}
                     margin={[0,0]}
                     draggableHandle={".gridItemDragHandleTag"}
+                    resizeHandle={resizeHandle}
                 >
                     {pageModel.pageItems.map(pi => (
                         <div key={pi.i} data-grid={pi}>
