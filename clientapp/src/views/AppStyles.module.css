@@ -7,8 +7,8 @@
     font-size: 1vw;
 }
 
-.MainAppPage {
-    background: lightblue;
+.mainPage {
+    margin: 5px;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -64,7 +64,7 @@
 }
 
 /************************************************
-    Home Page
+    Grid
 ************************************************/
 
 .gridItem {
@@ -141,6 +141,25 @@
     overflow-wrap: break-word;
     white-space: normal;
     text-align: left;
+}
+
+/************************************************
+  Fungible page
+************************************************/
+
+.FungiblePage {
+    background: lightblue;
+}
+
+.FungiblePage .dragArea {
+    width: 100px;
+    height: 100px;
+    left: 100px;
+    top: 20px;
+    background: green;
+    z-index: 10;
+    opacity: .5;
+    position:fixed;
 }
 
 /* .wordClassText:hover {

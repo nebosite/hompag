@@ -14,17 +14,11 @@ extends React.Component<{pageItem: PageItem}>
   // -------------------------------------------------------------------
   render() {
     //const {appModel, pageItem} = this.props;
-    const handleClick = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        e.stopPropagation();
-    }
-
     return (
-        <div className={styles.gridItem} 
-            onClick={handleClick}>
+        <div className={styles.gridItem}>
             <div className={`${styles.gridItemInterior} ${styles.gridItemFiller}`}>
                 <div className={`${styles.gridItemFiller}`} style={{background: "green", margin: "5px"}}>
                     {this.props.children}
- 
                 </div>
             </div>
         </div> 

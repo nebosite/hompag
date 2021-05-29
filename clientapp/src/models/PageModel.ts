@@ -1,4 +1,4 @@
-import { makeObservable, observable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { PageItem } from "./AppModel";
 
 // -------------------------------------------------------------------
@@ -28,17 +28,28 @@ export class PageModel
     // -------------------------------------------------------------------
     // ctor 
     // -------------------------------------------------------------------
-    addItem(rawX: number, rawY: number, rawW: number, rawH: number) {
-        console.log(`Adding: ${rawX},${rawY}`)
-        const column = Math.floor(rawX/this.columnWidth); 
-        const row = Math.floor(rawY/this.rowHeight);
+    addItem(x1: number, y1: number, x2: number, y2: number) {
+        if(x2 < x1) [x2,x1] = [x1,x2]
+        if(y2 < y1) [y2,y1] = [y1,y2]
+
+        if(x2 < x1) [x2,x1] = [x1,x2]
+        if(y2 < y1) [y2,y1] = [y1,y2]
+
+        
+        const column1 = Math.floor(x1/this.columnWidth); 
+        const row1 = Math.floor(y1/this.rowHeight);
+        const column2 = Math.ceil(x2/this.columnWidth); 
+        const row2 = Math.ceil(y2/this.rowHeight);
+        const columns = Math.max(1, column2-column1);
+        const rows = Math.max(1, row2-row1);
 
         const newItem = new PageItem();
         newItem.i = Date.now().toString();
-        newItem.x = column;
-        newItem.y = row;
-        newItem.w = Math.floor(rawW/this.columnWidth) + 1;
-        newItem.h = Math.floor(rawH/ this.rowHeight) + 1;
-        this.pageItems.push(newItem) 
+        newItem.x = column1;
+        newItem.y = row1;
+        newItem.w = columns;
+        newItem.h = rows;
+        action(() => this.pageItems.push(newItem) )();
+        
     }
 }
