@@ -7,6 +7,8 @@ export class PageItem {
     @observable y: number;
     @observable w: number;
     @observable h: number; 
+    @observable data: any = {};
+    type: string;
 
     parentPage: PageModel;
 }
@@ -17,9 +19,9 @@ export class PageItem {
 export class PageModel
 {
     pageItems: PageItem[] = observable<PageItem>([])
-    get columnWidth() {return this.pageWidth / this.columnCount;}
-    @observable columnCount = 12;
-    @observable rowHeight = 30;
+    get columnCount() {return Math.floor(this.pageWidth / this.columnWidth);}
+    @observable columnWidth = 50;
+    @observable rowHeight = 50;
     @observable pageWidth = 1200; 
     @observable colorTheme: ColorTool;  
 
@@ -30,13 +32,14 @@ export class PageModel
     {
         makeObservable(this);
 
-        this.pageItems.push({i: 'a', x: 0, y: 0, w: 1, h: 2, parentPage: this})
-        this.pageItems.push({i: 'b', x: 1, y: 0, w: 3, h: 2, parentPage: this})
-        this.pageItems.push({i: 'c', x: 4, y: 0, w: 1, h: 2, parentPage: this})  
+        
+
+        this.pageItems.push({i: 'a', x: 0, y: 0, w: 8, h: 10,    parentPage: this, data: {}, type: "Editor"})
+        this.pageItems.push({i: 'b', x: 10, y: 0, w: 4, h: 4,    parentPage: this, data: {}, type: "Colors"})
+        this.pageItems.push({i: 'c', x: 6, y: 12, w: 5, h: 3,    parentPage: this, data: {}, type: "Blank"})  
 
         this.colorTheme = new ColorTool(["#FFA100","#FFCF00","#FF0051","#007DFF","#0004FF"]  )
     }
-
 
 
     // -------------------------------------------------------------------

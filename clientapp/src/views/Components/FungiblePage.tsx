@@ -2,12 +2,15 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import ReactGridLayout from 'react-grid-layout';
-import { PageModel } from "models/PageModel";
+import { PageItem, PageModel } from "models/PageModel";
 import styles from '../AppStyles.module.css';
 import '../../../node_modules/react-grid-layout/css/styles.css'
 import '../../../node_modules/react-resizable/css/styles.css'
 import { GridItem } from "./GridItem";
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
+import WidgetDefault from "./WidgetDefault";
+import ColorPalette from "./ColorPalette";
+import WidgetEditor from "./WidgetEditor";
 
 interface FungiblePageProps
 {
@@ -116,6 +119,14 @@ extends React.Component<FungiblePageProps>
 
         const resizeHandle = <div className={styles.gridItemResizeHandle}>╯</div>
 
+        const renderPageItem = (pageItem: PageItem) => {
+            switch(pageItem.type) {
+                case "Editor": return <WidgetEditor pageItem={pageItem} />; 
+                case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
+                default: return <WidgetDefault pageItem={pageItem} />
+            }
+        }
+
         return (
             <div id="theGrid" 
                 className={styles.FungiblePage} 
@@ -148,12 +159,8 @@ extends React.Component<FungiblePageProps>
                 >
                     {pageModel.pageItems.map(pi => (
                         <div key={pi.i} data-grid={pi}>
-                            <GridItem pageItem={pi}>
-                                Lorem Ipsum <a href="http://google.com">Link here</a> wow.<br/>
-                                twas brilling and the slithy toves<br/>
-                                Did gyre and gimble in the wabe<br/>
-                                all mimsy were the borogroves<br/>
-                                and the momewraths outgrabe
+                            <GridItem pageItem={pi} >
+                                {renderPageItem(pi)}
                             </GridItem>
                         </div>))}  
 

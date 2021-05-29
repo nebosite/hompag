@@ -10,7 +10,7 @@ TODO
                 #BF0404
                 #590202
     [x] Only move the item if we drag in the move handle
-    [ ] WSIWIG Editor
+    [x] WSIWIG Editor
     [ ] Remember grid setup
 
 NEW
