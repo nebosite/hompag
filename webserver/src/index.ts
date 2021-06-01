@@ -1,8 +1,11 @@
 import express from 'express';
 import * as path from 'path';
+import { getPage, storePage } from './apis/pages';
 import { showHealth } from './apis/showHealth';
 import { Logger } from './helpers/logger';
+import { PageAccessLocalDisk } from './models/PageAccessLocalDisk';
 import { ServerModel } from './models/ServerModel';
+import {hompag_config} from './config'
 
 
 // ---------------------------------------------------------------------------------
@@ -11,7 +14,7 @@ import { ServerModel } from './models/ServerModel';
 const port = process.env.PORT || 8080
 export const app = express();
 export const logger = new Logger();
-export const serverModel = new ServerModel(logger);
+export const serverModel = new ServerModel(logger, new PageAccessLocalDisk(logger, hompag_config.localStoreLocation));
 export const VERSION = require('./version');
 
 logger.logLine("##################################################################################")
@@ -40,10 +43,18 @@ if(killpath) {
     });
 }
 
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}));
+
 // ---------------------------------------------------------------------------------
 // REST APIs / socket apis
 // ---------------------------------------------------------------------------------
 app.get("/api/am_i_healthy", showHealth);
+
+app.post("/api/pages/:id", storePage(logger))
+app.get("/api/pages/:id", getPage(logger))
 
 
 // ---------------------------------------------------------------------------------

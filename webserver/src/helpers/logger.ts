@@ -2,7 +2,12 @@
 const pad2 = (n: number) => n.toString().padStart(2,'0');
 const pad3 = (n: number) => n.toString().padStart(3,'0');
 
-export class Logger 
+export interface ILogger 
+{
+    logLine(text: string): void;
+    logError(text: string): void;
+}
+export class Logger implements ILogger
 {
     constructor() {
         console.error(this.getCurrentDateString() + "] ##################################################################################");

@@ -4,19 +4,50 @@ import { Logger } from "../helpers/logger";
 import moment from "moment";
 import { VERSION } from ".."; 
 
+export interface PageData {
+    pageDetails: any;
+}
+
+export interface IPageAccess
+{
+    getPage(pageId: string): Promise<PageData | null>;
+    storePage(pageId: string, data: PageData): Promise<null>;
+}
+
+
+
 //------------------------------------------------------------------------------------------
 // The state of the server overall
 //------------------------------------------------------------------------------------------
 export class ServerModel {
     logger: Logger
     private _startTime = Date.now();
+    private _pageAccess: IPageAccess;
 
     //------------------------------------------------------------------------------------------
     // ctor
     //------------------------------------------------------------------------------------------
-    constructor(logger: Logger)
+    constructor(logger: Logger, pageAccess: IPageAccess)
     {
         this.logger = logger;
+        this._pageAccess = pageAccess;
+    }
+
+
+    //------------------------------------------------------------------------------------------
+    // getPage
+    //------------------------------------------------------------------------------------------
+    async getPage(pageId: string) 
+    {
+        return (await this._pageAccess.getPage(pageId))?.pageDetails;
+    }
+
+    //------------------------------------------------------------------------------------------
+    // getPage
+    //------------------------------------------------------------------------------------------
+    storePage(pageId: string, pageData: any) 
+    {
+        return this._pageAccess.storePage(pageId, {pageDetails: pageData})
     }
 
     //------------------------------------------------------------------------------------------

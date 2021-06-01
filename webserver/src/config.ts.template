@@ -1,3 +1,3 @@
 export const hompag_config = {
-
+    localStoreLocation: "_path_to_folder_"
 }

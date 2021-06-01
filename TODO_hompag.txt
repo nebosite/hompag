@@ -12,16 +12,34 @@ TODO
     [x] Only move the item if we drag in the move handle
     [x] WSIWIG Editor
     [ ] Remember grid setup
+    [ ] Title pad for each widget
 
 NEW
+    [ ] Start with a smaller window height and expand as items get close to the bottom
+
+WIDGET IDEAS
+    - Abacus
+    - Real-time growing plant
+    - Slowly changing backgroun
+    - Stock watcher
+        - https://rapidapi.com/blog/best-stock-api/
+    - Analytics watcher
+        - Google analytics https://developers.google.com/analytics/devguides/reporting/core/v4/quickstart/web-js
+    - Message watcher
+    - Spotify tool
+    - Finance watcher
+        https://plaid.com/
 
 IMPORTANT
    
 BACKLOG
-    [ ] Google analytics https://developers.google.com/analytics/devguides/reporting/core/v4/quickstart/web-js
     [ ] Feature: Rule-base homepage:  Work page shows from 8am-5pm M-F
 
 MAYBE NEVER
+
+
+
+
 
 
 -- DONE ---------------------------------------------------------------------
