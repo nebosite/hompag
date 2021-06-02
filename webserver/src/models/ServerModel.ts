@@ -11,6 +11,7 @@ export interface PageData {
 export interface IPageAccess
 {
     getPage(pageId: string): Promise<PageData | null>;
+    getPageList(): Promise<string[]>;
     storePage(pageId: string, data: PageData): Promise<null>;
 }
 
@@ -39,7 +40,17 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     async getPage(pageId: string) 
     {
-        return (await this._pageAccess.getPage(pageId))?.pageDetails;
+        const foundPage = await this._pageAccess.getPage(pageId);
+        if(foundPage) return foundPage.pageDetails;
+        else return {} 
+    }
+
+    //------------------------------------------------------------------------------------------
+    // getPages
+    //------------------------------------------------------------------------------------------
+    async getPages() 
+    {
+        return (await this._pageAccess.getPageList());
     }
 
     //------------------------------------------------------------------------------------------

@@ -18,10 +18,47 @@ export class PageAccessLocalDisk implements IPageAccess
     }
 
     // ---------------------------------------------------------------------------------
+    // Convert page name to a file name for storage
+    // ---------------------------------------------------------------------------------
+    pageToFileName(pageId: string)
+    {
+        return `_page_${pageId}.json`;
+    }
+
+    // ---------------------------------------------------------------------------------
+    // getPageList
+    // ---------------------------------------------------------------------------------
+    getPageList():Promise<string[]> {
+
+        return new Promise<string[]>((resolve, reject) => {
+            
+            if (!fs.existsSync(this._storeLocation)) {
+                this._logger.logError(`Store location is not valid: ${this._storeLocation}`)
+                resolve([])
+            }
+            else {
+                fs.readdir(this._storeLocation ,  (err: string, files: any[]) => {
+                    if (err) {
+                        this._logger.logError('Unable to scan directory: ' + err)
+                        resolve([])
+                    } 
+
+                    const output:string[] = [];
+                    files.forEach(f => {
+                        const match = f.match(/_page_(.*)\.json/);
+                        if(match) output.push(match[1])
+                    })
+                    resolve(output);
+                })
+            }            
+        })
+    }
+
+    // ---------------------------------------------------------------------------------
     // getPage
     // ---------------------------------------------------------------------------------
     getPage(pageId: string) {
-        const fileName = path.join(this._storeLocation, `${pageId}.json`)
+        const fileName = path.join(this._storeLocation, this.pageToFileName(pageId))
 
         return new Promise<PageData | null>((resolve, reject) => {
             if (!fs.existsSync(fileName)) {
@@ -46,7 +83,7 @@ export class PageAccessLocalDisk implements IPageAccess
     // ---------------------------------------------------------------------------------
     async storePage(pageId: string, data: PageData)
     {
-        const fileName = path.join(this._storeLocation, `${pageId}.json`)
+        const fileName = path.join(this._storeLocation, this.pageToFileName(pageId))
         return new Promise<null>((resolve, reject) => {
             fs.writeFile(fileName, JSON.stringify(data), (err: any) => {
                     if (err) {

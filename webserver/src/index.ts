@@ -1,6 +1,6 @@
 import express from 'express';
 import * as path from 'path';
-import { getPage, storePage } from './apis/pages';
+import { getPage, getPages, storePage } from './apis/pages';
 import { showHealth } from './apis/showHealth';
 import { Logger } from './helpers/logger';
 import { PageAccessLocalDisk } from './models/PageAccessLocalDisk';
@@ -55,6 +55,7 @@ app.get("/api/am_i_healthy", showHealth);
 
 app.post("/api/pages/:id", storePage(logger))
 app.get("/api/pages/:id", getPage(logger))
+app.get("/api/pages", getPages(logger))
 
 
 // ---------------------------------------------------------------------------------

@@ -5,6 +5,16 @@ import { ILogger } from "../helpers/logger";
 import { safeSend } from "../helpers/SafeSend";
 
 // ---------------------------------------------------------------------------------
+// REST Api to retrieve list of pages
+// ---------------------------------------------------------------------------------
+export function getPages(logger:ILogger) {
+    return async (req: Request, res: Response) => {
+        await safeSend(res, logger, req.url, async () => {
+            return await serverModel.getPages();
+        })   
+    }
+};
+// ---------------------------------------------------------------------------------
 // REST Api to retrieve a page
 // ---------------------------------------------------------------------------------
 export function getPage(logger:ILogger) {
