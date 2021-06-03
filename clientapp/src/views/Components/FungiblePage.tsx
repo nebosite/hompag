@@ -128,44 +128,48 @@ extends React.Component<FungiblePageProps>
         }
 
         return (
-            <div id="theGrid" 
-                className={styles.FungiblePage} 
-                onMouseDown={mouseDown}
-                onMouseMove={mouseMove}
-                onMouseUp={mouseUp}
-                style={{
-                    width: `${pageModel.pageWidth}px`, 
-                    height:"5000px", 
-                    background: pageModel.colorTheme.color(ColorIndex.Background, ColorValue.V5_Lightened)}}
-            >
-                <div 
-                    id="dragArea" 
-                    style={dragStyle}
-                    className={styles.dragArea} />
-
-                <ReactGridLayout 
-                    className="layout" 
-                    onDragStart={() => this.setState({draggingOK:false})}
-                    onResizeStart={() => this.setState({draggingOK:false})}
-                    onDragStop={() => this.setState({draggingOK:true})}
-                    onResizeStop={() => this.setState({draggingOK:true})}
-                    useCSSTransforms={false}
-                    cols={pageModel.columnCount} rowHeight={pageModel.rowHeight} width={pageModel.pageWidth}
-                    compactType={null}
-                    containerPadding={[0,0]}
-                    margin={[0,0]}
-                    draggableHandle={".gridItemDragHandleTag"}
-                    resizeHandle={resizeHandle}
+            <div>
+                {/* <div>Some Instructions here</div> */}
+                <div id="theGrid" 
+                    className={styles.FungiblePage} 
+                    onMouseDown={mouseDown}
+                    onMouseMove={mouseMove}
+                    onMouseUp={mouseUp}
+                    style={{
+                        width: `${pageModel.pageWidth}px`, 
+                        height:"5000px", 
+                        background: pageModel.colorTheme.color(ColorIndex.Background, ColorValue.V5_Lightened)}}
                 >
-                    {pageModel.pageItems.map(pi => (
-                        <div key={pi.i} data-grid={pi}>
-                            <GridItem pageItem={pi} >
-                                {renderPageItem(pi)}
-                            </GridItem>
-                        </div>))}  
+                    <div 
+                        id="dragArea" 
+                        style={dragStyle}
+                        className={styles.dragArea} />
 
-                </ReactGridLayout> 
+                    <ReactGridLayout 
+                        className="layout" 
+                        onDragStart={() => this.setState({draggingOK:false})}
+                        onResizeStart={() => this.setState({draggingOK:false})}
+                        onDragStop={() => this.setState({draggingOK:true})}
+                        onResizeStop={() => this.setState({draggingOK:true})}
+                        useCSSTransforms={false}
+                        preventCollision={true}
+                        cols={pageModel.columnCount} rowHeight={pageModel.rowHeight} width={pageModel.pageWidth}
+                        compactType={null}
+                        containerPadding={[0,0]}
+                        margin={[0,0]}
+                        draggableHandle={".gridItemDragHandleTag"}
+                        resizeHandle={resizeHandle}
+                    >
+                        {pageModel.pageItems.map(pi => (
+                            <div key={pi.i} data-grid={pi}>
+                                <GridItem pageItem={pi} >
+                                    {renderPageItem(pi)}
+                                </GridItem>
+                            </div>))}  
 
+                    </ReactGridLayout> 
+
+                </div>
             </div>
         );
     };

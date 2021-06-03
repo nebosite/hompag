@@ -11,6 +11,10 @@ TODO
                 #590202
     [x] Only move the item if we drag in the move handle
     [x] WSIWIG Editor
+    [ ] When fresh loading an empty page, pre-fill it with an instruction widget
+    [ ] When editing a widget, periodically save it
+        - Widgets should be saved separately from pages.  
+    [ ] Should be able to load an restore a widget
     [ ] Remember grid setup
     [ ] Title pad for each widget
 
@@ -20,7 +24,7 @@ NEW
 WIDGET IDEAS
     - Abacus
     - Real-time growing plant
-    - Slowly changing backgroun
+    - Slowly changing background
     - Stock watcher
         - https://rapidapi.com/blog/best-stock-api/
     - Analytics watcher
