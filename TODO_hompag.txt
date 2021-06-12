@@ -11,7 +11,10 @@ TODO
                 #590202
     [x] Only move the item if we drag in the move handle
     [x] WSIWIG Editor
-    [ ] When fresh loading an empty page, pre-fill it with an instruction widget
+    [ ] Default to widget picker
+    [ ] Save text widget
+        - widgets are save in their own files
+    [ ] Reload text widget with page
     [ ] When editing a widget, periodically save it
         - Widgets should be saved separately from pages.  
     [ ] Should be able to load an restore a widget
@@ -19,9 +22,17 @@ TODO
     [ ] Title pad for each widget
 
 NEW
+    [ ] Link tooltip with options
+        - Edit link]
+        - Open in new tap
+        - open in popup
+        - delete
+        - See stats
+    [ ] When fresh loading an empty page, pre-fill it with an instruction widget
     [ ] Start with a smaller window height and expand as items get close to the bottom
 
 WIDGET IDEAS
+    - Ping tester - ping known locations around the world
     - Abacus
     - Real-time growing plant
     - Slowly changing background

@@ -1,13 +1,13 @@
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { inject, observer } from "mobx-react";
-import { PageItem } from "models/PageModel";
+import { Widget } from "models/PageModel";
 import React from "react";
 import styles from '../AppStyles.module.css';
 
 @inject("appModel")
 @observer
 export class GridItem 
-extends React.Component<{pageItem: PageItem}> 
+extends React.Component<{pageItem: Widget}> 
 {    
     // -------------------------------------------------------------------
     // render

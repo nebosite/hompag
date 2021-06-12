@@ -2,15 +2,15 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import ReactGridLayout from 'react-grid-layout';
-import { PageItem, PageModel } from "models/PageModel";
+import { Widget, PageModel, WidgetType } from "models/PageModel";
 import styles from '../AppStyles.module.css';
 import '../../../node_modules/react-grid-layout/css/styles.css'
 import '../../../node_modules/react-resizable/css/styles.css'
 import { GridItem } from "./GridItem";
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import WidgetDefault from "./WidgetDefault";
-import ColorPalette from "./ColorPalette";
 import WidgetEditor from "./WidgetEditor";
+import WidgetPicker from "./WidgetPicker";
 
 interface FungiblePageProps
 {
@@ -44,7 +44,7 @@ extends React.Component<FungiblePageProps>
                 return;
             }
             const pos = mouseCoords(e);
-            for(const item of pageModel.pageItems)
+            for(const item of pageModel.widgets)
             {
                 const ix = item.x * pageModel.columnWidth;
                 const iy = item.y * pageModel.rowHeight;
@@ -119,11 +119,12 @@ extends React.Component<FungiblePageProps>
 
         const resizeHandle = <div className={styles.gridItemResizeHandle}>╯</div>
 
-        const renderPageItem = (pageItem: PageItem) => {
-            switch(pageItem.type) {
-                case "Editor": return <WidgetEditor pageItem={pageItem} />; 
-                case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
-                default: return <WidgetDefault pageItem={pageItem} />
+        const renderPageItem = (widget: Widget) => {
+            switch(widget.type) {
+                case WidgetType.Picker: return <WidgetPicker context={widget} />; 
+                case WidgetType.Editor: return <WidgetEditor context={widget} />; 
+                //case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
+                default: return <WidgetDefault pageItem={widget} />
             }
         }
 
@@ -160,7 +161,7 @@ extends React.Component<FungiblePageProps>
                         draggableHandle={".gridItemDragHandleTag"}
                         resizeHandle={resizeHandle}
                     >
-                        {pageModel.pageItems.map(pi => (
+                        {pageModel.widgets.map(pi => (
                             <div key={pi.i} data-grid={pi}>
                                 <GridItem pageItem={pi} >
                                     {renderPageItem(pi)}

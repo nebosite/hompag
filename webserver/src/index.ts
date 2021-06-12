@@ -11,7 +11,7 @@ import {hompag_config} from './config'
 // ---------------------------------------------------------------------------------
 // GLOBAL OBJECTS
 // ---------------------------------------------------------------------------------
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 8101
 export const app = express();
 export const logger = new Logger();
 export const serverModel = new ServerModel(logger, new PageAccessLocalDisk(logger, hompag_config.localStoreLocation));

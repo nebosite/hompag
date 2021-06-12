@@ -2,7 +2,7 @@
     "name": "@adobe/crash-cow-app",
     "version": "0.1.0",
     "private": true,
-    "proxy": "http://localhost:8080",
+    "proxy": "http://localhost:8101",
     "scripts": {
         "start": "react-scripts start",
         "startmock": "env-cmd -f ./.env.mock react-scripts start",
@@ -51,6 +51,7 @@
         "domutils": "^1.7.0",
         "draft-js": "^0.11.7",
         "eslint": "^7.15.0",
+        "evergreen-ui": "^6.0.1",
         "history": "^5.0.0",
         "jira-client": "^6.21.1",
         "mobx": "^6.0.4",

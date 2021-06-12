@@ -1,14 +1,19 @@
 import { ColorTool } from "helpers/ColorTool";
 import { action, makeObservable, observable } from "mobx";
 
-export class PageItem {
+export enum WidgetType
+{
+    Picker = "Picker",
+    Editor = "Editor"
+}
+export class Widget {
     i: string;
     @observable x: number;
     @observable y: number;
     @observable w: number;
     @observable h: number; 
     @observable data: any = {};
-    type: string;
+    type: WidgetType;
 
     parentPage: PageModel;
 }
@@ -18,7 +23,7 @@ export class PageItem {
 // -------------------------------------------------------------------
 export class PageModel
 {
-    pageItems: PageItem[] = observable<PageItem>([])
+    widgets: Widget[] = observable<Widget>([])
     get columnCount() {return Math.floor(this.pageWidth / this.columnWidth);}
     @observable columnWidth = 50;
     @observable rowHeight = 50;
@@ -60,15 +65,15 @@ export class PageModel
         const columns = Math.max(1, column2-column1);
         const rows = Math.max(1, row2-row1);
 
-        const newItem = new PageItem();
+        const newItem = new Widget();
         newItem.i = Date.now().toString();
         newItem.x = column1;
         newItem.y = row1;
         newItem.w = columns;
         newItem.h = rows;
-        newItem.type = "Editor";
+        newItem.type = WidgetType.Picker
         newItem.parentPage = this;
-        action(() => this.pageItems.push(newItem) )();
+        action(() => this.widgets.push(newItem) )();
         
     }
 }

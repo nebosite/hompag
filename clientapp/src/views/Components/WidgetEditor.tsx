@@ -1,6 +1,6 @@
 import Draft, { ContentState, Editor, EditorState } from "draft-js";
 import { observer } from "mobx-react";
-import { PageItem } from "models/PageModel";
+import { Widget } from "models/PageModel";
 import React from "react";
 import editorStyles from './WidgetEditor.module.css';
 import 'draft-js/dist/Draft.css';
@@ -8,10 +8,10 @@ import 'draft-js/dist/Draft.css';
 
 @observer
 export default class WidgetEditor 
-extends React.Component<{pageItem: PageItem}> 
+extends React.Component<{context: Widget}> 
 {    
     state:{editorState:EditorState}
-    constructor(props:{pageItem: PageItem}) {
+    constructor(props:{context: Widget}) {
         super(props);
         const plainText = 'Add some text here... \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n';
         const content = ContentState.createFromText(plainText);
