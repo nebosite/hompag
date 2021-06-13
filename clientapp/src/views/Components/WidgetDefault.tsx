@@ -12,8 +12,8 @@ extends React.Component<{pageItem: Widget}>
     render() {
         return (
             <div>
-                I appear to be an unknown kind of widget: {this.props.pageItem.type}
+                I appear to be an unknown kind of widget: {this.props.pageItem.myType}
             </div> 
         );
-    };
+    }; 
 }

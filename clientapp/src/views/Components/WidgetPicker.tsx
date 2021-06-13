@@ -14,8 +14,8 @@ extends React.Component<{context: Widget}>
 
         const selectWidgetType = (selectedType: string) =>
         {
-            console.log(`Selecting: ${selectWidgetType}`)
-            this.props.context.type = selectedType as WidgetType;
+            console.log(`Selecting: ${selectedType}`)
+            this.props.context.myType = selectedType as WidgetType;
         }
 
         return (

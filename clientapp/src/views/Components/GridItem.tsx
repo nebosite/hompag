@@ -22,7 +22,7 @@ extends React.Component<{pageItem: Widget}>
                             background: color(ColorIndex.Background, ColorValue.V7_ExtraBright),
                             color: color(ColorIndex.Foreground, ColorValue.V2_Dark)}}
                     >
-                        <div className={`${styles.gridItemDragHandle} gridItemDragHandleTag`}>🔳</div>
+                        <div className={`${styles.gridItemDragHandle} gridItemDragHandleTag`} />
                         <div className={`${styles.gridItemChildBorder}`}>
                             {this.props.children}
                         </div>

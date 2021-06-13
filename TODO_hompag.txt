@@ -11,7 +11,7 @@ TODO
                 #590202
     [x] Only move the item if we drag in the move handle
     [x] WSIWIG Editor
-    [ ] Default to widget picker
+    [x] New Widget: Default to widget picker
     [ ] Save text widget
         - widgets are save in their own files
     [ ] Reload text widget with page

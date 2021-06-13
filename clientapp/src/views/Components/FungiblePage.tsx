@@ -1,7 +1,7 @@
 // App Navigation handled here
 import React from "react";
 import { inject, observer } from "mobx-react";
-import ReactGridLayout from 'react-grid-layout';
+import ReactGridLayout, { ItemCallback, Layout } from 'react-grid-layout';
 import { Widget, PageModel, WidgetType } from "models/PageModel";
 import styles from '../AppStyles.module.css';
 import '../../../node_modules/react-grid-layout/css/styles.css'
@@ -120,13 +120,38 @@ extends React.Component<FungiblePageProps>
         const resizeHandle = <div className={styles.gridItemResizeHandle}>╯</div>
 
         const renderPageItem = (widget: Widget) => {
-            switch(widget.type) {
+            switch(widget.myType) {
                 case WidgetType.Picker: return <WidgetPicker context={widget} />; 
                 case WidgetType.Editor: return <WidgetEditor context={widget} />; 
                 //case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
                 default: return <WidgetDefault pageItem={widget} />
             }
+        } 
+
+        const widgetDragStop:ItemCallback = (layout: Layout[],
+            oldItem: Layout,
+            newItem: Layout,
+            placeholder: Layout,
+            event: MouseEvent,
+            element: HTMLElement) =>
+        {
+            this.setState({draggingOK:true})
+            //console.log(`Drag stop: ${JSON.stringify(newItem)}`)
+            pageModel.setWidgetLocation(newItem.i, newItem.x, newItem.y)
         }
+
+        const widgetResizeStop:ItemCallback = (layout: Layout[],
+            oldItem: Layout,
+            newItem: Layout,
+            placeholder: Layout,
+            event: MouseEvent,
+            element: HTMLElement) =>
+        {
+            this.setState({draggingOK:true})
+            //console.log(`Resize stop:  ${JSON.stringify(newItem)}`)
+            pageModel.setWidgetSize(newItem.i, newItem.w, newItem.h)
+        }
+
 
         return (
             <div>
@@ -150,8 +175,8 @@ extends React.Component<FungiblePageProps>
                         className="layout" 
                         onDragStart={() => this.setState({draggingOK:false})}
                         onResizeStart={() => this.setState({draggingOK:false})}
-                        onDragStop={() => this.setState({draggingOK:true})}
-                        onResizeStop={() => this.setState({draggingOK:true})}
+                        onDragStop={widgetDragStop}
+                        onResizeStop={widgetResizeStop}
                         useCSSTransforms={false}
                         preventCollision={true}
                         cols={pageModel.columnCount} rowHeight={pageModel.rowHeight} width={pageModel.pageWidth}

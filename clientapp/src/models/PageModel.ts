@@ -6,16 +6,34 @@ export enum WidgetType
     Picker = "Picker",
     Editor = "Editor"
 }
+// -------------------------------------------------------------------
+// Generic class for holding widget data
+// -------------------------------------------------------------------
 export class Widget {
     i: string;
     @observable x: number;
     @observable y: number;
     @observable w: number;
-    @observable h: number; 
-    @observable data: any = {};
-    type: WidgetType;
+    @observable h: number;
+    @observable data: any;
+
+    @observable _myType: WidgetType;
+    get myType() { return this._myType}
+    set myType(value: WidgetType) { action(()=>this._myType = value)(); }
 
     parentPage: PageModel;
+
+    // -------------------------------------------------------------------
+    // ctor 
+    // -------------------------------------------------------------------
+    constructor()
+    {
+        makeObservable(this);
+        // autorun(() => {
+        //     console.log("Something changed")
+        // })
+    }
+
 }
 
 // -------------------------------------------------------------------
@@ -48,7 +66,7 @@ export class PageModel
 
 
     // -------------------------------------------------------------------
-    // ctor 
+    // addItem 
     // -------------------------------------------------------------------
     addItem(x1: number, y1: number, x2: number, y2: number) {
         if(x2 < x1) [x2,x1] = [x1,x2]
@@ -71,9 +89,41 @@ export class PageModel
         newItem.y = row1;
         newItem.w = columns;
         newItem.h = rows;
-        newItem.type = WidgetType.Picker
+        newItem.myType = WidgetType.Picker
         newItem.parentPage = this;
         action(() => this.widgets.push(newItem) )();
         
     }
+
+    // -------------------------------------------------------------------
+    // setWidgetSize 
+    // -------------------------------------------------------------------
+    setWidgetSize(id: string, w: number, h:number)
+    {
+        const widget = this.widgets.find(w => w.i === id)
+        if(widget)
+        {
+            widget.w = w;
+            widget.h = h;
+        }
+        else {
+            console.log(`ERROR: Can't find widget with ID: ${id}`)
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // setWidgetLocation 
+    // -------------------------------------------------------------------
+    setWidgetLocation(id: string, x: number, y:number)
+    {
+        const widget = this.widgets.find(w => w.i === id)
+        if(widget)
+        {
+            widget.x = x;
+            widget.y = y;
+        }
+        else {
+            console.log(`ERROR: Can't find widget with ID: ${id}`)
+        }
+   }
 }
