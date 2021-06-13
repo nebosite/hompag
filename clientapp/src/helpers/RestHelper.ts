@@ -58,6 +58,7 @@ export class RestHelper implements IRestHelper
         this._cache = cache;
         this.apiRoot = apiRoot
         this._callPrefix = callPrefix;
+        this.addHeader("Content-Type", "application/json")
     }
 
     //------------------------------------------------------------------------------

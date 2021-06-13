@@ -43,10 +43,10 @@ if(killpath) {
     });
 }
 
-app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
+app.use(express.text({type: "application/json"}));
+// app.use(express.urlencoded({
+//   extended: true
+// }));
 
 // ---------------------------------------------------------------------------------
 // REST APIs / socket apis

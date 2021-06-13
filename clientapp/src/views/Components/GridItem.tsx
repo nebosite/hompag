@@ -13,7 +13,7 @@ extends React.Component<{pageItem: Widget}>
     // render
     // -------------------------------------------------------------------
     render() {
-        const color = this.props.pageItem.parentPage.colorTheme.color;
+        const color = this.props.pageItem.colorTheme.color;
         return (
             <div className={styles.gridItem}>
                 <div className={`${styles.gridItemInterior} ${styles.gridItemFiller}`}>

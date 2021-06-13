@@ -4,15 +4,12 @@ import { Logger } from "../helpers/logger";
 import moment from "moment";
 import { VERSION } from ".."; 
 
-export interface PageData {
-    pageDetails: any;
-}
 
 export interface IPageAccess
 {
-    getPage(pageId: string): Promise<PageData | null>;
+    getPage(pageId: string): Promise<string | null>;
     getPageList(): Promise<string[]>;
-    storePage(pageId: string, data: PageData): Promise<null>;
+    storePage(pageId: string, data: string): Promise<null>;
 }
 
 
@@ -40,9 +37,7 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     async getPage(pageId: string) 
     {
-        const foundPage = await this._pageAccess.getPage(pageId);
-        if(foundPage) return foundPage.pageDetails;
-        else return {} 
+        return await this._pageAccess.getPage(pageId);
     }
 
     //------------------------------------------------------------------------------------------
@@ -56,9 +51,9 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // getPage
     //------------------------------------------------------------------------------------------
-    storePage(pageId: string, pageData: any) 
+    storePage(pageId: string, pageData: string) 
     {
-        return this._pageAccess.storePage(pageId, {pageDetails: pageData})
+        return this._pageAccess.storePage(pageId, pageData)
     }
 
     //------------------------------------------------------------------------------------------

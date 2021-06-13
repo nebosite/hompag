@@ -1,5 +1,5 @@
 import { ILogger } from "../helpers/logger";
-import { IPageAccess, PageData } from "./ServerModel";
+import { IPageAccess } from "./ServerModel";
 const fs = require('fs')
 const path = require('path');
 
@@ -60,7 +60,7 @@ export class PageAccessLocalDisk implements IPageAccess
     getPage(pageId: string) {
         const fileName = path.join(this._storeLocation, this.pageToFileName(pageId))
 
-        return new Promise<PageData | null>((resolve, reject) => {
+        return new Promise<string | null>((resolve, reject) => {
             if (!fs.existsSync(fileName)) {
                 this._logger.logLine(`Tried to load non-existent file: ${pageId}`)
                 resolve(null)
@@ -71,7 +71,7 @@ export class PageAccessLocalDisk implements IPageAccess
                             reject (Error(`Error reading page '${pageId}': ${err}`))
                         }
                         this._logger.logLine(`Loaded page: ${pageId}`)
-                        resolve(JSON.parse(data))
+                        resolve(data)
                     }
                 )                  
             }            
@@ -81,11 +81,11 @@ export class PageAccessLocalDisk implements IPageAccess
     // ---------------------------------------------------------------------------------
     // storePage
     // ---------------------------------------------------------------------------------
-    async storePage(pageId: string, data: PageData)
+    async storePage(pageId: string, data: string)
     {
         const fileName = path.join(this._storeLocation, this.pageToFileName(pageId))
         return new Promise<null>((resolve, reject) => {
-            fs.writeFile(fileName, JSON.stringify(data), (err: any) => {
+            fs.writeFile(fileName, data, (err: any) => {
                     if (err) {
                         reject (Error(`Error writing page '${pageId}': ${err}`))
                     }

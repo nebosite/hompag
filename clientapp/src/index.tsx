@@ -15,8 +15,9 @@ export class GLOBALS {
 document.title = GLOBALS.Title;
 
 
-const url = trimChars(window.location.pathname, ['/']);
-if(url === "")
+const urlParts = trimChars(window.location.pathname, ['/']).split('/',2);
+const pageName = urlParts[0];
+if(pageName === "")
 {
     const getStartedModel = new GetStartedModel();
     ReactDOM.render(
@@ -26,7 +27,7 @@ if(url === "")
 
 }
 else {
-    const theAppModel:AppModel = new AppModel();
+    const theAppModel:AppModel = new AppModel(pageName);
 
     ReactDOM.render(
         <Provider appModel={theAppModel}> 

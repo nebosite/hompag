@@ -12,6 +12,13 @@ TODO
     [x] Only move the item if we drag in the move handle
     [x] WSIWIG Editor
     [x] New Widget: Default to widget picker
+    [x] General page saving
+    [ ] Should not try to save the page at all when refreshing
+    [ ] Page should auto-refresh when changes are detected on the server
+        - Use websockets to push
+        - Check every minute that websocket is still up
+        
+    
     [ ] Save text widget
         - widgets are save in their own files
     [ ] Reload text widget with page

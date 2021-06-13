@@ -20,7 +20,10 @@ extends React.Component<{appModel?: AppModel}>
 
     return ( 
         <div className={styles.mainPage}>
-            <FungiblePage pageModel={appModel.pages[0]} />
+            {appModel.page 
+                ? <FungiblePage pageModel={appModel.page} />
+                : <div>Loading... </div>}
+            
         </div>        
     );
   }
