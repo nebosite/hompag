@@ -52,7 +52,7 @@ export class AppModel {
     //private _localStorage:ILocalStorage;
     private _api = new RestHelper("/api/");
     private _serializer: BruteForceSerializer;
-
+    private _isLoaded = false;
     // -------------------------------------------------------------------
     // ctor 
     // -------------------------------------------------------------------
@@ -75,6 +75,7 @@ export class AppModel {
                 //console.log(`TRY: '${pageData.data}'`)
                 action(()=>{
                     this.page = this._serializer.parse<PageModel>(pageData.data);
+                    this._isLoaded = true;
                 })()
             }
         },1)
@@ -86,7 +87,7 @@ export class AppModel {
     // -------------------------------------------------------------------
     savePage()
     {
-        if(!this.page)
+        if(!this._isLoaded || !this.page)
         {
             return;
         }

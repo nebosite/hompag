@@ -1,5 +1,6 @@
 import { ColorTool } from "helpers/ColorTool";
-import { action, autorun, makeObservable, observable } from "mobx";
+import { ThrottledAction } from "helpers/ThrottledAction";
+import { action, makeObservable, observable, reaction } from "mobx";
 import { AppModel } from "./AppModel";
 
 export enum WidgetType
@@ -8,11 +9,14 @@ export enum WidgetType
     Editor = "Editor"
 }
 
+let debugId = 0;
+
 // -------------------------------------------------------------------
 // Generic class for holding widget data
 // -------------------------------------------------------------------
 export class Widget {
     i: string = `${Date.now()}${Math.random()}`;
+    debugId= `${debugId++}`
     @observable x: number;
     @observable y: number;
     @observable w: number;
@@ -26,6 +30,7 @@ export class Widget {
     get colorTheme() { return this.ref_App.page.colorTheme;}
 
     ref_App: AppModel;
+    ref_ThrottledSavePage: ThrottledAction;
 
     // -------------------------------------------------------------------
     // ctor 
@@ -34,12 +39,15 @@ export class Widget {
     {
         makeObservable(this);
         this.ref_App = app;
-        autorun(() => { 
-            if(this.myType !== WidgetType.Picker)
-            {
-                app.savePage();
+        this.ref_ThrottledSavePage = new ThrottledAction(()=> app.savePage(), 50)
+
+        reaction( 
+            ()=>  [this.x, this.y, this.w, this.h, this.data, this._myType],
+            () => {
+                this.ref_ThrottledSavePage.run();
             }
-        })
+        )
+
     }
 
 }
@@ -105,17 +113,28 @@ export class PageModel
     // -------------------------------------------------------------------
     // setWidgetSize 
     // -------------------------------------------------------------------
-    setWidgetSize(id: string, w: number, h:number)
+    setSomethingOnWidget(id: string, setter: (widget: Widget)=> void)
     {
         const widget = this.widgets.find(w => w.i === id)
         if(widget)
         {
-            widget.w = w;
-            widget.h = h;
+            action(() => setter(widget))()
         }
         else {
             console.log(`ERROR: Can't find widget with ID: ${id}`)
         }
+
+    }
+
+    // -------------------------------------------------------------------
+    // setWidgetSize 
+    // -------------------------------------------------------------------
+    setWidgetSize(id: string, w: number, h:number)
+    {
+        this.setSomethingOnWidget(id, (widget: Widget) => {
+            widget.w = w;
+            widget.h = h;
+        })
     }
 
     // -------------------------------------------------------------------
@@ -123,14 +142,9 @@ export class PageModel
     // -------------------------------------------------------------------
     setWidgetLocation(id: string, x: number, y:number)
     {
-        const widget = this.widgets.find(w => w.i === id)
-        if(widget)
-        {
+        this.setSomethingOnWidget(id, (widget: Widget) => {
             widget.x = x;
             widget.y = y;
-        }
-        else {
-            console.log(`ERROR: Can't find widget with ID: ${id}`)
-        }
-   }
+        })
+    }
 }
