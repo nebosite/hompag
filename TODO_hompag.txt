@@ -1,12 +1,11 @@
 
 TODO
-    [ ] Text editor is wayyy bugger
+    [x] Delete a widget
     
     [ ] Save text widget
-        - widgets are save in their own files
+        - widgets are saved in their own files
     [ ] Reload text widget with page
     [ ] When editing a widget, periodically save it
-        - Widgets should be saved separately from pages.  
         
     [ ] Page should auto-refresh when changes are detected on the server
         - Use websockets to push

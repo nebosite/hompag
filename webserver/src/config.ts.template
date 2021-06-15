@@ -1,3 +1,9 @@
+// Copy this file to config.ts and edit the properties to match your system
+
 export const hompag_config = {
+    // The local store location can be any folder on your computer.
+    // Ideally, this folder should be a cloud-backed folder so it replicates
+    // to your other machines.  Personally, I use a dropbox folder like this:  
+    // /path_to_my/dropbox/settingstuff/hompag
     localStoreLocation: "_path_to_folder_"
 }
