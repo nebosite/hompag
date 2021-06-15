@@ -1,56 +1,9 @@
 import { ColorTool } from "helpers/ColorTool";
-import { ThrottledAction } from "helpers/ThrottledAction";
-import { action, makeObservable, observable, reaction } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { AppModel } from "./AppModel";
+import { WidgetModel, WidgetType } from "./WidgetModel";
 
-export enum WidgetType
-{
-    Picker = "Picker",
-    Editor = "Editor"
-}
 
-let debugId = 0;
-
-// -------------------------------------------------------------------
-// Generic class for holding widget data
-// -------------------------------------------------------------------
-export class Widget {
-    i: string = `${Date.now()}${Math.random()}`;
-    debugId= `${debugId++}`
-    @observable x: number;
-    @observable y: number;
-    @observable w: number;
-    @observable h: number;
-    @observable data: any;
-
-    @observable _myType: WidgetType = WidgetType.Picker;
-    get myType() { return this._myType}
-    set myType(value: WidgetType) { action(()=>this._myType = value)(); }
-
-    get colorTheme() { return this.ref_App.page.colorTheme;}
-
-    ref_App: AppModel;
-    ref_ThrottledSavePage: ThrottledAction;
-
-    // -------------------------------------------------------------------
-    // ctor 
-    // -------------------------------------------------------------------
-    constructor(app: AppModel)
-    {
-        makeObservable(this);
-        this.ref_App = app;
-        this.ref_ThrottledSavePage = new ThrottledAction(()=> app.savePage(), 50)
-
-        reaction( 
-            ()=>  [this.x, this.y, this.w, this.h, this.data, this._myType],
-            () => {
-                this.ref_ThrottledSavePage.run();
-            }
-        )
-
-    }
-
-}
 
 // -------------------------------------------------------------------
 // Represents a single changeable page 
@@ -58,14 +11,14 @@ export class Widget {
 export class PageModel
 {
     name: string;
-    widgets: Widget[] = observable<Widget>([])
+    widgets: WidgetModel[] = observable<WidgetModel>([])
     get columnCount() {return Math.floor(this.pageWidth / this.columnWidth);}
     @observable columnWidth = 50;
     @observable rowHeight = 50;
     @observable pageWidth = 1200; 
     @observable colorTheme: ColorTool;  
 
-    private ref_App: AppModel;
+    private ref_App: AppModel; 
 
     // -------------------------------------------------------------------
     // ctor 
@@ -100,20 +53,22 @@ export class PageModel
         const columns = Math.max(1, column2-column1);
         const rows = Math.max(1, row2-row1);
 
-        const newItem = new Widget(this.ref_App);
-        newItem.x = column1;
-        newItem.y = row1;
-        newItem.w = columns;
-        newItem.h = rows;
-        newItem.myType = WidgetType.Picker
-        action(() => this.widgets.push(newItem) )();
+        const newItem = new WidgetModel(this.ref_App);
+        action(() => {
+            newItem.x = column1;
+            newItem.y = row1;
+            newItem.w = columns;
+            newItem.h = rows;
+            newItem.myType = WidgetType.Picker
+            this.widgets.push(newItem) 
+        })();
         
     }
 
     // -------------------------------------------------------------------
     // setWidgetSize 
     // -------------------------------------------------------------------
-    setSomethingOnWidget(id: string, setter: (widget: Widget)=> void)
+    setSomethingOnWidget(id: string, setter: (widget: WidgetModel)=> void)
     {
         const widget = this.widgets.find(w => w.i === id)
         if(widget)
@@ -127,11 +82,24 @@ export class PageModel
     }
 
     // -------------------------------------------------------------------
+    // deleteWidget 
+    // -------------------------------------------------------------------
+    deleteWidget(id: string)
+    {
+        const widgetIndex = this.widgets.findIndex(w => w.i === id);
+        if(widgetIndex === -1)
+        {
+            console.log(`ERROR: Could not find widget with index: ${id}`)
+        }
+        this.widgets.splice(widgetIndex,1);
+    }
+
+    // -------------------------------------------------------------------
     // setWidgetSize 
     // -------------------------------------------------------------------
     setWidgetSize(id: string, w: number, h:number)
     {
-        this.setSomethingOnWidget(id, (widget: Widget) => {
+        this.setSomethingOnWidget(id, (widget: WidgetModel) => {
             widget.w = w;
             widget.h = h;
         })
@@ -142,7 +110,7 @@ export class PageModel
     // -------------------------------------------------------------------
     setWidgetLocation(id: string, x: number, y:number)
     {
-        this.setSomethingOnWidget(id, (widget: Widget) => {
+        this.setSomethingOnWidget(id, (widget: WidgetModel) => {
             widget.x = x;
             widget.y = y;
         })

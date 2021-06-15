@@ -2,15 +2,16 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import ReactGridLayout, { ItemCallback, Layout } from 'react-grid-layout';
-import { Widget, PageModel, WidgetType } from "models/PageModel";
+import { PageModel } from "models/PageModel";
 import styles from '../AppStyles.module.css';
 import '../../../node_modules/react-grid-layout/css/styles.css'
 import '../../../node_modules/react-resizable/css/styles.css'
-import { GridItem } from "./GridItem";
+import { WidgetContainer } from "./WidgetContainer";
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import WidgetDefault from "./WidgetDefault";
 import WidgetEditor from "./WidgetEditor";
 import WidgetPicker from "./WidgetPicker";
+import { WidgetModel, WidgetType } from "models/WidgetModel";
 
 interface FungiblePageProps
 {
@@ -117,9 +118,9 @@ extends React.Component<FungiblePageProps>
             dragStyle.opacity = 0;
         }
 
-        const resizeHandle = <div className={styles.gridItemResizeHandle}>╯</div>
+        const resizeHandle = <div className={styles.widgetFrameResizeHandle}>╝</div>
 
-        const renderPageItem = (widget: Widget) => {
+        const renderPageItem = (widget: WidgetModel) => {
             switch(widget.myType) {
                 case WidgetType.Picker: return <WidgetPicker context={widget} />; 
                 case WidgetType.Editor: return <WidgetEditor context={widget} />; 
@@ -183,14 +184,14 @@ extends React.Component<FungiblePageProps>
                         compactType={null}
                         containerPadding={[0,0]}
                         margin={[0,0]}
-                        draggableHandle={".gridItemDragHandleTag"}
+                        draggableHandle={".widgetFrameDragHandleTag"}
                         resizeHandle={resizeHandle}
                     >
                         {pageModel.widgets.map(pi => (
                             <div key={pi.i} data-grid={pi}>
-                                <GridItem pageItem={pi} >
+                                <WidgetContainer context={pi} >
                                     {renderPageItem(pi)}
-                                </GridItem>
+                                </WidgetContainer>
                             </div>))}  
 
                     </ReactGridLayout> 

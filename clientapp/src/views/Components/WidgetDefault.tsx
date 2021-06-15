@@ -1,10 +1,10 @@
 import { observer } from "mobx-react";
-import { Widget } from "models/PageModel";
+import { WidgetModel } from "models/WidgetModel";
 import React from "react";
 
 @observer
 export default class WidgetDefault 
-extends React.Component<{pageItem: Widget}> 
+extends React.Component<{pageItem: WidgetModel}> 
 {    
     // -------------------------------------------------------------------
     // render

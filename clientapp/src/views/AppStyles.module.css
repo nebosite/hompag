@@ -152,17 +152,21 @@
     position:fixed;
 }
 
-.gridItem {
+/************************************************
+  WidgetFrame
+************************************************/
+
+.widgetFrame {
     height: 100%;
     display: flow-root;
 }
 
-.gridItemInterior {
+.widgetFrame .Interior {
     margin: 1px;
     border: 1px solid gray;
 }
 
-.gridItemFiller {
+.widgetFrame .Filler {
     bottom:0;
     top:0;
     left:0;
@@ -172,37 +176,56 @@
     overflow:hidden;
 }
 
-.gridItemChildBorder
+.widgetFrame .ChildBorder
 {
     margin: 5px;
     overflow:hidden;
 }
 
-.gridItemDragHandle {
-    background: #00000000;
+.widgetFrame .DragHandle {
+    background: #00000022;
     display:flex; 
     position:absolute; 
     top:0; 
-    background: black;
     z-index: 1;
-    height: 5px;
+    height: 7px;
     width: 100%;
-    opacity: .2;
 }
-.gridItemDragHandle:hover {
+.widgetFrame .DragHandle:hover {
     cursor:move;
 }
 
-.gridItemResizeHandle {
+.widgetFrame .ConfigButton {
+    background:  #00000012;
+    display:flex; 
+    position:absolute; 
+    top:0; 
+    right: 0;
+    z-index: 2;
+    margin-top: -10px;
+}
+.widgetFrame .ConfigButton:hover {
+    cursor:pointer;
+}
+
+.widgetFrame .ConfigSection {
+    background:  white;
+    margin-top: 10px;
+}
+
+
+.widgetFrameResizeHandle {
     background: #00000000;
     display:flex; 
     position:absolute; 
     right:0;
     bottom:0;
+    margin-bottom: -3px;
+    margin-right: -2px;
     font-size:12px;
     opacity: .5;
 }
-.gridItemResizeHandle:hover {
+.widgetFrame .ResizeHandle:hover {
     cursor:nwse-resize;
 }
 

@@ -3,8 +3,8 @@ import BruteForceSerializer, { ITypeHelper } from "helpers/BruteForceSerializer"
 import { ColorTool } from "helpers/ColorTool";
 import { RestHelper } from "helpers/RestHelper";
 import { action, makeObservable, observable } from "mobx";
-import { PageModel, Widget } from "./PageModel";
-
+import { PageModel } from "./PageModel";
+import { WidgetModel } from "./WidgetModel";
 
 class hompagTypeHelper implements ITypeHelper
 {
@@ -18,7 +18,7 @@ class hompagTypeHelper implements ITypeHelper
         switch(typeName)
         {
             case "PageModel": return new PageModel(this.theApp);
-            case "Widget": return new Widget(this.theApp);
+            case "Widget": return new WidgetModel(this.theApp);
             case "ColorTool": return new ColorTool([]);
             default: return null; 
         }
@@ -30,7 +30,10 @@ class hompagTypeHelper implements ITypeHelper
     }
 
     reconstitute(typeName: string, propertyName: string, rehydratedObject: any) {
-        return rehydratedObject;
+        switch(propertyName) {
+            case "widgets": return observable<WidgetModel>(rehydratedObject)
+        }
+        return rehydratedObject; 
     }
 
 }
@@ -93,6 +96,14 @@ export class AppModel {
         }
         console.log("Saving page...")
         this._api.restPost(`pages/${this.page.name}`, this._serializer.stringify(this.page))
+    }
+
+    // -------------------------------------------------------------------
+    // deleteWidget 
+    // -------------------------------------------------------------------
+    deleteWidget(id: string)
+    {
+        this.page.deleteWidget(id);
     }
 
 

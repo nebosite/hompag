@@ -1,11 +1,11 @@
 import { Combobox } from "evergreen-ui";
 import { observer } from "mobx-react";
-import { Widget, WidgetType } from "models/PageModel";
+import { WidgetModel, WidgetType } from "models/WidgetModel";
 import React from "react";
 
 @observer
 export default class WidgetPicker 
-extends React.Component<{context: Widget}> 
+extends React.Component<{context: WidgetModel}> 
 {    
     // -------------------------------------------------------------------
     // render

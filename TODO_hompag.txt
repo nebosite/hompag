@@ -1,34 +1,26 @@
 
 TODO
-    [x] Formatting tweaks
-        [x] Trim up margins
-        [x] 5-color palette scheme with pastel backgrounds
-            https://color.adobe.com/search?q=most-popular
-                #020659
-                #D9B504
-                #D97904
-                #BF0404
-                #590202
-    [x] Only move the item if we drag in the move handle
-    [x] WSIWIG Editor
-    [x] New Widget: Default to widget picker
-    [x] General page saving
-    [ ] Should not try to save the page at all when refreshing
-    [ ] Page should auto-refresh when changes are detected on the server
-        - Use websockets to push
-        - Check every minute that websocket is still up
-        
+    [ ] Text editor is wayyy bugger
     
     [ ] Save text widget
         - widgets are save in their own files
     [ ] Reload text widget with page
     [ ] When editing a widget, periodically save it
         - Widgets should be saved separately from pages.  
-    [ ] Should be able to load an restore a widget
-    [ ] Remember grid setup
-    [ ] Title pad for each widget
+        
+    [ ] Page should auto-refresh when changes are detected on the server
+        - Use websockets to push
+        - Check every minute that websocket is still up
+        
+    [ ] Server should watch the file system for changes
+        [ ] A connected client has a visible page + widgets
+        [ ] Push an update to the client any page or widgets change
+        
+    
+
 
 NEW
+    [ ] A widget to switch to a different page according to a schedule
     [ ] Link tooltip with options
         - Edit link]
         - Open in new tap
@@ -65,6 +57,23 @@ MAYBE NEVER
 
 
 -- DONE ---------------------------------------------------------------------
+    [x] Formatting tweaks
+        [x] Trim up margins
+        [x] 5-color palette scheme with pastel backgrounds
+            https://color.adobe.com/search?q=most-popular
+                #020659
+                #D9B504
+                #D97904
+                #BF0404
+                #590202
+    [x] Only move the item if we drag in the move handle
+    [x] WSIWIG Editor
+    [x] New Widget: Default to widget picker
+    [x] General page saving
+    [x] Should not try to save the page at all when refreshing
+    [x] Remember grid setup
+    [x] Title pad for each widget
+    
     [x] React grid layout: https://www.npmjs.com/package/react-grid-layout
         [x] Add new grid items
         [x] compact on column
