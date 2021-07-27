@@ -25,7 +25,7 @@ const colorValues = [-1, -.8, -.6, -.3, 0, .3, .6, .8, 1]
 // -------------------------------------------------------------------
 export class ColorTool
 {
-    private _colors: {r:number, g:number, b:number}[]
+    _colors: {r:number, g:number, b:number}[]
 
     // -------------------------------------------------------------------
     // ctor 
@@ -48,7 +48,7 @@ export class ColorTool
     // -------------------------------------------------------------------
     // Get a color 
     // -------------------------------------------------------------------
-    color=(index: ColorIndex, value: ColorValue = ColorValue.V4_Pure)=>
+    color = (index: ColorIndex, value: ColorValue = ColorValue.V4_Pure) =>
     {
         let valueFraction = colorValues[value];
         let targetValue = (valueFraction > 0) ? 255: 0;

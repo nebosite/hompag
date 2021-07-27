@@ -19,6 +19,8 @@ TODO
 
 
 NEW
+    [ ] A form widget - point it to a URL and it will find the forms
+        [ ] inside adobe search
     [ ] A widget to switch to a different page according to a schedule
     [ ] Link tooltip with options
         - Edit link]

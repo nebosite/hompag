@@ -18,7 +18,7 @@ class hompagTypeHelper implements ITypeHelper
         switch(typeName)
         {
             case "PageModel": return new PageModel(this.theApp);
-            case "Widget": return new WidgetModel(this.theApp);
+            case "WidgetModel": return new WidgetModel(this.theApp);
             case "ColorTool": return new ColorTool([]);
             default: return null; 
         }

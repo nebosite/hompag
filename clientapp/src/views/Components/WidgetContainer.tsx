@@ -15,7 +15,7 @@ extends React.Component<{context: WidgetModel}>
     // -------------------------------------------------------------------
     render() {
         const {context: widget} = this.props;
-        const color = widget.colorTheme.color;
+        const color = (i: ColorIndex,v: ColorValue) => widget.colorTheme.color(i,v);
 
 
         const configClick = () => {

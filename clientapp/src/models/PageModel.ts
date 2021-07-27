@@ -27,12 +27,8 @@ export class PageModel
     {
         makeObservable(this);
         this.ref_App = app;
-
-        // this.pageItems.push({i: 'a', x: 0, y: 0, w: 8, h: 10,    parentPage: this, data: {}, type: "Editor"})
-        // this.pageItems.push({i: 'b', x: 10, y: 0, w: 4, h: 4,    parentPage: this, data: {}, type: "Colors"})
-        // this.pageItems.push({i: 'c', x: 6, y: 12, w: 5, h: 3,    parentPage: this, data: {}, type: "Blank"})  
-
         this.colorTheme = new ColorTool(["#FFA100","#FFCF00","#FF0051","#007DFF","#0004FF"]  )
+        console.log(`Constructed page with colortheme: ${this.colorTheme}`)
     }
 
     // -------------------------------------------------------------------

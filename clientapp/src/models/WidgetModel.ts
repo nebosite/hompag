@@ -26,7 +26,10 @@ export class WidgetModel {
     get myType() { return this._myType}
     set myType(value: WidgetType) { action(()=>this._myType = value)(); }
 
-    get colorTheme() { return this.ref_App.page.colorTheme;}
+    get colorTheme() { 
+        const returnMe = this.ref_App?.page?.colorTheme;
+        return returnMe;
+    }
 
     ref_App: AppModel;
     ref_ThrottledSavePage: ThrottledAction;
@@ -47,6 +50,7 @@ export class WidgetModel {
             }
         )
 
+        console.log("Constructing WidgetModel")
     }
 
     // -------------------------------------------------------------------
