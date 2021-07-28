@@ -1,0 +1,21 @@
+body { 
+    font-family:Helvetica,Arial,sans-serif; 
+    font-size:12px 
+} 
+    
+p {
+    margin: 0px;
+}
+
+.mce-toolbar-grp {
+    background-color: #000 !important; /* uses !important or override .mce-panel background-color/image */
+    background-image: none !important;
+}
+
+.mce-btn button {
+    background-color: #00000000;
+}
+
+.tox {
+    background: green;
+}
