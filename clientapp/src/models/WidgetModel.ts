@@ -61,8 +61,6 @@ export class WidgetModel {
                 this.ref_ThrottledSavePage.run();
             }
         )
-
-        console.log("Constructing WidgetModel")
     }
 
     // -------------------------------------------------------------------

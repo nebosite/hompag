@@ -7,21 +7,15 @@ import appStyles from '../AppStyles.module.css';
 import styles from './WidgetEditor.module.css';
 import { Editor } from '@tinymce/tinymce-react';
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
-import { action, makeObservable, observable } from "mobx";
 import { registerType } from "models/hompagTypeHelper";
 
 export class WidgetEditorData
 {
-    @observable _body: string;
+    _body: string;
     get body() {return this._body}
-    set body(value: string) {action(()=>this._body = value)(); this.ref_parent.saveData()}
+    set body(value: string) {this._body = value; this.ref_parent.saveData()}
 
     private ref_parent: WidgetModel
-
-    constructor()
-    {
-        makeObservable(this);
-    }
 }
 
 registerDataTypeForWidgetType(WidgetType.Editor, "WidgetEditorData");
@@ -63,16 +57,13 @@ extends React.Component<{context: WidgetModel},{editor: any}>
                         var caretPos = sel.anchorOffset;
                         var txtData = sel.anchorNode.textContent;
                         
-                        console.log(txtData === "* ")
                         if(caretPos === 2 && (txtData === "* " || txtData === "- "))
                         {
                             if(sel.focusNode.parentElement.constructor.name === "HTMLParagraphElement")
                             {
                                 console.log("CONVERT")
                             }
-                        }
-                        console.log(`(${sel.focusNode.parentElement.constructor.name} ${caretPos}) '${txtData}'`);
-                        
+                        }                        
                     });
 
                     // const menuItem = {

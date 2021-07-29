@@ -1,24 +1,27 @@
 
 TODO
     [x] Delete a widget
-    
+    [x] Save text widget
+        - widgets are saved in their own files
+    [x] Reload text widget with page
+    [x] When editing a widget, periodically save it
+        
+    [x] Text widget editing is allll wonky
+        - probably because the initial value is calculated from body, which is observable
+    [ ] Resize corner shows the wrong moust pointer
+    [ ] Auto completer for bullets: https://stackoverflow.com/questions/68564653/tinymce-how-to-auto-convert-text-to-a-bullet-when-user-types/68570784#68570784
     [ ] Set up text editing with tinymce
         Account: ericjorg@thejcrew.net 22cowborgsInvading
         [ ] Resize the editor when the widget resizes
         [ ] Bullets from * 
         [ ] Tab to indent text
-        
+    [ ] Use web sockets to push update notifications to clients
     
     [ ] Links
         [ ] Auto-include selected text in the link
         [ ] Decorator includes spaces
         [ ] Cancel does not cancel the link
     
-    [ ] Save text widget
-        - widgets are saved in their own files
-    [ ] Reload text widget with page
-    [ ] When editing a widget, periodically save it
-        
     [ ] Page should auto-refresh when changes are detected on the server
         - Use websockets to push
         - Check every minute that websocket is still up
