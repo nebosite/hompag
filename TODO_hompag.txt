@@ -12,7 +12,7 @@ TODO
     [x] Set up text editing with tinymce
         Account: ericjorg@thejcrew.net 22cowborgsInvading
     [x] Auto completer for bullets: https://stackoverflow.com/questions/68564653/tinymce-how-to-auto-convert-text-to-a-bullet-when-user-types/68570784#68570784
-    [ ] Resize the tinymce editor when the widget resizes
+    [x] Resize the tinymce editor when the widget resizes
     [ ] Tab to indent text
     [ ] Use web sockets to push update notifications to clients
     

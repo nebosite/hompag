@@ -93,6 +93,15 @@ extends React.Component<{context: WidgetModel},{editor: any}>
                         this.setState({editor}) 
                         editor.getBody().style.backgroundColor = editorColor;
 
+                        editor.on('KeyDown', function(e){
+                            if(e.keyCode === 9 && !e.altKey && !e.ctrlKey)
+                            {
+                                console.log("TAB")
+                                e.preventDefault();
+                                editor.execCommand(e.shiftKey ? "Outdent" : "Indent")
+                            }
+                        });
+                        
                         editor.on('KeyUp', function(e){
                             var sel = editor.selection.getSel();
                             var caretPos = sel.anchorOffset;
@@ -119,6 +128,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
                         menubar: false,
                         skin: 'small',
                         icons: 'small',
+                        indentation: "10px",
                         toolbar: false,//'bold italic color | outdent indent | bullist numlist | code',
                         contextmenu: "bold italic link lists | code",
                         toolbar_location: 'bottom',
