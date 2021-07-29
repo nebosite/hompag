@@ -7,6 +7,11 @@ p {
     margin: 0px;
 }
 
+ul {
+    margin: 0px;  
+    padding-left: 20px;
+}
+
 .mce-toolbar-grp {
     background-color: #000 !important; /* uses !important or override .mce-panel background-color/image */
     background-image: none !important;

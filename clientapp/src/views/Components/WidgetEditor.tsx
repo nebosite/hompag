@@ -52,32 +52,24 @@ extends React.Component<{context: WidgetModel},{editor: any}>
                 onInit={(evt, editor) => {
                     this.setState({editor}) 
                     editor.getBody().style.backgroundColor = editorColor;
+
                     editor.on('KeyUp', function(e){
                         var sel = editor.selection.getSel();
                         var caretPos = sel.anchorOffset;
                         var txtData = sel.anchorNode.textContent;
                         
-                        if(caretPos === 2 && (txtData === "* " || txtData === "- "))
+                        // if the user types '* ' or '- ' then convert to a bullet
+                        // Note that the character from &nbsp; is different that an ascii space.  That's
+                        // why the match has two spaces in the 2nd character place.  They are actually 
+                        // different character codes. 
+                        if(e.key === ' ' && caretPos === 2 && (txtData.match(/^[*-][  ]/)))
                         {
                             if(sel.focusNode.parentElement.constructor.name === "HTMLParagraphElement")
                             {
-                                console.log("CONVERT")
+                                sel.focusNode.parentElement.outerHTML = `<ul><li>${txtData.substr(2)}</li></ul>`
                             }
                         }                        
                     });
-
-                    // const menuItem = {
-                    //     type: 'item',
-                    //     text: "WOW",
-                    //     shortcut: "Q",
-                    //     onAction: ()=>{}    
-                    // } as ContextMenuItem
-
-                    // const menuApi = {
-                    //     update: (element: Element) => "bold italic"
-                    // }
-
-                    //editor.ui.registry.addContextMenu("Foo", menuApi)
                 }}
                 initialValue={data?.body ?? `<p>Add something here</p>${"<p/>".repeat(height/19)}`}
                 apiKey="i9mbmtxj437lrd1i9a3vsf1e3cg88gbxmkzbcncacfwbj0l0"
