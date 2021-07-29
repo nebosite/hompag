@@ -2,6 +2,18 @@
 TODO
     [x] Delete a widget
     
+    [ ] Set up text editing with tinymce
+        Account: ericjorg@thejcrew.net 22cowborgsInvading
+        [ ] Resize the editor when the widget resizes
+        [ ] Bullets from * 
+        [ ] Tab to indent text
+        
+    
+    [ ] Links
+        [ ] Auto-include selected text in the link
+        [ ] Decorator includes spaces
+        [ ] Cancel does not cancel the link
+    
     [ ] Save text widget
         - widgets are saved in their own files
     [ ] Reload text widget with page

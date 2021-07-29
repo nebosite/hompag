@@ -1,42 +1,12 @@
 
-import BruteForceSerializer, { ITypeHelper } from "helpers/BruteForceSerializer";
-import { ColorTool } from "helpers/ColorTool";
+import BruteForceSerializer from "helpers/BruteForceSerializer";
 import { RestHelper } from "helpers/RestHelper";
 import { action, makeObservable, observable } from "mobx";
+import { hompagTypeHelper, registerGlobalItem } from "./hompagTypeHelper";
 import { PageModel } from "./PageModel";
-import { WidgetModel } from "./WidgetModel";
+import { dataTypeForWidgetType, WidgetModel } from "./WidgetModel"; 
 
-class hompagTypeHelper implements ITypeHelper
-{
-    theApp: AppModel;
-    constructor(theApp: AppModel)
-    {
-        this.theApp = theApp;
-    }
 
-    constructType(typeName: string): object {
-        switch(typeName)
-        {
-            case "PageModel": return new PageModel(this.theApp);
-            case "WidgetModel": return new WidgetModel(this.theApp);
-            case "ColorTool": return new ColorTool([]);
-            default: return null; 
-        }
-    }
-
-    shouldStringify(typeName: string, propertyName: string, object: any): boolean {
-        if(propertyName.startsWith("ref_")) return false;
-        return true;
-    }
-
-    reconstitute(typeName: string, propertyName: string, rehydratedObject: any) {
-        switch(propertyName) {
-            case "widgets": return observable<WidgetModel>(rehydratedObject)
-        }
-        return rehydratedObject; 
-    }
-
-}
 
 interface PageRequestResponse
 {
@@ -56,13 +26,17 @@ export class AppModel {
     private _api = new RestHelper("/api/");
     private _serializer: BruteForceSerializer;
     private _isLoaded = false;
+    private _typeHelper: hompagTypeHelper;
+
     // -------------------------------------------------------------------
     // ctor 
     // -------------------------------------------------------------------
     constructor(pageName: string)
     {
         makeObservable(this);
-        this._serializer = new BruteForceSerializer(new hompagTypeHelper(this))
+        registerGlobalItem("theApp", this);
+        this._typeHelper = new hompagTypeHelper();
+        this._serializer = new BruteForceSerializer(this._typeHelper)
 
         setTimeout(async ()=>{
             const pageData = await this._api.restGet<PageRequestResponse>(`pages/${pageName}`);
@@ -76,14 +50,47 @@ export class AppModel {
             }
             else {
                 //console.log(`TRY: '${pageData.data}'`)
-                action(()=>{
-                    this.page = this._serializer.parse<PageModel>(pageData.data);
+                action(async ()=>{
+                    this.page = await this.reconstitutePage(pageData.data);
                     this._isLoaded = true;
                 })()
             }
         },1)
     }
 
+    // -------------------------------------------------------------------
+    // reconstitutePage 
+    // -------------------------------------------------------------------
+    async reconstitutePage(pageJson: string)
+    {
+        const output = this._serializer.parse<PageModel>(pageJson);
+
+        output.widgets.forEach(async w => {
+            let response =  await this._api.restGet<PageRequestResponse>(`widgets/${w.i}`);
+            let dataBlob:any = null;
+            if(response.data)
+            {
+                dataBlob = JSON.parse(response.data);    
+            }
+            const data = this._typeHelper.constructType(dataTypeForWidgetType(w._myType)) as any;
+            Object.assign(data, dataBlob);
+            data.ref_parent = w;
+            w.ref_data = data;
+            
+        })
+
+        return output;
+    }
+
+    // -------------------------------------------------------------------
+    // getBlankWidgetData 
+    // -------------------------------------------------------------------
+    getBlankWidgetData(widget: WidgetModel)
+    {
+        const output = this._typeHelper.constructType(dataTypeForWidgetType(widget.myType)) as any;
+        output.ref_parent = widget;
+        return output;
+    }
 
     // -------------------------------------------------------------------
     // savePage 
@@ -106,6 +113,14 @@ export class AppModel {
         this.page.deleteWidget(id);
     }
 
+    // -------------------------------------------------------------------
+    // saveWidgetData 
+    // -------------------------------------------------------------------
+    saveWidgetData(id: string, data: any)
+    {
+        console.log("Saving widget data...")
+        this._api.restPost(`widgets/${id}`, this._serializer.stringify(data))
+    }
 
 
     // // -------------------------------------------------------------------

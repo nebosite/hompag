@@ -1,9 +1,11 @@
+import { registerType } from "./hompagTypeHelper";
 import { ColorTool } from "helpers/ColorTool";
 import { action, makeObservable, observable } from "mobx";
 import { AppModel } from "./AppModel";
 import { WidgetModel, WidgetType } from "./WidgetModel";
 
 
+registerType("PageModel", bag => new PageModel(bag.get("theApp")))
 
 // -------------------------------------------------------------------
 // Represents a single changeable page 

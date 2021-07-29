@@ -6,6 +6,7 @@ import { Logger } from './helpers/logger';
 import { PageAccessLocalDisk } from './models/PageAccessLocalDisk';
 import { ServerModel } from './models/ServerModel';
 import {hompag_config} from './config'
+import { getWidget, storeWidget } from './apis/widgets';
 
 
 // ---------------------------------------------------------------------------------
@@ -56,6 +57,8 @@ app.get("/api/am_i_healthy", showHealth);
 app.post("/api/pages/:id", storePage(logger))
 app.get("/api/pages/:id", getPage(logger))
 app.get("/api/pages", getPages(logger))
+app.post("/api/widgets/:id", storeWidget(logger))
+app.get("/api/widgets/:id", getWidget(logger))
 
 
 // ---------------------------------------------------------------------------------

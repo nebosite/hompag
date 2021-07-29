@@ -18,12 +18,10 @@ export class PageAccessLocalDisk implements IPageAccess
     }
 
     // ---------------------------------------------------------------------------------
-    // Convert page name to a file name for storage
+    // name converters
     // ---------------------------------------------------------------------------------
-    pageToFileName(pageId: string)
-    {
-        return `_page_${pageId}.json`;
-    }
+    pageToFileName =    (pageId: string) => `_page_${pageId}.json`;
+    widgetToFileName =  (pageId: string) => `_widget_${pageId}.json`;
 
     // ---------------------------------------------------------------------------------
     // getPageList
@@ -55,22 +53,22 @@ export class PageAccessLocalDisk implements IPageAccess
     }
 
     // ---------------------------------------------------------------------------------
-    // getPage
+    // getThing
     // ---------------------------------------------------------------------------------
-    getPage(pageId: string) {
-        const fileName = path.join(this._storeLocation, this.pageToFileName(pageId))
+    getThing(fileName: string) {
+        fileName = path.join(this._storeLocation, fileName)
 
         return new Promise<string | null>((resolve, reject) => {
             if (!fs.existsSync(fileName)) {
-                this._logger.logLine(`Tried to load non-existent file: ${pageId}`)
+                this._logger.logLine(`Tried to load non-existent file: ${fileName}`)
                 resolve(null)
             }
             else {
                 fs.readFile(fileName, 'utf8' , (err: any, data: any) => {
                         if (err) {
-                            reject (Error(`Error reading page '${pageId}': ${err}`))
+                            reject (Error(`Error reading file '${fileName}': ${err}`))
                         }
-                        this._logger.logLine(`Loaded page: ${pageId}`)
+                        this._logger.logLine(`Loaded file: ${fileName}`)
                         resolve(data)
                     }
                 )                  
@@ -79,22 +77,50 @@ export class PageAccessLocalDisk implements IPageAccess
     }
 
     // ---------------------------------------------------------------------------------
+    // getPage
+    // ---------------------------------------------------------------------------------
+    getPage(pageId: string) {
+        return this.getThing(this.pageToFileName(pageId))
+    }
+
+    // ---------------------------------------------------------------------------------
+    // getWidget
+    // ---------------------------------------------------------------------------------
+    getWidget(widgetId: string) {
+        return this.getThing(this.widgetToFileName(widgetId))
+    }
+
+    // ---------------------------------------------------------------------------------
     // storePage
     // ---------------------------------------------------------------------------------
-    async storePage(pageId: string, data: string)
+    async storeThing(fileName:string, data: string)
     {
-        const fileName = path.join(this._storeLocation, this.pageToFileName(pageId))
+        fileName = path.join(this._storeLocation, fileName)
         return new Promise<null>((resolve, reject) => {
             fs.writeFile(fileName, data, (err: any) => {
                     if (err) {
-                        reject (Error(`Error writing page '${pageId}': ${err}`))
+                        reject (Error(`Error writing '${fileName}': ${err}`))
                     }
-                    this._logger.logLine(`Stored page: ${pageId}`)
+                    this._logger.logLine(`Stored item at: ${fileName}`)
 
                     resolve(null)
                 }
             )              
         })
+    }
+    // ---------------------------------------------------------------------------------
+    // storePage
+    // ---------------------------------------------------------------------------------
+    async storePage(id: string, data: string)
+    {
+        return this.storeThing(this.pageToFileName(id), data)
+    }
+    // ---------------------------------------------------------------------------------
+    // storePage
+    // ---------------------------------------------------------------------------------
+    async storeWidget(id: string, data: string)
+    {
+        return this.storeThing(this.widgetToFileName(id), data)
     }
 
 }

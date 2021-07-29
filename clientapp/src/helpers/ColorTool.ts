@@ -1,3 +1,5 @@
+import { registerType } from "models/hompagTypeHelper"
+
 export enum ColorIndex {
     Foreground = 0,
     Background = 1,
@@ -19,6 +21,8 @@ export enum ColorValue {
 }
 
 const colorValues = [-1, -.8, -.6, -.3, 0, .3, .6, .8, 1]
+
+registerType("ColorTool", typeHelper => new ColorTool([]))
 
 // -------------------------------------------------------------------
 // A class for working with a color scheme 

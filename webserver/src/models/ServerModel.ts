@@ -9,7 +9,10 @@ export interface IPageAccess
 {
     getPage(pageId: string): Promise<string | null>;
     getPageList(): Promise<string[]>;
-    storePage(pageId: string, data: string): Promise<null>;
+    storePage(id: string, data: string): Promise<null>;
+    storeWidget(id: string, data: string): Promise<null>;
+    getWidget(id: string): Promise<string | null>;
+
 }
 
 
@@ -55,6 +58,24 @@ export class ServerModel {
     {
         return this._pageAccess.storePage(pageId, pageData)
     }
+
+    //------------------------------------------------------------------------------------------
+    // getPage
+    //------------------------------------------------------------------------------------------
+    storeWidget(widgetId: string, data: string) 
+    {
+        return this._pageAccess.storeWidget(widgetId, data)
+    }
+
+    //------------------------------------------------------------------------------------------
+    // getWidget
+    //------------------------------------------------------------------------------------------
+    async getWidget(id: string) 
+    {
+        return await this._pageAccess.getWidget(id);
+    }
+
+
 
     //------------------------------------------------------------------------------------------
     // getHealth

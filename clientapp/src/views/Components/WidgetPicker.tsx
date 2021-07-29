@@ -1,7 +1,16 @@
 import { Combobox } from "evergreen-ui";
 import { observer } from "mobx-react";
-import { WidgetModel, WidgetType } from "models/WidgetModel";
+import { registerType } from "models/hompagTypeHelper";
+import { registerDataTypeForWidgetType, WidgetModel, WidgetType } from "models/WidgetModel";
 import React from "react";
+
+export class WidgetPickerData {
+
+}
+
+registerDataTypeForWidgetType(WidgetType.Picker, "WidgetPickerData");
+registerType("WidgetPickerData", () => new WidgetPickerData())
+
 
 @observer
 export default class WidgetPicker 

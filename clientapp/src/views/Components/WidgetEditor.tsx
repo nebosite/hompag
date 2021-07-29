@@ -1,12 +1,31 @@
 import { observer } from "mobx-react";
 import React from "react";
 import 'draft-js/dist/Draft.css';
-import { WidgetModel } from "models/WidgetModel";
+import { registerDataTypeForWidgetType, WidgetModel, WidgetType } from "models/WidgetModel";
 import './WidgetEditor.module.css';
 import appStyles from '../AppStyles.module.css';
 import styles from './WidgetEditor.module.css';
 import { Editor } from '@tinymce/tinymce-react';
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
+import { action, makeObservable, observable } from "mobx";
+import { registerType } from "models/hompagTypeHelper";
+
+export class WidgetEditorData
+{
+    @observable _body: string;
+    get body() {return this._body}
+    set body(value: string) {action(()=>this._body = value)(); this.ref_parent.saveData()}
+
+    private ref_parent: WidgetModel
+
+    constructor()
+    {
+        makeObservable(this);
+    }
+}
+
+registerDataTypeForWidgetType(WidgetType.Editor, "WidgetEditorData");
+registerType("WidgetEditorData", () => new WidgetEditorData())
 
 @observer
 export default class WidgetEditor 
@@ -21,6 +40,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
     // -------------------------------------------------------------------
     render() {
         const {context} = this.props;
+        const data = context.ref_data as WidgetEditorData
         const color = context.colorTheme.color;
         const editorColor= color(ColorIndex.Background, ColorValue.V6_Bright);
 
@@ -28,7 +48,8 @@ extends React.Component<{context: WidgetModel},{editor: any}>
 
 
         const handleEditorChange = (event: any) => {
-            console.log(`The html is: ${this.state.editor}`)
+            context.ref_data.body = this.state.editor.contentDocument.body.innerHTML
+            // console.log(`The htm}l is: ${context.ref_data.body}`)
         }
 
         return (
@@ -37,7 +58,6 @@ extends React.Component<{context: WidgetModel},{editor: any}>
                 onInit={(evt, editor) => {
                     this.setState({editor}) 
                     editor.getBody().style.backgroundColor = editorColor;
-
                     editor.on('KeyUp', function(e){
                         var sel = editor.selection.getSel();
                         var caretPos = sel.anchorOffset;
@@ -68,7 +88,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
 
                     //editor.ui.registry.addContextMenu("Foo", menuApi)
                 }}
-                initialValue={`<p>Add something here</p>${"<p/>".repeat(height/19)}`}
+                initialValue={data?.body ?? `<p>Add something here</p>${"<p/>".repeat(height/19)}`}
                 apiKey="i9mbmtxj437lrd1i9a3vsf1e3cg88gbxmkzbcncacfwbj0l0"
                 onChange={handleEditorChange}
                 init={{
