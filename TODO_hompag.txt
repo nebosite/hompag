@@ -11,7 +11,7 @@ TODO
     [x] Resize corner shows the wrong mouse pointer
     [x] Set up text editing with tinymce
         Account: ericjorg@thejcrew.net 22cowborgsInvading
-    [ ] Auto completer for bullets: https://stackoverflow.com/questions/68564653/tinymce-how-to-auto-convert-text-to-a-bullet-when-user-types/68570784#68570784
+    [x] Auto completer for bullets: https://stackoverflow.com/questions/68564653/tinymce-how-to-auto-convert-text-to-a-bullet-when-user-types/68570784#68570784
     [ ] Resize the tinymce editor when the widget resizes
     [ ] Tab to indent text
     [ ] Use web sockets to push update notifications to clients
@@ -33,6 +33,7 @@ TODO
 
 
 NEW
+    [ ] Clean up the scroll bars on the editor area so the are smaller and less clunky
     [ ] A form widget - point it to a URL and it will find the forms
         [ ] inside adobe search
     [ ] A widget to switch to a different page according to a schedule
