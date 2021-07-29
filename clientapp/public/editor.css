@@ -5,7 +5,6 @@ body {
     
 p {
     margin: 0px;
-    padding-left: 20px; 
 }
 
 li {
@@ -15,7 +14,7 @@ li {
 
 ul {
     margin: 0px;  
-    padding-left: 20px;
+    padding-left: 15px;
 }
 
 .mce-toolbar-grp {

@@ -13,7 +13,11 @@ TODO
         Account: ericjorg@thejcrew.net 22cowborgsInvading
     [x] Auto completer for bullets: https://stackoverflow.com/questions/68564653/tinymce-how-to-auto-convert-text-to-a-bullet-when-user-types/68570784#68570784
     [x] Resize the tinymce editor when the widget resizes
-    [ ] Tab to indent text
+    [x] Tab to indent text
+    [ ] Sometimes there are collisions trying to save a widget
+        - don't try to actually save on page load - recompiling can cause many pages to reload
+        - Overall, there should be zero storage calls on a page reload
+        - Try to protect file accesses on the server
     [ ] Use web sockets to push update notifications to clients
     
     [ ] Links
