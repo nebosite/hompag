@@ -2,7 +2,6 @@
     "name": "@adobe/crash-cow-app",
     "version": "0.1.0",
     "private": true,
-    "proxy": "http://localhost:8101",
     "scripts": {
         "start": "react-scripts start",
         "startmock": "env-cmd -f ./.env.mock react-scripts start",

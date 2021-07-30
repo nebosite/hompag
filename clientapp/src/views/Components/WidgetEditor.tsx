@@ -35,18 +35,11 @@ extends React.Component<{context: WidgetModel},{editor: any}>
         const {context} = this.props;
 
         const containerDiv = window.document.getElementById(`container_${context.i}`)
-        // const potentialEditors = containerDiv.getElementsByClassName('tox-tinymce') 
-        // console.log(`Found ${potentialEditors.length}`)
-        // if(potentialEditors.length === 0) return; 
         const editorElement = containerDiv.lastChild as HTMLElement;
-        //const editorElement = window.document.getElementById(`editor_${context.i}`)
         this.resizeOberver = new ResizeObserver(entries => {
             for (let entry of entries) {
                 if(entry.contentRect) {
-                    const w = entry.contentRect.width;
                     const h = entry.contentRect.height
-                    console.log(`ZZ: Rect: ${w},${h}`)
-                    //editorElement.style.width = '';
                     editorElement.style.height = `${h + 18}px`;
                 } 
                 
@@ -55,7 +48,6 @@ extends React.Component<{context: WidgetModel},{editor: any}>
                 // else {
                 //     const w = entry.contentBoxSize[0];
                 //     const h = entry.contentBoxSize[1].inlineSize
-                //     console.log(`ZZ: Box: ${w},${h}`)
                 //     enditorElement.style.width = w.toString();
                 //     enditorElement.style.height = h.toString();
                 // }
@@ -72,7 +64,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
     // -------------------------------------------------------------------
     render() {
         const {context} = this.props;
-        const data = context.ref_data as WidgetEditorData
+        const data = context.data as WidgetEditorData
         const color = context.colorTheme.color;
         const editorColor= color(ColorIndex.Background, ColorValue.V6_Bright);
 
@@ -80,7 +72,8 @@ extends React.Component<{context: WidgetModel},{editor: any}>
 
 
         const handleEditorChange = (event: any) => {
-            context.ref_data.body = this.state.editor.contentDocument.body.innerHTML
+            console.log("EDITOR CHANGE")
+            context.data.body = this.state.editor.contentDocument.body.innerHTML
             // console.log(`The htm}l is: ${context.ref_data.body}`)
         }
 
@@ -100,7 +93,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
                                 e.preventDefault();
                                 editor.execCommand(e.shiftKey ? "Outdent" : "Indent")
                             }
-                        });
+                        },true);
                         
                         editor.on('KeyUp', function(e){
                             var sel = editor.selection.getSel();

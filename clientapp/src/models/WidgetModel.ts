@@ -28,13 +28,24 @@ export class WidgetModel {
     @observable y: number;
     @observable w: number;
     @observable h: number;
-    @observable ref_data: any;
+    @observable ref_privateData: any = null;
+    get data() {return this.ref_privateData}
+    set data(value: any) {
+        action(()=>{
+            // If we don't have any data, it means we are being initialized still
+            if(this.ref_privateData) {
+                console.log("W: calling throttler")
+                this.ref_saveThrottler.run(()=>{this.ref_App.saveWidgetData(this.i, value)})
+            }
+            this.ref_privateData = value; 
+        })()
+    }
 
     @observable _myType: WidgetType = WidgetType.Picker;
     get myType() { return this._myType}
     set myType(value: WidgetType) { action(()=> {
             this._myType = value;
-            this.ref_data = this.ref_App.getBlankWidgetData(this)
+            this.data = this.ref_App.getBlankWidgetData(this)
         })(); 
     }
 
@@ -44,7 +55,7 @@ export class WidgetModel {
     }
 
     ref_App: AppModel;
-    ref_ThrottledSavePage: ThrottledAction;
+    private ref_saveThrottler = new ThrottledAction(500);
 
     // -------------------------------------------------------------------
     // ctor 
@@ -53,12 +64,11 @@ export class WidgetModel {
     {
         makeObservable(this);
         this.ref_App = app;
-        this.ref_ThrottledSavePage = new ThrottledAction(()=> app.savePage(), 50)
 
         reaction( 
-            ()=>  [this.x, this.y, this.w, this.h, this.ref_data, this._myType],
+            ()=>  [this.x, this.y, this.w, this.h, this._myType],
             () => {
-                this.ref_ThrottledSavePage.run();
+                this.ref_App.savePage();
             }
         )
     }
@@ -74,7 +84,7 @@ export class WidgetModel {
     // saveData 
     // -------------------------------------------------------------------
     saveData() {
-        this.ref_App.saveWidgetData(this.i, this.ref_data)
+        this.ref_App.saveWidgetData(this.i, this.data)
     }
 
 }

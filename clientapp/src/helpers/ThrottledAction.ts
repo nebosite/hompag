@@ -8,20 +8,18 @@ export class ThrottledAction
 {
     private _throttleDelay_ms = 250;
     private _currentId = 0;
-    private _action: ()=>void;
 
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor( action: () => void, minDelay_ms: number = 250) {
+    constructor(  minDelay_ms: number = 250) {
         this._throttleDelay_ms = minDelay_ms;
-        this._action = action;
     }
 
     // -------------------------------------------------------------------
     // doSomething
     // -------------------------------------------------------------------
-    run()
+    run(action: () => void)
     {
         const throttleId = ++this._currentId;
        
@@ -29,7 +27,7 @@ export class ThrottledAction
             // Only run if nothing else has come up since I was called
             if(throttleId === this._currentId)
             {
-                this._action();
+                action();
             }
         }
 

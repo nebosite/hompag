@@ -15,7 +15,11 @@ export interface IPageAccess
 
 }
 
-
+export interface IListener{
+    name: string    
+    close():void;
+    send(data: any): Promise<void>
+}
 
 //------------------------------------------------------------------------------------------
 // The state of the server overall
@@ -24,7 +28,7 @@ export class ServerModel {
     logger: Logger
     private _startTime = Date.now();
     private _pageAccess: IPageAccess;
-
+    private _listeners = new Map<string, IListener>();
     //------------------------------------------------------------------------------------------
     // ctor
     //------------------------------------------------------------------------------------------
@@ -34,6 +38,21 @@ export class ServerModel {
         this._pageAccess = pageAccess;
     }
 
+    //------------------------------------------------------------------------------------------
+    // registerListener - register instances that want to know about page changes
+    //------------------------------------------------------------------------------------------
+    registerListener(listener: IListener)
+    {
+        this._listeners.set(listener.name, listener);
+    }
+
+    //------------------------------------------------------------------------------------------
+    // unregisterListener 
+    //------------------------------------------------------------------------------------------
+    unregisterListener(name: string)
+    {
+        this._listeners.delete(name)
+    }
 
     //------------------------------------------------------------------------------------------
     // getPage
@@ -54,17 +73,27 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // getPage
     //------------------------------------------------------------------------------------------
-    storePage(pageId: string, pageData: string) 
+    async storePage(pageId: string, pageData: string) 
     {
-        return this._pageAccess.storePage(pageId, pageData)
+        await this._pageAccess.storePage(pageId, pageData)
+        
+        this.sendAlert({type: "page", id: pageId})
     }
 
     //------------------------------------------------------------------------------------------
     // getPage
     //------------------------------------------------------------------------------------------
-    storeWidget(widgetId: string, data: string) 
+    async storeWidget(widgetId: string, data: string) 
     {
-        return this._pageAccess.storeWidget(widgetId, data)
+        await this._pageAccess.storeWidget(widgetId, data)
+        this.sendAlert({type: "widget", id: widgetId})  
+    }
+
+    //------------------------------------------------------------------------------------------
+    // sendAlert
+    //------------------------------------------------------------------------------------------
+    sendAlert(info: {type: string, id: string}) {
+        this._listeners.forEach(l => l.send(info))
     }
 
     //------------------------------------------------------------------------------------------
@@ -74,8 +103,6 @@ export class ServerModel {
     {
         return await this._pageAccess.getWidget(id);
     }
-
-
 
     //------------------------------------------------------------------------------------------
     // getHealth

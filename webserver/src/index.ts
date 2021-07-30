@@ -1,4 +1,5 @@
 import express from 'express';
+import express_ws from 'express-ws';
 import * as path from 'path';
 import { getPage, getPages, storePage } from './apis/pages';
 import { showHealth } from './apis/showHealth';
@@ -7,6 +8,7 @@ import { PageAccessLocalDisk } from './models/PageAccessLocalDisk';
 import { ServerModel } from './models/ServerModel';
 import {hompag_config} from './config'
 import { getWidget, storeWidget } from './apis/widgets';
+import { handleSocket } from './apis/handleSocket';
 
 
 // ---------------------------------------------------------------------------------
@@ -14,6 +16,7 @@ import { getWidget, storeWidget } from './apis/widgets';
 // ---------------------------------------------------------------------------------
 const port = process.env.PORT || 8101
 export const app = express();
+const app_ws = express_ws(app);
 export const logger = new Logger();
 export const serverModel = new ServerModel(logger, new PageAccessLocalDisk(logger, hompag_config.localStoreLocation));
 export const VERSION = require('./version');
@@ -60,6 +63,7 @@ app.get("/api/pages", getPages(logger))
 app.post("/api/widgets/:id", storeWidget(logger))
 app.get("/api/widgets/:id", getWidget(logger))
 
+app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger));
 
 // ---------------------------------------------------------------------------------
 // app hosting
@@ -82,4 +86,5 @@ app.get('/*', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); })
 app.listen(port, () => {
     logger.logLine('listening on ' + port);
 });
+
 

@@ -34,6 +34,30 @@ export class PageModel
     }
 
     // -------------------------------------------------------------------
+    // updateWidget 
+    // -------------------------------------------------------------------
+    async updateWidget(id: string)
+    {
+        const foundWidget = this.widgets.find(w => w.i === id)
+        if(foundWidget) {
+            const newWidget = new WidgetModel(foundWidget.ref_App);
+            newWidget.i = foundWidget.i;
+            newWidget.x = foundWidget.x;
+            newWidget.y = foundWidget.y;
+            newWidget.w = foundWidget.w;
+            newWidget.h = foundWidget.h;
+            newWidget.myType = foundWidget.myType;
+            await foundWidget.ref_App.loadWidget(newWidget);
+            
+            action(()=>{
+                this.deleteWidget(id);
+                this.widgets.push(newWidget);
+            })()
+
+        }
+    }
+
+    // -------------------------------------------------------------------
     // addItem 
     // -------------------------------------------------------------------
     addItem(x1: number, y1: number, x2: number, y2: number) {
