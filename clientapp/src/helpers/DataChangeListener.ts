@@ -11,7 +11,8 @@ export interface IDataChangeListener {
 export interface DataChangeAlert
 {
     type: string;
-    id: string;
+    itemId: string;
+    updateId: string;
 }
 
 // -------------------------------------------------------------------
@@ -26,7 +27,7 @@ export class WebSocketListener implements IDataChangeListener {
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(handler: (type: string, id: string) => void)
+    constructor(handler: (type: string, itemId: string, updateId: string) => void)
     {
         const url = (window.location.protocol === 'https:' ? 'wss:' : 'ws:') + window.location.host + "/subscribe";
         console.log(`Attempting socket to: ${url}`)
@@ -45,7 +46,7 @@ export class WebSocketListener implements IDataChangeListener {
 
         this._websocket.addEventListener("message", (ev: { data: string; }) => {
             const message = JSON.parse(ev.data) as DataChangeAlert;
-            handler(message.type, message.id);
+            handler(message.type, message.itemId, message.updateId);
         })
     }
 

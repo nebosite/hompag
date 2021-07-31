@@ -73,26 +73,29 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // getPage
     //------------------------------------------------------------------------------------------
-    async storePage(pageId: string, pageData: string) 
+    async storePage(pageId: string, payload: string) 
     {
-        await this._pageAccess.storePage(pageId, pageData)
+        const updateDetails = JSON.parse(payload) as {id: number, data: any}
+        await this._pageAccess.storePage(pageId, JSON.stringify(updateDetails.data,null,2))
         
-        this.sendAlert({type: "page", id: pageId})
+        this.sendAlert({type: "page", itemId: pageId, updateId: updateDetails.id})
     }
 
     //------------------------------------------------------------------------------------------
     // getPage
     //------------------------------------------------------------------------------------------
-    async storeWidget(widgetId: string, data: string) 
+    async storeWidget(widgetId: string,  payload: string) 
     {
-        await this._pageAccess.storeWidget(widgetId, data)
-        this.sendAlert({type: "widget", id: widgetId})  
+        const updateDetails = JSON.parse(payload) as {id: number, data: any}
+
+        await this._pageAccess.storeWidget(widgetId, JSON.stringify(updateDetails.data,null,2))
+        this.sendAlert({type: "widget", itemId: widgetId, updateId: updateDetails.id})
     }
 
     //------------------------------------------------------------------------------------------
     // sendAlert
     //------------------------------------------------------------------------------------------
-    sendAlert(info: {type: string, id: string}) {
+    sendAlert(info: {type: string, itemId: string, updateId: number}) {
         this._listeners.forEach(l => l.send(info))
     }
 

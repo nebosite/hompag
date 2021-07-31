@@ -1,4 +1,4 @@
-import { registerType } from "./hompagTypeHelper";
+import { registerProperty, registerType } from "./hompagTypeHelper";
 import { ColorTool } from "helpers/ColorTool";
 import { action, makeObservable, observable } from "mobx";
 import { AppModel } from "./AppModel";
@@ -6,6 +6,10 @@ import { WidgetModel, WidgetType } from "./WidgetModel";
 
 
 registerType("PageModel", bag => new PageModel(bag.get("theApp")))
+registerProperty("PageModel", "widgets", (t,n,o) => {
+    console.log("Making widgets observable")
+    return observable(o as WidgetModel[])
+})
 
 // -------------------------------------------------------------------
 // Represents a single changeable page 
@@ -13,7 +17,7 @@ registerType("PageModel", bag => new PageModel(bag.get("theApp")))
 export class PageModel
 {
     name: string;
-    widgets: WidgetModel[] = observable<WidgetModel>([])
+    @observable widgets: WidgetModel[] = observable<WidgetModel>([])
     get columnCount() {return Math.floor(this.pageWidth / this.columnWidth);}
     @observable columnWidth = 50;
     @observable rowHeight = 50;

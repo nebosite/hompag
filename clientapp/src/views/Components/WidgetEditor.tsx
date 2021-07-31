@@ -64,7 +64,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
     // -------------------------------------------------------------------
     render() {
         const {context} = this.props;
-        const data = context.data as WidgetEditorData
+        const data = context.ref_data as WidgetEditorData
         const color = context.colorTheme.color;
         const editorColor= color(ColorIndex.Background, ColorValue.V6_Bright);
 
@@ -73,7 +73,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
 
         const handleEditorChange = (event: any) => {
             console.log("EDITOR CHANGE")
-            context.data.body = this.state.editor.contentDocument.body.innerHTML
+            context.ref_data.body = this.state.editor.contentDocument.body.innerHTML
             // console.log(`The htm}l is: ${context.ref_data.body}`)
         }
 

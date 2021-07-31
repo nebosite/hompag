@@ -31,6 +31,7 @@ export class AppModel {
     private _typeHelper: hompagTypeHelper;
     private _dataChangeListener: IDataChangeListener
     private _savePageThrottler = new ThrottledAction(500)
+    private _reportedSaves = new Map<string,string>()
 
     // -------------------------------------------------------------------
     // ctor 
@@ -41,14 +42,18 @@ export class AppModel {
         registerGlobalItem("theApp", this);
         this._typeHelper = new hompagTypeHelper();
         this._serializer = new BruteForceSerializer(this._typeHelper)
-        this._dataChangeListener = new WebSocketListener((type, id) => {
-            if(type === "page" && this.page.name === id)
+        this._dataChangeListener = new WebSocketListener((type, itemId, updateId) => {
+            if(!this._reportedSaves.has(updateId))
             {
-                this.loadPage(id);           
+                if(type === "page" && this.page?.name === itemId)
+                {
+                    this.loadPage(itemId);           
+                }
+                else if(type === "widget") {
+                    this.page.updateWidget(itemId);
+                }                
             }
-            else if(type === "widget") {
-                this.page.updateWidget(id);
-            }
+
         })
         if(!this._dataChangeListener) console.log("Just shutting up the compiler")
 
@@ -79,35 +84,34 @@ export class AppModel {
         }
         else {
             //console.log(`TRY: '${pageData.data}'`)
-            const loadedPage = await this.reconstitutePage(pageData.data);
+            try {
+                var loadedPage = this._serializer.parse<PageModel>(pageData.data);
+            }
+            catch(err)
+            {
+                console.log(`${err}\nJSON:${pageData.data}`)
+            }
+            
+            
+
+            if(this.page && this.page.name === loadedPage.name)
+            {
+                // for simple page reloads, don't need to download widget content
+                loadedPage.widgets.forEach(w => {
+                    const oldWidget = this.page.widgets.find(ww => ww.i === w.i)
+                    if(oldWidget) w.ref_data = oldWidget.ref_data;
+                })
+            }
+            else {
+                await Promise.all(loadedPage.widgets.map((w) => this.loadWidget(w)));
+            }
+
             action(()=>{
                 this.page = loadedPage;
-                console.log(`PAGE LOADED ${loadedPage.name}`)
-                this._isLoaded = true;
             })()
+            console.log(`PAGE LOADED ${loadedPage.name}`)
+            this._isLoaded = true;
         }        
-    }
-
-    // -------------------------------------------------------------------
-    // reconstitutePage 
-    // -------------------------------------------------------------------
-    async reconstitutePage(pageJson: string)
-    {
-        let output:PageModel = null;
-        await new Promise<void>((resolve) => {
-            action(async () =>{
-                try {
-                    output = await this._serializer.parse<PageModel>(pageJson);
-                }
-                catch(err)
-                {
-                    console.log(`${err}\nJSON:${pageJson}`)
-                }
-                await Promise.all(output.widgets.map((w) => this.loadWidget(w)));
-                resolve();
-            })()
-        }) 
-        return output;
     }
 
     // -------------------------------------------------------------------
@@ -115,17 +119,19 @@ export class AppModel {
     // -------------------------------------------------------------------
     async loadWidget(w: WidgetModel)
     {
-        console.log(`WIDGET START: ${w.i}`)
+        console.log(`WIDGET START: ${w.i} ${w.x},${w.y}`)
         let response =  await this._api.restGet<PageRequestResponse>(`widgets/${w.i}`);
         let dataBlob:any = null;
         if(response.data)
         {
-            dataBlob = JSON.parse(response.data);    
+            dataBlob = JSON.parse(response.data);
+            console.log(`INCOMING: ${response.data}`)  ;  
         }
+
         const data = this._typeHelper.constructType(dataTypeForWidgetType(w._myType)) as any;
         Object.assign(data, dataBlob);
         data.ref_parent = w;
-        action(()=>{w.data = data})()
+        action(()=>{w.ref_data = data})()
         console.log(`WIDGET FINISH: ${w.i}`)
 
     }
@@ -141,6 +147,16 @@ export class AppModel {
     }
 
     // -------------------------------------------------------------------
+    // get a unique ID for this update 
+    // -------------------------------------------------------------------
+    getUpdateId()
+    {
+        const updateId = `${Date.now()}`;
+        this._reportedSaves.set(updateId, updateId);
+        return updateId
+    }
+
+    // -------------------------------------------------------------------
     // savePage 
     // -------------------------------------------------------------------
     savePage()
@@ -153,7 +169,7 @@ export class AppModel {
         const pageToSave = this.page;
         console.log(`Saving page ${pageToSave.name}`)
         this._savePageThrottler.run(() => {
-            this._api.restPost(`pages/${pageToSave.name}`, this._serializer.stringify(pageToSave))
+            this._api.restPost(`pages/${pageToSave.name}`, this._serializer.stringify({id: this.getUpdateId(), data: pageToSave}))
         });
     }
 
@@ -175,7 +191,7 @@ export class AppModel {
             return;
         }
         console.log("Saving widget data...")
-        this._api.restPost(`widgets/${id}`, this._serializer.stringify(data))
+        this._api.restPost(`widgets/${id}`, this._serializer.stringify({id: this.getUpdateId(), data: data}))
     }
 
 

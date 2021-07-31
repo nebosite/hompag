@@ -28,24 +28,13 @@ export class WidgetModel {
     @observable y: number;
     @observable w: number;
     @observable h: number;
-    @observable ref_privateData: any = null;
-    get data() {return this.ref_privateData}
-    set data(value: any) {
-        action(()=>{
-            // If we don't have any data, it means we are being initialized still
-            if(this.ref_privateData) {
-                console.log("W: calling throttler")
-                this.ref_saveThrottler.run(()=>{this.ref_App.saveWidgetData(this.i, value)})
-            }
-            this.ref_privateData = value; 
-        })()
-    }
+    ref_data: any = null;
 
     @observable _myType: WidgetType = WidgetType.Picker;
     get myType() { return this._myType}
     set myType(value: WidgetType) { action(()=> {
             this._myType = value;
-            this.data = this.ref_App.getBlankWidgetData(this)
+            this.ref_data = this.ref_App.getBlankWidgetData(this)
         })(); 
     }
 
@@ -68,6 +57,7 @@ export class WidgetModel {
         reaction( 
             ()=>  [this.x, this.y, this.w, this.h, this._myType],
             () => {
+                console.log(`Reaction: ${this.x},${this.y}`)
                 this.ref_App.savePage();
             }
         )
@@ -81,10 +71,11 @@ export class WidgetModel {
     }
 
     // -------------------------------------------------------------------
-    // saveData 
+    // trigger data save for this widget 
     // -------------------------------------------------------------------
-    saveData() {
-        this.ref_App.saveWidgetData(this.i, this.data)
+    saveData()
+    {
+        this.ref_saveThrottler.run(()=>{this.ref_App.saveWidgetData(this.i, this.ref_data)})
     }
 
 }

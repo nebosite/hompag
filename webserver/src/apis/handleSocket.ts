@@ -22,11 +22,13 @@ class WebSocketListener implements IListener
     private _socket: WebSocket
     private _onClose: () => void
     private _closed = false;
+    private _logger: ILogger;
 
     constructor(name: string, socket: WebSocket, logger: ILogger, onClose: ()=> void) {
         this._socket = socket;
         this.name = name;
         this._onClose = onClose;
+        this._logger = logger;
     }
 
     //------------------------------------------------------------------------------------------
@@ -34,7 +36,7 @@ class WebSocketListener implements IListener
     //------------------------------------------------------------------------------------------
     close() {
         this._closed = true;
-        console.log(`CLosing socket ${this._socket.eventNames}`)
+        if(this._socket) this._logger.logLine(`Closing socket: ${this.name}`)
         this._onClose();
     }
 
