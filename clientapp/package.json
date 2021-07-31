@@ -63,6 +63,7 @@
         "react-grid-layout": "^1.2.5",
         "react-icons": "^4.1.0",
         "react-router-dom": "^5.2.0",
+        "react-select": "^4.3.1",
         "recharts": "^1.8.5",
         "strapi": "^3.6.0",
         "tinymce": "^5.8.2",

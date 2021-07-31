@@ -1,21 +1,20 @@
 import { observer } from "mobx-react";
 import React from "react";
 import 'draft-js/dist/Draft.css';
-import { registerDataTypeForWidgetType, WidgetModel, WidgetType } from "models/WidgetModel";
+import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
 import './WidgetEditor.module.css';
 import appStyles from '../AppStyles.module.css';
 import styles from './WidgetEditor.module.css';
 import { Editor } from '@tinymce/tinymce-react';
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { registerType } from "models/hompagTypeHelper";
+import { WidgetModelData, WidgetType } from "models/WidgetModel";
 
-export class WidgetEditorData
+export class WidgetEditorData extends WidgetModelData
 {
     _body: string;
     get body() {return this._body}
-    set body(value: string) {this._body = value; this.ref_parent.saveData()}
-
-    private ref_parent: WidgetModel
+    set body(value: string) {this._body = value; this.widgetParent.save()}
 }
 
 registerDataTypeForWidgetType(WidgetType.Editor, "WidgetEditorData");
@@ -23,10 +22,9 @@ registerType("WidgetEditorData", () => new WidgetEditorData())
 
 @observer
 export default class WidgetEditor 
-extends React.Component<{context: WidgetModel},{editor: any}> 
+extends React.Component<{context: WidgetContainer},{editor: any}> 
 {    
     resizeOberver: ResizeObserver
-
 
     // -------------------------------------------------------------------
     // componentDidMount - set up resize listener
@@ -34,7 +32,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
     componentDidMount() {
         const {context} = this.props;
 
-        const containerDiv = window.document.getElementById(`container_${context.i}`)
+        const containerDiv = window.document.getElementById(`container_${context.widgetId}`)
         const editorElement = containerDiv.lastChild as HTMLElement;
         this.resizeOberver = new ResizeObserver(entries => {
             for (let entry of entries) {
@@ -64,23 +62,24 @@ extends React.Component<{context: WidgetModel},{editor: any}>
     // -------------------------------------------------------------------
     render() {
         const {context} = this.props;
-        const data = context.ref_data as WidgetEditorData
+        const widget = context.ref_widget;
+        const data = widget.data as WidgetEditorData
         const color = context.colorTheme.color;
         const editorColor= color(ColorIndex.Background, ColorValue.V6_Bright);
 
-        const height = context.h * context.ref_App.page.rowHeight;
+        const height = context.h * context.parentPage.rowHeight;
 
 
         const handleEditorChange = (event: any) => {
             console.log("EDITOR CHANGE")
-            context.ref_data.body = this.state.editor.contentDocument.body.innerHTML
+            data.body = this.state.editor.contentDocument.body.innerHTML
             // console.log(`The htm}l is: ${context.ref_data.body}`)
         }
 
         
 
         return (
-            <div className={`${appStyles.Filler} ${styles.widgetEditor}`} id={`container_${context.i}`}>
+            <div className={`${appStyles.Filler} ${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
                 <Editor
                     onInit={(evt, editor) => {
                         this.setState({editor}) 
@@ -90,7 +89,7 @@ extends React.Component<{context: WidgetModel},{editor: any}>
                             if(e.keyCode === 9 && !e.altKey && !e.ctrlKey)
                             {
                                 console.log("TAB")
-                                e.preventDefault();
+                                //e.preventDefault();
                                 editor.execCommand(e.shiftKey ? "Outdent" : "Indent")
                             }
                         },true);

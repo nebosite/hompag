@@ -6,12 +6,13 @@ import { PageModel } from "models/PageModel";
 import styles from '../AppStyles.module.css';
 import '../../../node_modules/react-grid-layout/css/styles.css'
 import '../../../node_modules/react-resizable/css/styles.css'
-import { WidgetContainer } from "./WidgetContainer";
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import WidgetDefault from "./WidgetDefault";
 import WidgetEditor from "./WidgetEditor";
 import WidgetPicker from "./WidgetPicker";
-import { WidgetModel, WidgetType } from "models/WidgetModel";
+import { WidgetContainer } from "models/WidgetContainer";
+import { WidgetFrame } from "./WidgetFrame";
+import { WidgetType } from "models/WidgetModel";
 
 interface FungiblePageProps
 {
@@ -45,7 +46,7 @@ extends React.Component<FungiblePageProps>
                 return;
             }
             const pos = mouseCoords(e);
-            for(const item of pageModel.widgets)
+            for(const item of pageModel.widgetContainers)
             {
                 const ix = item.x * pageModel.columnWidth;
                 const iy = item.y * pageModel.rowHeight;
@@ -120,12 +121,12 @@ extends React.Component<FungiblePageProps>
 
         const resizeHandle = <div className={styles.widgetFrameResizeHandle}>╝</div>
 
-        const renderPageItem = (widget: WidgetModel) => {
-            switch(widget.myType) {
-                case WidgetType.Picker: return <WidgetPicker context={widget} />; 
-                case WidgetType.Editor: return <WidgetEditor context={widget} />; 
+        const renderPageItem = (container: WidgetContainer) => {
+            switch(container.ref_widget.widgetType) {
+                case WidgetType.Picker: return <WidgetPicker context={container} />; 
+                case WidgetType.Editor: return <WidgetEditor context={container} />; 
                 //case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
-                default: return <WidgetDefault pageItem={widget} />
+                default: return <WidgetDefault pageItem={container} />
             }
         } 
 
@@ -138,7 +139,7 @@ extends React.Component<FungiblePageProps>
         {
             this.setState({draggingOK:true})
             //console.log(`Drag stop: ${JSON.stringify(newItem)}`)
-            pageModel.setWidgetLocation(newItem.i, newItem.x, newItem.y)
+            pageModel.setContainerLocation(newItem.i, newItem.x, newItem.y)
         }
 
         const widgetResizeStop:ItemCallback = (layout: Layout[],
@@ -187,11 +188,11 @@ extends React.Component<FungiblePageProps>
                         draggableHandle={".widgetFrameDragHandleTag"}
                         resizeHandle={resizeHandle}
                     >
-                        {pageModel.widgets.map(pi => (
-                            <div key={pi.i} data-grid={pi}>
-                                <WidgetContainer context={pi} >
-                                    {renderPageItem(pi)}
-                                </WidgetContainer>
+                        {pageModel.widgetContainers.map(c => (
+                            <div key={c.getKey()} data-grid={c}>
+                                <WidgetFrame context={c} >
+                                    {renderPageItem(c)}
+                                </WidgetFrame>
                             </div>))}  
 
                     </ReactGridLayout> 

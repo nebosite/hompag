@@ -23,11 +23,12 @@ export class hompagTypeHelper implements ITypeHelper
         if(knownTypes.has(typeName)) {
             return knownTypes.get(typeName)(globalItems);
         }
-        else return null;
+        else throw Error(`Tried to construct unknown type: ${typeName}`)
     }
 
     shouldStringify(typeName: string, propertyName: string, object: any): boolean {
         if(propertyName.startsWith("ref_")) return false;
+        if(propertyName.startsWith("state_")) return false;
         return true;
     }
 

@@ -22,13 +22,17 @@ TODO
         
     [x] Use web sockets to push update notifications to clients
     
-    [ ] Bug: page is not property reloading when another client changes their page
-        [ ] Widget details should not be on the widget at all.  
+    [x] Bug: page is not property reloading when another client changes their page
+        [x] Widget details should not be on the widget at all.  
             The App should keep track of all the widgets in a map that is 
             updated separately. 
+        [x] Widget should reference page, not app
         - Data is making it over, but mobx is not signalling a reload (does not appear to be related to tinymce)
         - Somehow a widget update is touching the x,y,width,height properties
-    [ ] Bug: page should not reload if you were the one changing the page
+    [x] Bug: page should not reload if you were the one changing the page
+    
+    
+    
     
     [ ] Links
         [ ] Auto-include selected text in the link
@@ -47,6 +51,11 @@ TODO
 
 
 NEW
+    [ ] Server should periodically destry unreferenced widgets
+        - Load all the pages, Figure out widget ids from the file system
+        - Delete any widgets that never appear in the page text
+    [ ] should not try to save any content with null data
+    [ ] Should not be able to change a widget's type
     [ ] Ping server regularly to decide if you should reconnect
     [ ] Try to protect file accesses on the server
     [ ] Clean up the scroll bars on the editor area so the are smaller and less clunky

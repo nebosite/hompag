@@ -6,7 +6,8 @@ import { ThrottledAction } from "helpers/ThrottledAction";
 import { action, makeObservable, observable } from "mobx";
 import { hompagTypeHelper, registerGlobalItem } from "./hompagTypeHelper";
 import { PageModel } from "./PageModel";
-import { dataTypeForWidgetType, WidgetModel } from "./WidgetModel"; 
+import { WidgetModel, WidgetType } from "./WidgetModel";
+import { dataTypeForWidgetType } from "./WidgetContainer"; 
 
 
 
@@ -27,7 +28,6 @@ export class AppModel {
     //private _localStorage:ILocalStorage;
     private _api = new RestHelper("/api/");
     private _serializer: BruteForceSerializer;
-    private _isLoaded = false;
     private _typeHelper: hompagTypeHelper;
     private _dataChangeListener: IDataChangeListener
     private _savePageThrottler = new ThrottledAction(500)
@@ -50,10 +50,9 @@ export class AppModel {
                     this.loadPage(itemId);           
                 }
                 else if(type === "widget") {
-                    this.page.updateWidget(itemId);
+                    this.loadWidgetContent(this.getWidget(itemId, false))
                 }                
             }
-
         })
         if(!this._dataChangeListener) console.log("Just shutting up the compiler")
 
@@ -71,7 +70,6 @@ export class AppModel {
         // for the newly loaded page
         this._savePageThrottler = new ThrottledAction(500)
 
-        this._isLoaded = false;
         const pageData = await this._api.restGet<PageRequestResponse>(`pages/${name}`);
         if(pageData.errorMessage) {
             this.pageError = pageData.errorMessage;
@@ -79,72 +77,86 @@ export class AppModel {
         else if(!pageData.data) {
             const freshPage = new PageModel(this);
             freshPage.name = name;
-            this.page = freshPage;
-            this._isLoaded = true;
+            action (()=>{this.page = freshPage; })()
         }
         else {
-            //console.log(`TRY: '${pageData.data}'`)
             try {
-                var loadedPage = this._serializer.parse<PageModel>(pageData.data);
+                action(()=>{
+                    const loadedPage = this._serializer.parse<PageModel>(pageData.data);
+                    this.page = loadedPage;
+                    console.log(`PAGE LOADED ${loadedPage.name}`)
+                })()
             }
             catch(err)
             {
                 console.log(`${err}\nJSON:${pageData.data}`)
+                console.log(`STACK: ${err.stack}`)
             }
             
             
 
-            if(this.page && this.page.name === loadedPage.name)
-            {
-                // for simple page reloads, don't need to download widget content
-                loadedPage.widgets.forEach(w => {
-                    const oldWidget = this.page.widgets.find(ww => ww.i === w.i)
-                    if(oldWidget) w.ref_data = oldWidget.ref_data;
-                })
-            }
-            else {
-                await Promise.all(loadedPage.widgets.map((w) => this.loadWidget(w)));
-            }
+            // if(this.page && this.page.name === loadedPage.name)
+            // {
+            //     // for simple page reloads, don't need to download widget content
+            //     loadedPage.widgets.forEach(w => {
+            //         const oldWidget = this.page.widgets.find(ww => ww.i === w.i)
+            //         if(oldWidget) w.ref_data = oldWidget.ref_data;
+            //     })
+            // }
+            // else {
+            //     await Promise.all(loadedPage.widgets.map((w) => this.loadWidget(w)));
+            // }
 
-            action(()=>{
-                this.page = loadedPage;
-            })()
-            console.log(`PAGE LOADED ${loadedPage.name}`)
-            this._isLoaded = true;
         }        
     }
 
     // -------------------------------------------------------------------
     // loadWidget - restore widget contents from server 
     // -------------------------------------------------------------------
-    async loadWidget(w: WidgetModel)
+    async loadWidgetContent(widget: WidgetModel)
     {
-        console.log(`WIDGET START: ${w.i} ${w.x},${w.y}`)
-        let response =  await this._api.restGet<PageRequestResponse>(`widgets/${w.i}`);
-        let dataBlob:any = null;
+        let response =  await this._api.restGet<PageRequestResponse>(`widgets/${widget.id}`);
         if(response.data)
         {
-            dataBlob = JSON.parse(response.data);
-            console.log(`INCOMING: ${response.data}`)  ;  
+            const loadedWidget = JSON.parse(response.data);
+            if(!loadedWidget) throw Error(`Data was not a Widget: ${response.data}`)
+            let loadedData = loadedWidget.data
+
+            loadedWidget.data = this._typeHelper.constructType(dataTypeForWidgetType(loadedWidget._myType)) as any;
+            Object.assign(loadedWidget.data, loadedData);
+            widget.loadFrom(loadedWidget); 
+        }
+        else if(response.errorMessage) {
+            console.log(`No data for ${widget.id}:  ${response.errorMessage}`)
+        }
+    }
+
+    private _widgetContent = new Map<string, WidgetModel>()
+
+    // -------------------------------------------------------------------
+    // getWidget
+    // -------------------------------------------------------------------
+    getWidget(widgetId: string, loadIfNotFound: boolean)
+    {
+        if(!this._widgetContent.has(widgetId)){
+            const newContent = new WidgetModel(this, widgetId);
+            this._widgetContent.set(widgetId, newContent)
+            if(loadIfNotFound) {
+                this.loadWidgetContent(newContent)
+            }
         }
 
-        const data = this._typeHelper.constructType(dataTypeForWidgetType(w._myType)) as any;
-        Object.assign(data, dataBlob);
-        data.ref_parent = w;
-        action(()=>{w.ref_data = data})()
-        console.log(`WIDGET FINISH: ${w.i}`)
-
+        return this._widgetContent.get(widgetId);
     }
 
     // -------------------------------------------------------------------
-    // getBlankWidgetData 
+    // createBlankWidgetContent 
     // -------------------------------------------------------------------
-    getBlankWidgetData(widget: WidgetModel)
+    getBlankData(widgetType: WidgetType)
     {
-        const output = this._typeHelper.constructType(dataTypeForWidgetType(widget.myType)) as any;
-        output.ref_parent = widget;
-        return output;
+        return this._typeHelper.constructType(dataTypeForWidgetType(widgetType)) as any;
     }
+  
 
     // -------------------------------------------------------------------
     // get a unique ID for this update 
@@ -159,13 +171,8 @@ export class AppModel {
     // -------------------------------------------------------------------
     // savePage 
     // -------------------------------------------------------------------
-    savePage()
+    savePage(page: PageModel)
     {
-        if(!this._isLoaded || !this.page)
-        {
-            return;
-        }
-
         const pageToSave = this.page;
         console.log(`Saving page ${pageToSave.name}`)
         this._savePageThrottler.run(() => {
@@ -174,36 +181,13 @@ export class AppModel {
     }
 
     // -------------------------------------------------------------------
-    // deleteWidget 
-    // -------------------------------------------------------------------
-    deleteWidget(id: string)
-    {
-        this.page.deleteWidget(id);
-    }
-
-    // -------------------------------------------------------------------
     // saveWidgetData 
     // -------------------------------------------------------------------
-    saveWidgetData(id: string, data: any)
+    saveWidgetData(widget: WidgetModel)
     {
-        if(!this._isLoaded || !this.page)
-        {
-            return;
-        }
-        console.log("Saving widget data...")
-        this._api.restPost(`widgets/${id}`, this._serializer.stringify({id: this.getUpdateId(), data: data}))
+        const payload = this._serializer.stringify({id: this.getUpdateId(), data: widget});
+        console.log(`Writing this: ${payload}`)
+        this._api.restPost(`widgets/${widget.id}`, payload)
     }
-
-
-    // // -------------------------------------------------------------------
-    // // pingServer
-    // // -------------------------------------------------------------------
-    // pingServer()
-    // {
-    //     setTimeout(async () =>{
-    //         this.serverStatus = await this.dbApi.restGet("am_i_healthy");
-    //     },500);
-    // }
-
 }
  

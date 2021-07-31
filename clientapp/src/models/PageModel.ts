@@ -2,13 +2,12 @@ import { registerProperty, registerType } from "./hompagTypeHelper";
 import { ColorTool } from "helpers/ColorTool";
 import { action, makeObservable, observable } from "mobx";
 import { AppModel } from "./AppModel";
-import { WidgetModel, WidgetType } from "./WidgetModel";
+import { WidgetContainer } from "./WidgetContainer";
 
 
 registerType("PageModel", bag => new PageModel(bag.get("theApp")))
-registerProperty("PageModel", "widgets", (t,n,o) => {
-    console.log("Making widgets observable")
-    return observable(o as WidgetModel[])
+registerProperty("PageModel", "widgetContainers", (t,n,o) => {
+    return observable(o as WidgetContainer[])
 })
 
 // -------------------------------------------------------------------
@@ -17,7 +16,7 @@ registerProperty("PageModel", "widgets", (t,n,o) => {
 export class PageModel
 {
     name: string;
-    @observable widgets: WidgetModel[] = observable<WidgetModel>([])
+    @observable widgetContainers: WidgetContainer[] = observable<WidgetContainer>([])
     get columnCount() {return Math.floor(this.pageWidth / this.columnWidth);}
     @observable columnWidth = 50;
     @observable rowHeight = 50;
@@ -38,27 +37,21 @@ export class PageModel
     }
 
     // -------------------------------------------------------------------
-    // updateWidget 
+    // save - save this page to the server 
     // -------------------------------------------------------------------
-    async updateWidget(id: string)
+    save()
     {
-        const foundWidget = this.widgets.find(w => w.i === id)
-        if(foundWidget) {
-            const newWidget = new WidgetModel(foundWidget.ref_App);
-            newWidget.i = foundWidget.i;
-            newWidget.x = foundWidget.x;
-            newWidget.y = foundWidget.y;
-            newWidget.w = foundWidget.w;
-            newWidget.h = foundWidget.h;
-            newWidget.myType = foundWidget.myType;
-            await foundWidget.ref_App.loadWidget(newWidget);
-            
-            action(()=>{
-                this.deleteWidget(id);
-                this.widgets.push(newWidget);
-            })()
+        this.ref_App.savePage(this);
+    }
 
-        }
+    // -------------------------------------------------------------------
+    // removeWidget - Remove this widget from the page
+    // -------------------------------------------------------------------
+    removeWidget(container: WidgetContainer)
+    {
+        const index = this.widgetContainers.findIndex(w => w.x === container.x && w.y === container.y)
+        if(index > -1) this.widgetContainers.splice(index, 1);
+        this.save();
     }
 
     // -------------------------------------------------------------------
@@ -79,27 +72,27 @@ export class PageModel
         const columns = Math.max(1, column2-column1);
         const rows = Math.max(1, row2-row1);
 
-        const newItem = new WidgetModel(this.ref_App);
+        const newItem = new WidgetContainer(this);
         action(() => {
             newItem.x = column1;
             newItem.y = row1;
             newItem.w = columns;
             newItem.h = rows;
-            newItem.myType = WidgetType.Picker
-            this.widgets.push(newItem) 
+            this.widgetContainers.push(newItem) 
         })();
         
     }
 
     // -------------------------------------------------------------------
-    // setWidgetSize 
+    // setSomethingOnContainer 
     // -------------------------------------------------------------------
-    setSomethingOnWidget(id: string, setter: (widget: WidgetModel)=> void)
+    setSomethingOnContainer(id: string, setter: (widget: WidgetContainer)=> void)
     {
-        const widget = this.widgets.find(w => w.i === id)
-        if(widget)
+        const container = this.widgetContainers.find(wc => wc.getKey() === id)
+        console.log(`Setting something on ${container?.ref_widget.id}`)
+        if(container)
         {
-            action(() => setter(widget))()
+            action(() => setter(container))()
         }
         else {
             console.log(`ERROR: Can't find widget with ID: ${id}`)
@@ -108,37 +101,32 @@ export class PageModel
     }
 
     // -------------------------------------------------------------------
-    // deleteWidget 
-    // -------------------------------------------------------------------
-    deleteWidget(id: string)
-    {
-        const widgetIndex = this.widgets.findIndex(w => w.i === id);
-        if(widgetIndex === -1)
-        {
-            console.log(`ERROR: Could not find widget with index: ${id}`)
-        }
-        this.widgets.splice(widgetIndex,1);
-    }
-
-    // -------------------------------------------------------------------
     // setWidgetSize 
     // -------------------------------------------------------------------
     setWidgetSize(id: string, w: number, h:number)
     {
-        this.setSomethingOnWidget(id, (widget: WidgetModel) => {
+        this.setSomethingOnContainer(id, (widget: WidgetContainer) => {
             widget.w = w;
             widget.h = h;
         })
     }
 
     // -------------------------------------------------------------------
-    // setWidgetLocation 
+    // setContainerLocation 
     // -------------------------------------------------------------------
-    setWidgetLocation(id: string, x: number, y:number)
+    setContainerLocation(id: string, x: number, y:number)
     {
-        this.setSomethingOnWidget(id, (widget: WidgetModel) => {
+        this.setSomethingOnContainer(id, (widget: WidgetContainer) => {
             widget.x = x;
             widget.y = y;
         })
+    }
+
+    // -------------------------------------------------------------------
+    // getWidget 
+    // -------------------------------------------------------------------
+    getWidget(id: string, loadIfNotFound: boolean = true)
+    {
+        return this.ref_App.getWidget(id, loadIfNotFound)
     }
 }

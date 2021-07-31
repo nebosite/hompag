@@ -1,13 +1,13 @@
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { inject, observer } from "mobx-react";
-import { WidgetModel } from "models/WidgetModel";
+import { WidgetContainer } from "models/WidgetContainer";
 import React from "react";
 import styles from '../AppStyles.module.css';
 
 @inject("appModel")
 @observer
-export class WidgetContainer 
-extends React.Component<{context: WidgetModel}> 
+export class WidgetFrame 
+extends React.Component<{context: WidgetContainer}> 
 {    
     state = {configVisible: false}
     // -------------------------------------------------------------------

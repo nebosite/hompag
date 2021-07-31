@@ -1,81 +1,76 @@
-import { registerType } from "./hompagTypeHelper";
 import { ThrottledAction } from "helpers/ThrottledAction";
-import { observable, action, makeObservable, reaction } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { AppModel } from "./AppModel";
 
 export enum WidgetType
 {
     Picker = "Picker",
-    Editor = "Editor"
+    Editor = "Editor",
 }
 
-registerType("WidgetModel", bag => new WidgetModel(bag.get("theApp")))
-
-const knownDataTypes = new Map<WidgetType, string>()
-export const registerDataTypeForWidgetType =(widgetType: WidgetType, dataType: string) =>
-{
-    knownDataTypes.set(widgetType, dataType);
+export class WidgetModelData {
+    widgetParent: WidgetModel
 }
-export const dataTypeForWidgetType = (widgetType: WidgetType) => knownDataTypes.get(widgetType);
 
-
-// -------------------------------------------------------------------
-// Generic class for holding widget data
-// -------------------------------------------------------------------
 export class WidgetModel {
-    i: string = `${Date.now()}${Math.random()}`;
-    @observable x: number;
-    @observable y: number;
-    @observable w: number;
-    @observable h: number;
-    ref_data: any = null;
+    id: string 
+    alias: string = null
+    @observable data: WidgetModelData = null
 
-    @observable _myType: WidgetType = WidgetType.Picker;
-    get myType() { return this._myType}
-    set myType(value: WidgetType) { action(()=> {
-            this._myType = value;
-            this.ref_data = this.ref_App.getBlankWidgetData(this)
+    @observable private _myType: WidgetType = WidgetType.Picker;
+    get widgetType() { return this._myType}
+    set widgetType(value: WidgetType) { action(()=> {
+            if(this._myType === WidgetType.Picker)
+            {
+                this.data = this.ref_App.getBlankData(value)
+                this.data.widgetParent = this;
+                this._myType = value;
+                console.log(`new type: ${value}`)
+                this.save();
+            }
+            else {
+                console.log(`WEIRD:  Widget trying to change type from ${this._myType} to ${value}`)
+            }
         })(); 
     }
 
-    get colorTheme() { 
-        const returnMe = this.ref_App?.page?.colorTheme;
-        return returnMe;
-    }
-
-    ref_App: AppModel;
+    private ref_App: AppModel
     private ref_saveThrottler = new ThrottledAction(500);
+    private state_isLoading = false;
 
     // -------------------------------------------------------------------
     // ctor 
     // -------------------------------------------------------------------
-    constructor(app: AppModel)
+    constructor(app: AppModel, id: string)
     {
         makeObservable(this);
+        this.id = id;
         this.ref_App = app;
 
-        reaction( 
-            ()=>  [this.x, this.y, this.w, this.h, this._myType],
-            () => {
-                console.log(`Reaction: ${this.x},${this.y}`)
-                this.ref_App.savePage();
-            }
-        )
+        // reaction( 
+        //     ()=>  [this.data],
+        //     () => this.save()
+        // )    
     }
 
     // -------------------------------------------------------------------
-    // deleteMe 
+    // Save Me 
     // -------------------------------------------------------------------
-    deleteMe = () => {
-        this.ref_App.deleteWidget(this.i);
+    save() {
+        if(!this.state_isLoading) this.ref_saveThrottler.run(()=>this.ref_App.saveWidgetData(this))
     }
 
     // -------------------------------------------------------------------
-    // trigger data save for this widget 
+    // loadFrom - copy contents from another widget
     // -------------------------------------------------------------------
-    saveData()
+    loadFrom(widget: WidgetModel)
     {
-        this.ref_saveThrottler.run(()=>{this.ref_App.saveWidgetData(this.i, this.ref_data)})
-    }
+        this.state_isLoading = true;
+        action(()=>{
+            Object.assign(this, widget)
+            this.data.widgetParent = this;
+            this.state_isLoading = false;
+        })()
 
+    }
 }

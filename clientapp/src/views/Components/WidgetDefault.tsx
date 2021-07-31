@@ -1,10 +1,10 @@
 import { observer } from "mobx-react";
-import { WidgetModel } from "models/WidgetModel";
+import { WidgetContainer } from "models/WidgetContainer";
 import React from "react";
 
 @observer
 export default class WidgetDefault 
-extends React.Component<{pageItem: WidgetModel}> 
+extends React.Component<{pageItem: WidgetContainer}> 
 {    
     // -------------------------------------------------------------------
     // render
@@ -12,7 +12,7 @@ extends React.Component<{pageItem: WidgetModel}>
     render() {
         return (
             <div>
-                I appear to be an unknown kind of widget: {this.props.pageItem.myType}
+                I appear to be an unknown kind of widget: {this.props.pageItem.ref_widget.widgetType}
             </div> 
         );
     }; 
