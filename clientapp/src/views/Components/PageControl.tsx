@@ -2,28 +2,106 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import ReactGridLayout, { ItemCallback, Layout } from 'react-grid-layout';
-import { PageModel } from "models/PageModel";
+import { colorThemes, PageModel } from "models/PageModel";
 import styles from '../AppStyles.module.css';
 import '../../../node_modules/react-grid-layout/css/styles.css'
 import '../../../node_modules/react-resizable/css/styles.css'
-import { ColorIndex, ColorValue } from "helpers/ColorTool";
+import { ColorIndex, ColorTool, ColorValue } from "helpers/ColorTool";
 import WidgetDefault from "./WidgetDefault";
 import WidgetEditor from "./WidgetEditor";
 import WidgetPicker from "./WidgetPicker";
 import { WidgetContainer } from "models/WidgetContainer";
 import { WidgetFrame } from "./WidgetFrame";
 import { WidgetType } from "models/WidgetModel";
+import { BsGear } from 'react-icons/bs'; 
+import {CgCloseR} from 'react-icons/cg'
+import Combobox from "./ComboBox";
 
-interface FungiblePageProps
+
+interface PageSettingsControlProps
 {
     pageModel?: PageModel
 }
+
+@observer
+export class PageSettingsControl 
+extends React.Component<PageSettingsControlProps,{showSettings: boolean}> 
+{    
+    state = {showSettings: false}
+    render()
+    {
+        const {pageModel} = this.props;
+
+        const themeToComboItem = (theme: {name: string, colors: string[]}) => {
+            return {
+                value: theme.name,
+                label: <div className={styles.divRow}>
+                    <div style={{width:"100px"}}>{theme.name}</div>
+                    {theme.colors.map(c => <div style={{background: c, width: "12px", height: "12px"}}></div>)}
+                </div>
+            }
+        }
+
+        const selectColorTheme = (value: string) =>
+        {
+            const theme = colorThemes.find(t => t.name === value)
+            pageModel.colorTheme = new ColorTool(theme)
+        }
+
+        return  !this.state.showSettings 
+            ? <div className={styles.settingsIcon} onClick={()=>{this.setState({showSettings: true})}}><BsGear/></div>
+            : <div 
+            className={styles.pageSettingsControl}
+            style={{
+                color: pageModel.colorTheme.color(ColorIndex.Foreground, ColorValue.V1_ExtraDark),
+                borderColor: pageModel.colorTheme.color(ColorIndex.Foreground, ColorValue.V5_Lightened),
+                background: pageModel.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright),
+            }}>
+                <div className={styles.closeButton} onClick={()=> this.setState({showSettings: false})}><CgCloseR /></div>
+                <div><b>Page Settings</b></div>
+                <div style={{margin:"5px", fontSize: "80%"}}>
+                    <div className={styles.divRow} >
+                        <div>Color Theme: </div>
+                        <Combobox
+                            itemsSource={colorThemes.map(t => themeToComboItem(t))} 
+                            selectedItem={pageModel.colorTheme.colorTheme.name}
+                            onSelectValue={value => selectColorTheme(value)}
+                            placeholder={"Select a color theme"}
+                        />
+                    </div>
+
+                </div>
+
+            </div>
+    }
+}
+
+interface PageControlProps
+{
+    pageModel?: PageModel
+}
+
+interface PageControlState
+{
+    draggingOK: boolean, 
+    dragging: boolean, 
+    x1: number, 
+    y1: number, 
+    x2: number, 
+    y2: number,
+}
+
 @inject("appModel")
 @observer
-export class FungiblePage 
-extends React.Component<FungiblePageProps> 
+export class PageControl 
+extends React.Component<PageControlProps, PageControlState> 
 {    
-    state = { draggingOK: true, dragging: false, x1:0, y1: 0, x2: 0, y2:0}
+    constructor(props: PageControlProps)
+    {
+        super(props);
+        this.state = { draggingOK: true, dragging: false, x1:0, y1: 0, x2: 0, y2:0}
+
+    }
 
     // -------------------------------------------------------------------
     // render
@@ -153,11 +231,12 @@ extends React.Component<FungiblePageProps>
             //console.log(`Resize stop:  ${JSON.stringify(newItem)}`)
             pageModel.setWidgetSize(newItem.i, newItem.w, newItem.h)
         }
-
+        
 
         return (
             <div>
                 {/* <div>Some Instructions here</div> */}
+                <PageSettingsControl pageModel={pageModel} />
                 <div id="theGrid" 
                     className={styles.FungiblePage} 
                     onMouseDown={mouseDown}

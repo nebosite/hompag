@@ -30,7 +30,7 @@ export class WidgetContainer {
         return returnMe;
     }
 
-    parentPage: PageModel;
+    @observable parentPage: PageModel;
     getKey = () => `${this.x},${this.y},${this.w},${this.h}`
 
     // -------------------------------------------------------------------

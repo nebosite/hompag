@@ -1,6 +1,8 @@
 
 TODO
-    
+    [ ] Don't save page until you pick widget type
+
+    [x] Make links clickable
     [ ] Color Theme picker
     [ ] Google search
     [ ] Thesaurus/rhymes
@@ -10,8 +12,12 @@ TODO
 
 
 NEW
+    [ ] Bug:  '* ' at the front of a line of links removes to end of the line
+
 
 WIDGET IDEAS
+    - Stacked TODO
+    - Alfred TODO
     [ ] widget: Rule-base homepage:  Work page shows from 8am-5pm M-F
     - Searches 
         Google

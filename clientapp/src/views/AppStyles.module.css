@@ -8,6 +8,10 @@
     color: inherit;
 }
 
+body {
+    margin: 0px;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -24,7 +28,7 @@
 }
 
 .mainPage {
-    margin: 5px;
+    margin: 2px;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -149,6 +153,35 @@
     z-index: 10;
     opacity: .5;
     position:fixed;
+}
+
+.settingsIcon {
+    position: absolute;
+    z-index: 3;
+    width: 10px;
+    height: 10px;
+}
+
+.closeButton {
+    position: absolute;
+    z-index: 3;
+    width: 10px;
+    height: 10px; 
+    right: 15px;
+}
+
+.pageSettingsControl {
+    position: absolute;
+    z-index: 3;
+    padding: 10px;
+
+    background: rgb(255, 255, 255);
+    width: 500px;
+    height: 500px;
+    left: 40px;
+    top: 40px;
+    border: 2px solid black;
+    box-shadow: 5px 5px 25px #00000080;
 }
 
 /************************************************

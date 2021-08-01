@@ -64,8 +64,8 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
         const {context} = this.props;
         const widget = context.ref_widget;
         const data = widget.data as WidgetEditorData
-        const color = context.colorTheme.color;
-        const editorColor= color(ColorIndex.Background, ColorValue.V6_Bright);
+        //const color = context.colorTheme.color;
+        const editorColor= context.colorTheme.color(ColorIndex.Background, ColorValue.V6_Bright);
 
         const height = context.h * context.parentPage.rowHeight;
 
@@ -80,6 +80,9 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
         return (
             <div className={`${appStyles.Filler} ${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
                 <Editor
+                    onMouseEnter={(evt, editor) => {
+                        editor.getBody().style.backgroundColor = editorColor;
+                    }}
                     onInit={(evt, editor) => {
                         this.setState({editor}) 
                         editor.getBody().style.backgroundColor = editorColor;

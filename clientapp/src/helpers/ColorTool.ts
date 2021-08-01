@@ -1,4 +1,5 @@
 import { registerType } from "models/hompagTypeHelper"
+import { colorThemes } from "models/PageModel"
 
 export enum ColorIndex {
     Foreground = 0,
@@ -22,19 +23,25 @@ export enum ColorValue {
 
 const colorValues = [-1, -.8, -.6, -.3, 0, .3, .6, .8, 1]
 
-registerType("ColorTool", typeHelper => new ColorTool([]))
+registerType("ColorTool", typeHelper => new ColorTool())
+
+export interface ColorTheme {name: string, colors: string[]}
 
 // -------------------------------------------------------------------
 // A class for working with a color scheme 
 // -------------------------------------------------------------------
 export class ColorTool
 {
+    colorTheme: ColorTheme
     _colors: {r:number, g:number, b:number}[]
 
     // -------------------------------------------------------------------
     // ctor 
     // -------------------------------------------------------------------
-    constructor(colors: string[]) {
+    constructor(colorTheme: ColorTheme = null) {
+        if(!colorTheme) colorTheme = colorThemes[0]
+        this.colorTheme = colorTheme;
+        const colors: string[] = [...colorTheme.colors]
         while(colors.length < 5)
         {
             colors.push("#000000")

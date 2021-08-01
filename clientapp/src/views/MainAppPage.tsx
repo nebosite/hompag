@@ -3,7 +3,7 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import styles from './AppStyles.module.css';
 import { AppModel } from "models/AppModel";
-import { FungiblePage } from "./Components/FungiblePage";
+import { PageControl } from "./Components/PageControl";
 
 
 @inject("appModel")
@@ -21,7 +21,7 @@ extends React.Component<{appModel?: AppModel}>
     return ( 
         <div className={styles.mainPage}>
             {appModel.page 
-                ? <FungiblePage pageModel={appModel.page} />
+                ? <PageControl pageModel={appModel.page} />
                 : <div>Loading... </div>}
             
         </div>        

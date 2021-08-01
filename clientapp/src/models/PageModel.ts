@@ -10,6 +10,14 @@ registerProperty("PageModel", "widgetContainers", (t,n,o) => {
     return observable(o as WidgetContainer[])
 })
 
+// https://color.adobe.com/explore
+export const colorThemes = [
+    {name: "Desert", colors: ["#FFA100","#FFCF00","#FF0051","#007DFF","#0004FF"]},
+    {name: "Sepia Vintage", colors: ["#063647","#458985","#DFDFC9","#DBA67B","#A55C55"]},
+    {name: "Poster", colors: ["#2A2359","#04C4D9","#D8F2F0","#F2CB07","#F26716"]},
+    {name: "Complementarios", colors: ["#5433CC","#FFEA29","#FFFDED","#3C258F","#FFF48C",]},
+]
+
 // -------------------------------------------------------------------
 // Represents a single changeable page 
 // -------------------------------------------------------------------
@@ -32,7 +40,7 @@ export class PageModel
     {
         makeObservable(this);
         this.ref_App = app;
-        this.colorTheme = new ColorTool(["#FFA100","#FFCF00","#FF0051","#007DFF","#0004FF"]  )
+        this.colorTheme = new ColorTool(colorThemes[0] )
         console.log(`Constructed page with colortheme: ${this.colorTheme}`)
     }
 
