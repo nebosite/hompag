@@ -1,5 +1,73 @@
 
 TODO
+    
+    [ ] Color Theme picker
+    [ ] Google search
+    [ ] Thesaurus/rhymes
+    [ ] Inside Adobe
+    [ ] Spotify    
+    
+
+
+NEW
+
+WIDGET IDEAS
+    [ ] widget: Rule-base homepage:  Work page shows from 8am-5pm M-F
+    - Searches 
+        Google
+        Thesaurus
+        Rymes
+        Inside Adobe
+    - Choose color scheme
+    - Ping tester - ping known locations around the world
+    - Abacus
+    - Real-time growing plant
+    - Slowly changing background
+    - Stock watcher
+        - https://rapidapi.com/blog/best-stock-api/
+    - Analytics watcher
+        - Google analytics https://developers.google.com/analytics/devguides/reporting/core/v4/quickstart/web-js
+    - Message watcher
+    - Spotify tool
+    - Finance watcher
+        https://plaid.com/
+    - Form Widget - Point it to a URL and it will find the forms
+
+IMPORTANT
+   
+BACKLOG
+    [ ] Links
+        [ ] Auto-include selected text in the link
+        [ ] Decorator includes spaces
+        [ ] Cancel does not cancel the link
+    [ ] Server should watch the file system for changes
+        [ ] A connected client has a visible page + widgets
+        [ ] Push an update to the client any page or widgets change
+    [ ] should not try to save any content with null data
+    [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
+
+MAYBE NEVER
+    [ ] Start with a smaller window height and expand as items get close to the bottom
+    [ ] Link tooltip with options
+        - Edit link
+        - Open in new tap
+        - open in popup
+        - delete
+        - See stats
+    [ ] Try to protect file accesses on the server
+    [ ] Ping server regularly to decide if you should reconnect
+    [ ] Server should periodically destry unreferenced widgets
+        - Load all the pages, Figure out widget ids from the file system
+        - Delete any widgets that never appear in the page text
+    [ ] Would be nice to put forms into editor and have them work
+        - Maybe just override keydown, but we need to not update the widget when editing the form
+
+
+
+
+
+
+-- DONE ---------------------------------------------------------------------
     [x] Delete a widget
     [x] Save text widget
         - widgets are saved in their own files
@@ -30,74 +98,14 @@ TODO
         - Data is making it over, but mobx is not signalling a reload (does not appear to be related to tinymce)
         - Somehow a widget update is touching the x,y,width,height properties
     [x] Bug: page should not reload if you were the one changing the page
-    
-    
-    
-    
-    [ ] Links
-        [ ] Auto-include selected text in the link
-        [ ] Decorator includes spaces
-        [ ] Cancel does not cancel the link
-    
-    [ ] Page should auto-refresh when changes are detected on the server
+    [x] Page should auto-refresh when changes are detected on the server
         - Use websockets to push
         - Check every minute that websocket is still up
-        
-    [ ] Server should watch the file system for changes
-        [ ] A connected client has a visible page + widgets
-        [ ] Push an update to the client any page or widgets change
-        
+    [x] Should not be able to change a widget's type
     
-
-
-NEW
-    [ ] Server should periodically destry unreferenced widgets
-        - Load all the pages, Figure out widget ids from the file system
-        - Delete any widgets that never appear in the page text
-    [ ] should not try to save any content with null data
-    [ ] Should not be able to change a widget's type
-    [ ] Ping server regularly to decide if you should reconnect
-    [ ] Try to protect file accesses on the server
-    [ ] Clean up the scroll bars on the editor area so the are smaller and less clunky
-    [ ] A form widget - point it to a URL and it will find the forms
-        [ ] inside adobe search
-    [ ] A widget to switch to a different page according to a schedule
-    [ ] Link tooltip with options
-        - Edit link]
-        - Open in new tap
-        - open in popup
-        - delete
-        - See stats
-    [ ] When fresh loading an empty page, pre-fill it with an instruction widget
-    [ ] Start with a smaller window height and expand as items get close to the bottom
-
-WIDGET IDEAS
-    - Ping tester - ping known locations around the world
-    - Abacus
-    - Real-time growing plant
-    - Slowly changing background
-    - Stock watcher
-        - https://rapidapi.com/blog/best-stock-api/
-    - Analytics watcher
-        - Google analytics https://developers.google.com/analytics/devguides/reporting/core/v4/quickstart/web-js
-    - Message watcher
-    - Spotify tool
-    - Finance watcher
-        https://plaid.com/
-
-IMPORTANT
-   
-BACKLOG
-    [ ] Feature: Rule-base homepage:  Work page shows from 8am-5pm M-F
-
-MAYBE NEVER
-
-
-
-
-
-
--- DONE ---------------------------------------------------------------------
+    
+    
+    
     [x] Formatting tweaks
         [x] Trim up margins
         [x] 5-color palette scheme with pastel backgrounds

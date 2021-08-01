@@ -186,7 +186,7 @@ export class AppModel {
     saveWidgetData(widget: WidgetModel)
     {
         const payload = this._serializer.stringify({id: this.getUpdateId(), data: widget});
-        console.log(`Writing this: ${payload}`)
+        console.log(`Writing widget: ${widget.id}`)
         this._api.restPost(`widgets/${widget.id}`, payload)
     }
 }

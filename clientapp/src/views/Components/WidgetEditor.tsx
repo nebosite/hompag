@@ -71,7 +71,6 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
 
 
         const handleEditorChange = (event: any) => {
-            console.log("EDITOR CHANGE")
             data.body = this.state.editor.contentDocument.body.innerHTML
             // console.log(`The htm}l is: ${context.ref_data.body}`)
         }
@@ -85,14 +84,34 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
                         this.setState({editor}) 
                         editor.getBody().style.backgroundColor = editorColor;
 
+                        // On click, navigate to links
+                        editor.on("click", function (e){
+                            var sel = editor.selection.getSel();
+                            var element = sel?.focusNode.parentElement as HTMLAnchorElement;
+                            if(element && element.tagName === "A")
+                            {
+                                const url = element.href;
+                                const range = sel.getRangeAt(0);
+                                const isSelection = (range.endOffset - range.startOffset) > 0;
+                                const atEnd = range.endOffset === sel.anchorNode.textContent.length -1 
+                                const atStart = range.endOffset === 1
+                                if(!isSelection && !atEnd && !atStart)
+                                {
+                                    //console.log(`Link to : ${range.endOffset} of ${sel.anchorNode.textContent.length} ${url}`)
+                                    window.location.href = url;
+                                }
+
+                            }
+                        })
+
                         editor.on('KeyDown', function(e){
+                            // Tab should indent
                             if(e.keyCode === 9 && !e.altKey && !e.ctrlKey)
                             {
-                                console.log("TAB")
-                                //e.preventDefault();
                                 editor.execCommand(e.shiftKey ? "Outdent" : "Indent")
+                                e.preventDefault();
                             }
-                        },true);
+                        });
                         
                         editor.on('KeyUp', function(e){
                             var sel = editor.selection.getSel();
