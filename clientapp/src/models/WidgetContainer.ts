@@ -9,6 +9,7 @@ registerType("WidgetContainer", bag => new WidgetContainer())
 const knownDataTypes = new Map<WidgetType, string>()
 export const registerDataTypeForWidgetType =(widgetType: WidgetType, dataType: string) =>
 {
+    console.log(`Registering data type '${dataType}' for widget type '${widgetType}'`)
     knownDataTypes.set(widgetType, dataType);
 }
 export const dataTypeForWidgetType = (widgetType: WidgetType) => knownDataTypes.get(widgetType);
@@ -18,7 +19,7 @@ export const dataTypeForWidgetType = (widgetType: WidgetType) => knownDataTypes.
 // Generic class for holding widget data
 // -------------------------------------------------------------------
 export class WidgetContainer {
-    @observable widgetId: string = generateStringId();
+    @observable widgetId: string = generateStringId(); 
     @observable x: number;
     @observable y: number;
     @observable w: number;

@@ -1,21 +1,29 @@
 
 TODO
-    [ ] Don't save page until you pick widget type
-
     [x] Make links clickable
-    [ ] Color Theme picker
-    [ ] Google search
+    [x] Color Theme picker
+    [ ] Widget Color picker
+    [x] Google search
     [ ] Thesaurus/rhymes
     [ ] Inside Adobe
-    [ ] Spotify    
+    [ ] Spotify   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
     
 
 
 NEW
+    [ ] On window resize, move the settings gear to the corner
+    [ ] Page settings dropdowns have stopped working
+    [ ] Search widget needs a new default color
+    [ ] Local caching to make the page keep working when the server is offline
+        - Highest Write ID wins - should be easy to do this if the server is caching too
+    [ ] Versioning
+        [ ] Cache items in memory
+        [ ] Write changes on shutdown or after 5 minutes of inactivity
     [ ] Bug:  '* ' at the front of a line of links removes to end of the line
 
 
 WIDGET IDEAS
+    - Scribble notes
     - Stacked TODO
     - Alfred TODO
     [ ] widget: Rule-base homepage:  Work page shows from 8am-5pm M-F

@@ -16,6 +16,8 @@ import { WidgetType } from "models/WidgetModel";
 import { BsGear } from 'react-icons/bs'; 
 import {CgCloseR} from 'react-icons/cg'
 import Combobox from "./ComboBox";
+import WidgetSearch from "./WidgetSearch";
+import Row from "./Row";
 
 
 interface PageSettingsControlProps
@@ -28,6 +30,7 @@ export class PageSettingsControl
 extends React.Component<PageSettingsControlProps,{showSettings: boolean}> 
 {    
     state = {showSettings: false}
+
     render()
     {
         const {pageModel} = this.props;
@@ -49,28 +52,43 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean}>
         }
 
         return  !this.state.showSettings 
-            ? <div className={styles.settingsIcon} onClick={()=>{this.setState({showSettings: true})}}><BsGear/></div>
-            : <div 
-            className={styles.pageSettingsControl}
-            style={{
-                color: pageModel.colorTheme.color(ColorIndex.Foreground, ColorValue.V1_ExtraDark),
-                borderColor: pageModel.colorTheme.color(ColorIndex.Foreground, ColorValue.V5_Lightened),
-                background: pageModel.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright),
-            }}>
-                <div className={styles.closeButton} onClick={()=> this.setState({showSettings: false})}><CgCloseR /></div>
-                <div><b>Page Settings</b></div>
-                <div style={{margin:"5px", fontSize: "80%"}}>
-                    <div className={styles.divRow} >
-                        <div>Color Theme: </div>
-                        <Combobox
-                            itemsSource={colorThemes.map(t => themeToComboItem(t))} 
-                            selectedItem={pageModel.colorTheme.colorTheme.name}
-                            onSelectValue={value => selectColorTheme(value)}
-                            placeholder={"Select a color theme"}
-                        />
-                    </div>
-
+            ? <div 
+                className={styles.settingsIcon} 
+                style={{left: `${window.innerWidth-30}px`}} 
+                onClick={()=>{this.setState({showSettings: true})}}>
+                    <BsGear/>
                 </div>
+            : <div 
+                className={styles.pageSettingsControl}
+                style={{
+                    color: pageModel.colorTheme.color(ColorIndex.Foreground, ColorValue.V1_ExtraDark),
+                    borderColor: pageModel.colorTheme.color(ColorIndex.Foreground, ColorValue.V5_Lightened),
+                    background: pageModel.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright),
+                }}>
+                    <div className={styles.closeButton} onClick={()=> this.setState({showSettings: false})}><CgCloseR /></div>
+                    <div><b>Page Settings</b></div>
+                    <div style={{margin:"5px", fontSize: "80%", background: "red"}}>
+                        <Row >
+                            <div>Color Theme: </div>
+                            <Combobox
+                                itemsSource={colorThemes.map(t => themeToComboItem(t))} 
+                                selectedItem={pageModel.colorTheme.colorTheme.name}
+                                onSelectValue={value => selectColorTheme(value)}
+                                placeholder={"Select a color theme"}
+                            />
+                        </Row>
+                        <Row >
+                            <Row>
+                                <div>Column Width:</div>
+                                <Combobox
+                                    itemsSource={[5,10,15,20,30,40,50,75,100].map(v => ({value: v}))} 
+                                    selectedItem={pageModel.columnWidth}
+                                    onSelectValue={value => pageModel.columnWidth = (value)}
+                                />
+
+                            </Row>
+                        </Row>
+                    </div>
 
             </div>
     }
@@ -203,6 +221,7 @@ extends React.Component<PageControlProps, PageControlState>
             switch(container.ref_widget.widgetType) {
                 case WidgetType.Picker: return <WidgetPicker context={container} />; 
                 case WidgetType.Editor: return <WidgetEditor context={container} />; 
+                case WidgetType.Search: return <WidgetSearch context={container} />; 
                 //case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
                 default: return <WidgetDefault pageItem={container} />
             }

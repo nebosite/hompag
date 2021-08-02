@@ -1,6 +1,6 @@
 import { registerProperty, registerType } from "./hompagTypeHelper";
 import { ColorTool } from "helpers/ColorTool";
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable, observable, reaction } from "mobx";
 import { AppModel } from "./AppModel";
 import { WidgetContainer } from "./WidgetContainer";
 
@@ -41,7 +41,11 @@ export class PageModel
         makeObservable(this);
         this.ref_App = app;
         this.colorTheme = new ColorTool(colorThemes[0] )
-        console.log(`Constructed page with colortheme: ${this.colorTheme}`)
+
+        reaction( 
+            () => [this.colorTheme, this.rowHeight, this.pageWidth, this.columnWidth],
+            () => this.save()
+        )
     }
 
     // -------------------------------------------------------------------

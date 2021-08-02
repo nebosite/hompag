@@ -9,12 +9,18 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { registerType } from "models/hompagTypeHelper";
 import { WidgetModelData, WidgetType } from "models/WidgetModel";
+import { makeObservable, observable } from "mobx";
 
 export class WidgetEditorData extends WidgetModelData
 {
-    _body: string;
+    @observable private _body: string;
     get body() {return this._body}
-    set body(value: string) {this._body = value; this.widgetParent.save()}
+    set body(value: string) {this._body = value; this.save()}
+
+    constructor() {
+        super();
+        makeObservable(this);
+    }
 }
 
 registerDataTypeForWidgetType(WidgetType.Editor, "WidgetEditorData");

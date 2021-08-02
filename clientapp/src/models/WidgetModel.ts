@@ -6,10 +6,14 @@ export enum WidgetType
 {
     Picker = "Picker",
     Editor = "Editor",
+    Search = "Search",
 }
 
 export class WidgetModelData {
-    widgetParent: WidgetModel
+    ref_widgetParent: WidgetModel
+    save() {
+        this.ref_widgetParent.save();
+    }
 }
 
 export class WidgetModel {
@@ -23,7 +27,7 @@ export class WidgetModel {
             if(this._myType === WidgetType.Picker)
             {
                 this.data = this.ref_App.getBlankData(value)
-                this.data.widgetParent = this;
+                this.data.ref_widgetParent = this; 
                 this._myType = value;
                 console.log(`new type: ${value}`)
                 this.save();
@@ -68,7 +72,7 @@ export class WidgetModel {
         this.state_isLoading = true;
         action(()=>{
             Object.assign(this, widget)
-            this.data.widgetParent = this;
+            this.data.ref_widgetParent = this;
             this.state_isLoading = false;
         })()
 

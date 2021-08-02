@@ -6,7 +6,7 @@ import Select from "react-select";
 // internal type for thinking about items in the combox
 export type ComboboxItem = {
     value: any;
-    label: string | JSX.Element;
+    label?: string | JSX.Element;
 };
 
 // values for working with the Creatable Select control
@@ -23,21 +23,19 @@ enum OnChangeEnum {
 // Input bindings for the combobox
 type ComboboxProps = {
     itemsSource: ComboboxItem[];
-    selectedItem: string;
+    selectedItem: any;
     onSelectValue: (selectedItem: any) => void;
     placeholder?: string;
     menuWidth?: string;
+    width?: string;
 };
 
 export const SelectedItemComponent = (props:any) => {
-    return (<div style={{ marginTop: "0px", height: "100%", marginLeft: "3px", }}>
+    return (<div style={{ marginTop: "0px", height: "100%", marginLeft: "3px" }}>
         {props.data.label ?? props.data.value}
     </div>)
 };
 
-export const DropdownIndicator = (props:any) => {
-    return (<div>v</div>)
-};
 
 // -------------------------------------------------------------------
 //  Here is the actual combobox component
@@ -64,7 +62,6 @@ export default function Combobox(props: ComboboxProps) {
     ) => {
         switch (actionMeta.action) {
             case OnChangeEnum.selectOption:
-                console.log("selecting..")
                 onSelectValue(newValue.value)
                 hide(); // manually hiding the combobox as we control it by ourself
                 break;
@@ -77,17 +74,19 @@ export default function Combobox(props: ComboboxProps) {
     const customStyles = {
         control: (styles: any) => ({ 
              ...styles, 
-             minHeight: '12px',
+             minHeight: '16px',
+             margin: '3px',
+             width: props.width ?? '100%',
         }),
         indicatorsContainer: (styles: any) => ({
             ...styles, 
-            height:'10px',
+            //height:'10px',
             padding: '0px',
         }),
         valueContainer: (styles: any) => ({
              ...styles, 
              //padding:'0px',
-             height: '16px',
+            // height: '16px',
         }),
         menu: (styles: any) => ({
              ...styles, 
@@ -97,7 +96,7 @@ export default function Combobox(props: ComboboxProps) {
            return {
              ...styles,
              padding: "2px",
-             width: props.menuWidth,
+             width: props.width ?? props.menuWidth ?? "100%",
            };
          },
       };
@@ -115,8 +114,10 @@ export default function Combobox(props: ComboboxProps) {
         options={itemsSource}
         onChange={handleChange}
         //formatOptionLabel={(v) => <div>zzz {v.value}</div>}
-        components={{ SingleValue: SelectedItemComponent, DropdownIndicator }}
+        components={{ SingleValue: SelectedItemComponent, DropdownIndicator: null }}
         styles={customStyles}
+        menuPortalTarget={document.body}
+        isSearchable={false}
         />
     );
 }
