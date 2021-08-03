@@ -6,6 +6,7 @@ export enum WidgetType
 {
     Picker = "Picker",
     Editor = "Editor",
+    RichText = "RichText",
     Search = "Search",
 }
 

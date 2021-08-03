@@ -4,11 +4,11 @@ TODO
     [x] Color Theme picker
     [x] Google search
     
-    [ ] On window resize, move the settings gear to the corner
-    [ ] Page settings dropdowns have stopped working
-    [ ] Search widget needs a new default color
-    [ ] Text editor is busted - cursor keeps going to the start
-    [ ] Clean up scroll bars in general
+    [x] On window resize, move the settings gear to the corner
+    [x] Page settings dropdowns have stopped working
+    [x] Search widget needs a new default color
+    [x] Text editor is busted - cursor keeps going to the start
+    [x] Clean up scroll bars in general
     [ ] Editor should be called "Rich Text"
     
     

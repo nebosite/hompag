@@ -10,7 +10,7 @@ import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { registerType } from "models/hompagTypeHelper";
 import { WidgetModelData, WidgetType } from "models/WidgetModel";
 
-export class WidgetEditorData extends WidgetModelData
+export class WidgetRichTextData extends WidgetModelData
 {
     // Body should not be observable because it is only used for writing.  
     // THe body state is kept by the editor itself
@@ -25,11 +25,13 @@ export class WidgetEditorData extends WidgetModelData
     // }
 }
 
-registerDataTypeForWidgetType(WidgetType.Editor, "WidgetEditorData");
-registerType("WidgetEditorData", () => new WidgetEditorData())
+registerDataTypeForWidgetType(WidgetType.Editor, "WidgetRichTextData");
+registerDataTypeForWidgetType(WidgetType.RichText, "WidgetRichTextData");
+registerType("WidgetRichTextData", () => new WidgetRichTextData())
+registerType("WidgetEditorData", () => new WidgetRichTextData())
 
 @observer
-export default class WidgetEditor 
+export default class WidgetRichText 
 extends React.Component<{context: WidgetContainer},{editor: any}> 
 {    
     resizeOberver: ResizeObserver
@@ -71,7 +73,7 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
     render() {
         const {context} = this.props;
         const widget = context.ref_widget;
-        const data = widget.data as WidgetEditorData
+        const data = widget.data as WidgetRichTextData
         //const color = context.colorTheme.color;
         const editorColor= context.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright);
 

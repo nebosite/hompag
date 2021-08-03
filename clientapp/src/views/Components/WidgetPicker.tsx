@@ -22,6 +22,7 @@ extends React.Component<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     render() {
         const widget = this.props.context.ref_widget;
+        const hideTypes = [WidgetType.Picker, WidgetType.Editor]
 
         const selectWidgetType = (selectedType: string) =>
         {
@@ -31,7 +32,7 @@ extends React.Component<{context: WidgetContainer}>
         return (
             <div style={{height:"500px", fontSize:"10px"}}>
                 <Combobox
-                    itemsSource={Object.keys(WidgetType).filter(k => k !== WidgetType.Picker).map(k => {return {value: k, label: k}})}
+                    itemsSource={Object.keys(WidgetType).filter(k => hideTypes.indexOf(k as WidgetType) === -1).map(k => {return {value: k, label: k}})}
                     onSelectValue={selected => selectWidgetType(selected)}
                     selectedItem={widget.widgetType}
                     placeholder="What am I?"

@@ -8,7 +8,7 @@ import '../../../node_modules/react-grid-layout/css/styles.css'
 import '../../../node_modules/react-resizable/css/styles.css'
 import { ColorIndex, ColorTool, ColorValue } from "helpers/ColorTool";
 import WidgetDefault from "./WidgetDefault";
-import WidgetEditor from "./WidgetEditor";
+import WidgetRichText from "./WidgetRichText";
 import WidgetPicker from "./WidgetPicker";
 import { WidgetContainer } from "models/WidgetContainer";
 import { WidgetFrame } from "./WidgetFrame";
@@ -251,7 +251,8 @@ extends React.Component<PageControlProps, PageControlState>
         const renderPageItem = (container: WidgetContainer) => {
             switch(container.ref_widget.widgetType) {
                 case WidgetType.Picker: return <WidgetPicker context={container} />; 
-                case WidgetType.Editor: return <WidgetEditor context={container} />; 
+                case WidgetType.Editor: 
+                case WidgetType.RichText: return <WidgetRichText context={container} />; 
                 case WidgetType.Search: return <WidgetSearch context={container} />; 
                 //case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
                 default: return <WidgetDefault pageItem={container} />
