@@ -51,9 +51,9 @@ extends React.Component<{context: WidgetContainer}>
                 <div className={`${styles.Interior} ${styles.Filler}`}>
                     <div className={`${styles.Filler}`} 
                         style={{
-                            background: color(ColorIndex.Background, ColorValue.V7_ExtraBright),
-                            color: color(ColorIndex.Foreground, ColorValue.V2_Dark)}}
-                    >
+                            background: color(widget.backGroundColorIndex, widget.backGroundColorValue),
+                            color: color(widget.foregroundColorIndex, widget.foregroundColorValue)}}
+                        >
                         <div className={`${styles.DragHandle} widgetFrameDragHandleTag`} />
                         {this.state.configVisible ? renderConfig() : renderContent() }
                     </div>

@@ -3,6 +3,7 @@ import { observable, makeObservable, reaction } from "mobx";
 import { PageModel } from "./PageModel";
 import { generateStringId } from "helpers/randomHelper";
 import { WidgetType } from "./WidgetModel";
+import { ColorIndex, ColorValue } from "helpers/ColorTool";
 
 registerType("WidgetContainer", bag => new WidgetContainer())
 
@@ -24,6 +25,11 @@ export class WidgetContainer {
     @observable y: number;
     @observable w: number;
     @observable h: number;
+    @observable backGroundColorValue = ColorValue.V7_ExtraBright
+    @observable backGroundColorIndex = ColorIndex.Background
+    @observable foregroundColorValue = ColorValue.V1_ExtraDark
+    @observable foregroundColorIndex = ColorIndex.Foreground
+
     get ref_widget() {return this.parentPage.getWidget(this.widgetId)}
 
     get colorTheme() { 
@@ -44,7 +50,8 @@ export class WidgetContainer {
         this.parentPage?.getWidget(this.widgetId, false);
 
         reaction( 
-            () => [this.x, this.y, this.w, this.h],
+            () => [this.x, this.y, this.w, this.h, this.foregroundColorIndex, this.foregroundColorValue,
+                    this.backGroundColorIndex, this.backGroundColorValue],
             () => this.parentPage.save()
         )
     }
