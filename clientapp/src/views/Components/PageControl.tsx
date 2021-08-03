@@ -27,9 +27,20 @@ interface PageSettingsControlProps
 
 @observer
 export class PageSettingsControl 
-extends React.Component<PageSettingsControlProps,{showSettings: boolean}> 
+extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowWidth: number}> 
 {    
-    state = {showSettings: false}
+
+    constructor(props: PageSettingsControlProps) {
+        super(props);
+
+        this.state = {
+            showSettings: false,
+            windowWidth: window.innerWidth
+        }
+        window.addEventListener("resize", e => {
+            this.setState({windowWidth: window.innerWidth})
+        })
+    }
 
     render()
     {
@@ -54,7 +65,7 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean}>
         return  !this.state.showSettings 
             ? <div 
                 className={styles.settingsIcon} 
-                style={{left: `${window.innerWidth-30}px`}} 
+                style={{left: `${this.state.windowWidth-30}px`}} 
                 onClick={()=>{this.setState({showSettings: true})}}>
                     <BsGear/>
                 </div>

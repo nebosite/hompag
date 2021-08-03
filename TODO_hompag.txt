@@ -2,8 +2,17 @@
 TODO
     [x] Make links clickable
     [x] Color Theme picker
-    [ ] Widget Color picker
     [x] Google search
+    
+    [ ] On window resize, move the settings gear to the corner
+    [ ] Page settings dropdowns have stopped working
+    [ ] Search widget needs a new default color
+    [ ] Text editor is busted - cursor keeps going to the start
+    [ ] Clean up scroll bars in general
+    [ ] Editor should be called "Rich Text"
+    
+    
+    [ ] Widget Color picker
     [ ] Thesaurus/rhymes
     [ ] Inside Adobe
     [ ] Spotify   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
@@ -11,9 +20,6 @@ TODO
 
 
 NEW
-    [ ] On window resize, move the settings gear to the corner
-    [ ] Page settings dropdowns have stopped working
-    [ ] Search widget needs a new default color
     [ ] Local caching to make the page keep working when the server is offline
         - Highest Write ID wins - should be easy to do this if the server is caching too
     [ ] Versioning
