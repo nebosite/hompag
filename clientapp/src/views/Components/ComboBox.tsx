@@ -51,8 +51,8 @@ export default function Combobox(props: ComboboxProps) {
     // to external data.
     const [open, setOpen] = React.useState(false);
 
-    const show = () => { setOpen(true); };
-    const hide = () => { setOpen(false); };
+    const show = () => { console.log("OPEN"); setOpen(true); };
+    const hide = () => { console.log("HIDE"); setOpen(false); };
 
     // Process changes to the CreatableSelect control and communicate
     // those out as necessary.  
@@ -77,6 +77,7 @@ export default function Combobox(props: ComboboxProps) {
              minHeight: '16px',
              margin: '3px',
              width: props.width ?? '100%',
+    
         }),
         indicatorsContainer: (styles: any) => ({
             ...styles, 
@@ -89,8 +90,12 @@ export default function Combobox(props: ComboboxProps) {
             // height: '16px',
         }),
         menu: (styles: any) => ({
-             ...styles, 
-             width: null,
+            ...styles, 
+            width: null,
+        }),
+        menuPortal: (styles: any) => ({
+            ...styles, 
+            zIndex:50,
         }),
         option: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
            return {

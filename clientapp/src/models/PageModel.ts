@@ -25,10 +25,10 @@ export class PageModel
 {
     name: string;
     @observable widgetContainers: WidgetContainer[] = observable<WidgetContainer>([])
-    get columnCount() {return Math.floor(this.pageWidth / this.columnWidth);}
+    @observable columnCount = 24;
     @observable columnWidth = 50;
     @observable rowHeight = 50;
-    @observable pageWidth = 1200; 
+    get pageWidth() {return this.columnCount * this.columnWidth}; 
     @observable colorTheme: ColorTool;  
 
     private ref_App: AppModel; 

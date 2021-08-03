@@ -30,6 +30,9 @@ export class PageSettingsControl
 extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowWidth: number}> 
 {    
 
+    // -------------------------------------------------------------------
+    // ctor
+    // -------------------------------------------------------------------
     constructor(props: PageSettingsControlProps) {
         super(props);
 
@@ -42,19 +45,24 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
         })
     }
 
+    // -------------------------------------------------------------------
+    // render
+    // -------------------------------------------------------------------
     render()
     {
         const {pageModel} = this.props;
 
+        const gearX = Math.min(this.state.windowWidth, pageModel.pageWidth)
+
         const themeToComboItem = (theme: {name: string, colors: string[]}) => {
             return {
                 value: theme.name,
-                label: <div className={styles.divRow}>
-                    <div style={{width:"100px"}}>{theme.name}</div>
+                label:  <div className={styles.divRow}>
+                    <div style={{width:"110px", fontSize:"80%"}}>{theme.name}</div> 
                     {theme.colors.map(c => <div style={{background: c, width: "12px", height: "12px"}}></div>)}
                 </div>
             }
-        }
+        } 
 
         const selectColorTheme = (value: string) =>
         {
@@ -65,7 +73,7 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
         return  !this.state.showSettings 
             ? <div 
                 className={styles.settingsIcon} 
-                style={{left: `${this.state.windowWidth-30}px`}} 
+                style={{left: `${gearX-30}px`}} 
                 onClick={()=>{this.setState({showSettings: true})}}>
                     <BsGear/>
                 </div>
@@ -78,7 +86,7 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
                 }}>
                     <div className={styles.closeButton} onClick={()=> this.setState({showSettings: false})}><CgCloseR /></div>
                     <div><b>Page Settings</b></div>
-                    <div style={{margin:"5px", fontSize: "80%", background: "red"}}>
+                    <div style={{margin:"5px", fontSize: "80%"}}>
                         <Row >
                             <div>Color Theme: </div>
                             <Combobox
@@ -86,18 +94,30 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
                                 selectedItem={pageModel.colorTheme.colorTheme.name}
                                 onSelectValue={value => selectColorTheme(value)}
                                 placeholder={"Select a color theme"}
+                                menuWidth="100%"
+
                             />
                         </Row>
                         <Row >
-                            <Row>
+                            <Row style={{marginRight: "10px"}}>
                                 <div>Column Width:</div>
                                 <Combobox
-                                    itemsSource={[5,10,15,20,30,40,50,75,100].map(v => ({value: v}))} 
+                                    itemsSource={[5,10,15,20,30,40,50,75,100].map(v => ({value: v, label: v.toString()}))} 
                                     selectedItem={pageModel.columnWidth}
                                     onSelectValue={value => pageModel.columnWidth = (value)}
                                 />
 
                             </Row>
+                            <Row>
+                                <div>Column Count:</div>
+                                <Combobox
+                                    itemsSource={[12,18,24,30,42,60].map(v => ({value: v, label: v.toString()}))} 
+                                    selectedItem={pageModel.columnCount}
+                                    onSelectValue={value => pageModel.columnCount = (value)}
+                                />
+
+                            </Row>
+
                         </Row>
                     </div>
 
