@@ -9,18 +9,20 @@ import { Editor } from '@tinymce/tinymce-react';
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { registerType } from "models/hompagTypeHelper";
 import { WidgetModelData, WidgetType } from "models/WidgetModel";
-import { makeObservable, observable } from "mobx";
 
 export class WidgetEditorData extends WidgetModelData
 {
-    @observable private _body: string;
+    // Body should not be observable because it is only used for writing.  
+    // THe body state is kept by the editor itself
+    private _body: string;
     get body() {return this._body}
-    set body(value: string) {this._body = value; this.save()}
+    set body(value: string) {this._body = value; this.save()} 
 
-    constructor() {
-        super();
-        makeObservable(this);
-    }
+    // Nothing is observable, so this is not needed
+    // constructor() {
+    //     super();
+    //     makeObservable(this);
+    // }
 }
 
 registerDataTypeForWidgetType(WidgetType.Editor, "WidgetEditorData");
@@ -71,7 +73,7 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
         const widget = context.ref_widget;
         const data = widget.data as WidgetEditorData
         //const color = context.colorTheme.color;
-        const editorColor= context.colorTheme.color(ColorIndex.Background, ColorValue.V6_Bright);
+        const editorColor= context.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright);
 
         const height = context.h * context.parentPage.rowHeight;
 
