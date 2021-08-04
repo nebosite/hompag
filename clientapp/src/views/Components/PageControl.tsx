@@ -160,7 +160,7 @@ extends React.Component<PageControlProps, PageControlState>
         const {pageModel} = this.props; 
         let {draggingOK, dragging, x1, y1, x2, y2} = this.state;
         const thresholdDistance = pageModel.columnWidth / 4;
-        
+
         const mouseCoords = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             const gridElement = document.getElementById("theGrid") as HTMLCanvasElement; 
             var rect = gridElement.getBoundingClientRect();
@@ -249,6 +249,7 @@ extends React.Component<PageControlProps, PageControlState>
         const resizeHandle = <div className={styles.widgetFrameResizeHandle}>╝</div>
 
         const renderPageItem = (container: WidgetContainer) => {
+            if(dragging || !draggingOK) return <div>...</div>
             switch(container.ref_widget.widgetType) {
                 case WidgetType.Picker: return <WidgetPicker context={container} />; 
                 case WidgetType.Editor: 

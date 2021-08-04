@@ -9,13 +9,17 @@ TODO
     [x] Search widget needs a new default color
     [x] Text editor is busted - cursor keeps going to the start
     [x] Clean up scroll bars in general
-    [ ] Editor should be called "Rich Text"
+    [x] Editor should be called "Rich Text"
     
-    
+    [ ] Dragging containers does not work so well
+    [ ] Search dropdown: use theme colors
+    [ ] Text editor: use theme colors
     [ ] Widget Color picker
+        - use an X button
+        - make buttons smaller
     [ ] Thesaurus/rhymes
     [ ] Inside Adobe
-    [ ] Spotify   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
+    [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
     
 
 
