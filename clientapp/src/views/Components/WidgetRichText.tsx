@@ -75,7 +75,8 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
         const widget = context.ref_widget;
         const data = widget.data as WidgetRichTextData
         //const color = context.colorTheme.color;
-        const editorColor= context.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright);
+        const editorBackground= context.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright);
+        const editorColor= context.colorTheme.color(ColorIndex.Foreground, ColorValue.V2_Dark);
 
         const height = context.h * context.parentPage.rowHeight;
 
@@ -91,11 +92,15 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
             <div className={`${appStyles.Filler} ${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
                 <Editor
                     onMouseEnter={(evt, editor) => {
-                        editor.getBody().style.backgroundColor = editorColor;
+                        editor.getBody().style.backgroundColor = editorBackground;
+                        editor.getBody().style.color = editorColor;
                     }}
                     onInit={(evt, editor) => {
                         this.setState({editor}) 
-                        editor.getBody().style.backgroundColor = editorColor;
+                        editor.getBody().style.backgroundColor = editorBackground;
+                        editor.getBody().style.color = editorColor;
+                        editor.getBody().style.color = editorColor;
+                        
 
                         // On click, navigate to links
                         editor.on("click", function (e){
@@ -103,14 +108,13 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
                             var element = sel?.focusNode.parentElement as HTMLAnchorElement;
                             if(element && element.tagName === "A")
                             {
+                                const mouseIsInsideLink = element.matches(":hover");
                                 const url = element.href;
                                 const range = sel.getRangeAt(0);
                                 const isSelection = (range.endOffset - range.startOffset) > 0;
-                                const atEnd = range.endOffset === sel.anchorNode.textContent.length -1 
-                                const atStart = range.endOffset === 1
-                                if(!isSelection && !atEnd && !atStart)
+                                if(!isSelection && mouseIsInsideLink)
                                 {
-                                    //console.log(`Link to : ${range.endOffset} of ${sel.anchorNode.textContent.length} ${url}`)
+                                    //console.log(`--------------------> Link to : ${range.endOffset} of ${sel.anchorNode.textContent.length} ${url}`)
                                     window.location.href = url;
                                 }
 

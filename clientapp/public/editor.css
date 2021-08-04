@@ -29,3 +29,26 @@ ul {
 .tox {
     background: green;
 }
+
+::selection {
+   background: #00000030; 
+}
+
+a:visited {
+    color: #00000080
+}
+
+a:focus {
+    background: green;
+
+}
+
+a:hover {
+    border: 1px solid black;
+    margin-right: -1px;
+
+}
+
+a:active {
+    background: red;
+}

@@ -11,10 +11,11 @@ TODO
     [x] Clean up scroll bars in general
     [x] Editor should be called "Rich Text"
     
-    [ ] Dragging containers does not work so well
-    [ ] Search dropdown: use theme colors
-    [ ] Text editor: use theme colors
+    [x] Dragging richtext containers does not work so well
+    [x] Search dropdown: use theme colors
+    [x] Text editor: use theme color
     [ ] Widget Color picker
+        - Theme color
         - use an X button
         - make buttons smaller
     [ ] Thesaurus/rhymes
