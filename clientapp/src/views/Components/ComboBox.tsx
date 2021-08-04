@@ -28,6 +28,7 @@ type ComboboxProps = {
     placeholder?: string;
     menuWidth?: string;
     width?: string;
+    styleOverride?: any;
 };
 
 export const SelectedItemComponent = (props:any) => {
@@ -74,6 +75,7 @@ export default function Combobox(props: ComboboxProps) {
     const customStyles = {
         control: (styles: any) => ({ 
              ...styles, 
+             ...props.styleOverride,
              minHeight: '16px',
              margin: '3px',
              width: props.width ?? '100%',
@@ -81,25 +83,30 @@ export default function Combobox(props: ComboboxProps) {
         }),
         indicatorsContainer: (styles: any) => ({
             ...styles, 
+            ...props.styleOverride,
             //height:'10px',
             padding: '0px',
         }),
         valueContainer: (styles: any) => ({
              ...styles, 
+             ...props.styleOverride,
              //padding:'0px',
             // height: '16px',
         }),
         menu: (styles: any) => ({
             ...styles, 
+            ...props.styleOverride,
             width: null,
         }),
         menuPortal: (styles: any) => ({
             ...styles, 
+            ...props.styleOverride,
             zIndex:50,
         }),
         option: (styles: any, { data, isDisabled, isFocused, isSelected }: any) => {
            return {
              ...styles,
+             ...props.styleOverride,
              padding: "2px",
              width: props.width ?? props.menuWidth ?? "100%",
            };

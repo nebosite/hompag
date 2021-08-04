@@ -36,7 +36,9 @@ extends React.Component<{context: WidgetContainer}>
                     onSelectValue={selected => selectWidgetType(selected)}
                     selectedItem={widget.widgetType}
                     placeholder="What am I?"
+                    width="90%"
                     menuWidth="100%"
+                    styleOverride={{fontSize: "12px"}}
                 />  
             </div> 
         );

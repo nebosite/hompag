@@ -1,3 +1,4 @@
+import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { registerType } from "models/hompagTypeHelper";
@@ -14,11 +15,17 @@ interface SearchConfig
 }
 
 const searches:SearchConfig[] = [
+    {   name: "Google", 
+    createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
+    },
     {   name: "Google2", 
     createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
     },
-    {   name: "Google", 
-        createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
+    {   name: "Thesaurus", 
+        createSubmitUrl: (searchText: string) => `https://www.thesaurus.com/browse/${searchText}`
+    },
+    {   name: "Rhymes", 
+        createSubmitUrl: (searchText: string) => `https://rhymezone.com/r/rhyme.cgi?Word=${searchText}&typeofrhyme=perfect`
     },
 
 ]
@@ -59,15 +66,22 @@ extends React.Component<{context: WidgetContainer}, {searchText: string}>
         const searchConfig = searches.find(s => s.name === data.searchType)
 
         const pixelWidth = context.w * context.parentPage.columnWidth;
-        console.log(`Hey: ${context.w}`)
+
+        const labelStyle = {
+            fontSize: "10px",
+            background: context.colorTheme.color(ColorIndex.Special,ColorValue.V7_ExtraBright),
+            color: context.colorTheme.color(ColorIndex.Highlight,ColorValue.V2_Dark),
+        }
+
         return (
             <Row style={{fontSize: '10px', padding:'5px'}}> 
                 <Combobox 
-                    itemsSource={searches.map(s=>({value: s.name, label: <div style={{fontSize: '10px'}}>{s.name}</div>}))}
+                    itemsSource={searches.map(s=>({value: s.name, label: <div style={labelStyle}>{s.name}</div>}))}
                     selectedItem={data.searchType}
                     onSelectValue={v=> {data.searchType = v}} 
                     placeholder="Search Type"
                     width='60px'
+                    styleOverride={labelStyle}
                             
                 />
                 <input  type="text" 
