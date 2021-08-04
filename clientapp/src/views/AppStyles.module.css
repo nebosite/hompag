@@ -198,8 +198,17 @@ body {
 }
 
 .widgetFrame .ConfigSection {
-    background:  white;
-    margin-top: 10px;
+    font-size: 80%;
+    padding: 14px;
+    
+    box-shadow: inset 0 0 12px red;
+}
+
+.widgetFrame .ConfigSection .configButton {
+    width: 60px;
+}
+.widgetFrame .ConfigSection .configButton:hover {
+    cursor: pointer;
 }
 
 

@@ -14,11 +14,11 @@ TODO
     [x] Dragging richtext containers does not work so well
     [x] Search dropdown: use theme colors
     [x] Text editor: use theme color
-    [ ] Widget Color picker
+    [x] Widget Color picker
         - Theme color
         - use an X button
         - make buttons smaller
-    [ ] Thesaurus/rhymes
+    [x] Thesaurus/rhymes
     [ ] Inside Adobe
     [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
     

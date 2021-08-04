@@ -80,13 +80,13 @@ extends React.Component<{context: WidgetContainer}, {searchText: string}>
                     selectedItem={data.searchType}
                     onSelectValue={v=> {data.searchType = v}} 
                     placeholder="Search Type"
-                    width='60px'
+                    width='70px'
                     styleOverride={labelStyle}
                             
                 />
                 <input  type="text" 
                         value={ this.state.searchText }
-                        style={{width: `${pixelWidth - 98}px`}}
+                        style={{width: `${pixelWidth - 108}px`}}
                         onKeyUp={e => {
                             if(e.key === "Enter"){
                                 window.location.href = searchConfig.createSubmitUrl(this.state.searchText)
