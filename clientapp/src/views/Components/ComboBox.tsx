@@ -77,7 +77,7 @@ export default function Combobox(props: ComboboxProps) {
              ...styles, 
              ...props.styleOverride,
              minHeight: '16px',
-             margin: '3px',
+             margin: '1px',
              width: props.width ?? '100%',
     
         }),
@@ -94,6 +94,11 @@ export default function Combobox(props: ComboboxProps) {
             // height: '16px',
         }),
         menu: (styles: any) => ({
+            ...styles, 
+            ...props.styleOverride,
+            width: null,
+        }),
+        menuList: (styles: any) => ({
             ...styles, 
             ...props.styleOverride,
             width: null,

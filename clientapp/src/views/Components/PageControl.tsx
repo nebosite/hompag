@@ -70,6 +70,15 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
             pageModel.colorTheme = new ColorTool(theme)
         }
 
+        const numbersSource = (numbers: number[]) => {
+            return numbers.map(n => {
+                return {
+                    value: n,
+                    label: <div style={{fontSize: '10px'}}>{n}</div>
+                }
+            })
+        }
+
         return  !this.state.showSettings 
             ? <div 
                 className={styles.settingsIcon} 
@@ -86,7 +95,7 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
                 }}>
                     <div className={styles.closeButton} onClick={()=> this.setState({showSettings: false})}><CgCloseR /></div>
                     <div><b>Page Settings</b></div>
-                    <div style={{margin:"5px", fontSize: "80%"}}>
+                    <div style={{margin:"5px", fontSize: "70%"}}>
                         <Row >
                             <div>Color Theme: </div>
                             <Combobox
@@ -99,21 +108,31 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
                             />
                         </Row>
                         <Row >
-                            <Row style={{marginRight: "10px"}}>
+                            <Row style={{marginRight: "5px"}}>
                                 <div>Column Width:</div>
                                 <Combobox
-                                    itemsSource={[5,10,15,20,30,40,50,75,100].map(v => ({value: v, label: v.toString()}))} 
+                                    itemsSource={numbersSource([5,10,15,20,25,30,35,40,45,50,60,70,80,100])} 
                                     selectedItem={pageModel.columnWidth}
                                     onSelectValue={value => pageModel.columnWidth = (value)}
+                                    width="40px"
+                                />
+
+                            </Row>
+                            <Row style={{marginRight: "5px"}}>
+                                <div>Count:</div>
+                                <Combobox
+                                    itemsSource={numbersSource([12,15,18,21,24,27,30,35,45,50,60])} 
+                                    selectedItem={pageModel.columnCount}
+                                    onSelectValue={value => pageModel.columnCount = (value)}
                                 />
 
                             </Row>
                             <Row>
-                                <div>Column Count:</div>
+                                <div>Row Height:</div>
                                 <Combobox
-                                    itemsSource={[12,18,24,30,42,60].map(v => ({value: v, label: v.toString()}))} 
-                                    selectedItem={pageModel.columnCount}
-                                    onSelectValue={value => pageModel.columnCount = (value)}
+                                    itemsSource={numbersSource([20,25,30,35,40,50,60,75,100])} 
+                                    selectedItem={pageModel.rowHeight}
+                                    onSelectValue={value => pageModel.rowHeight = (value)}
                                 />
 
                             </Row>
@@ -249,7 +268,7 @@ extends React.Component<PageControlProps, PageControlState>
         const resizeHandle = <div className={styles.widgetFrameResizeHandle}>╝</div>
 
         const renderPageItem = (container: WidgetContainer) => {
-            if(dragging || !draggingOK) return <div>...</div>
+            if(!draggingOK) return <div>...</div>
             switch(container.ref_widget.widgetType) {
                 case WidgetType.Picker: return <WidgetPicker context={container} />; 
                 case WidgetType.Editor: 
