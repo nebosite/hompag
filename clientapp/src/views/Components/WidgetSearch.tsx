@@ -7,6 +7,8 @@ import { WidgetModelData, WidgetType } from "models/WidgetModel";
 import React from "react";
 import Combobox from "./ComboBox";
 import Row from "./Row";
+import appStyles from '../AppStyles.module.css';
+
 
 interface SearchConfig
 {
@@ -58,9 +60,9 @@ registerType("WidgetSearchData", () => new WidgetSearchData())
 
 @observer
 export default class WidgetSearch
-extends React.Component<{context: WidgetContainer}, {searchText: string}> 
+extends React.Component<{context: WidgetContainer}, {searchText: string, choosing: boolean}> 
 {    
-    state = {searchText: ""} 
+    state = {searchText: "", choosing: false} 
     // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
@@ -78,25 +80,46 @@ extends React.Component<{context: WidgetContainer}, {searchText: string}>
         }
 
         return (
-            <Row style={{fontSize: '10px', padding:'5px'}}> 
-                <Combobox 
-                    itemsSource={searches.map(s=>({value: s.name, label: <div style={labelStyle}>{s.name}</div>}))}
-                    selectedItem={data.searchType}
-                    onSelectValue={v=> {data.searchType = v}} 
-                    placeholder="Search Type"
-                    width='70px'
-                    styleOverride={labelStyle}
-                            
-                />
-                <input  type="text" 
-                        value={ this.state.searchText }
-                        style={{width: `${pixelWidth - 108}px`}}
-                        onKeyUp={e => {
-                            if(e.key === "Enter"){
-                                window.location.href = searchConfig.createSubmitUrl(this.state.searchText)
-                            }
-                        }}
-                        onChange={(e) =>  this.setState({searchText: e.target.value}) }  />      
+            <Row style={{fontSize: '10px', padding:'5px', paddingLeft: '0px', paddingRight: '0px'}}> 
+                
+                
+                <div style={{position: "relative"}}>
+                    {this.state.searchText 
+                        ? null
+                        : <div 
+                            className={appStyles.searchTypeIndicator}
+                            onClick={()=>this.setState({choosing: true})}
+                            >{searchConfig.name}</div>
+                    }
+                    {this.state.choosing
+                        ? <div className={appStyles.searchTypePicker}>
+                            <Combobox 
+                                startOpened={true}
+                                onBlur={()=>this.setState({choosing: false})}    
+                                itemsSource={searches.map(s=>({value: s.name, label: <div style={labelStyle}>{s.name}</div>}))}
+                                selectedItem={data.searchType}
+                                onSelectValue={v=> {
+                                    this.setState({choosing: false})
+                                    data.searchType = v}} 
+                                placeholder="Search Type"
+                                width='70px'
+                                styleOverride={labelStyle}
+                                        
+                            /></div>
+                        : null
+                    }                    
+                    <input  type="text" 
+                            value={ this.state.searchText }
+                            style={{width: `${pixelWidth - 22}px`}}
+                            onClick={()=>this.setState({choosing: false})}
+                            onKeyUp={e => {
+                                if(e.key === "Enter"){
+                                    window.location.href = searchConfig.createSubmitUrl(this.state.searchText)
+                                }
+                            }}
+                            onChange={(e) =>  this.setState({searchText: e.target.value}) }  />      
+
+                </div>
                            
             </Row>
             

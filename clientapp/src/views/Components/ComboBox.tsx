@@ -29,6 +29,8 @@ type ComboboxProps = {
     menuWidth?: string;
     width?: string;
     styleOverride?: any;
+    startOpened?: boolean;
+    onBlur?: ()=>void;
 };
 
 export const SelectedItemComponent = (props:any) => {
@@ -50,10 +52,13 @@ export default function Combobox(props: ComboboxProps) {
 
     // Setting up automatic state for items we don't expect to bind
     // to external data.
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(props.startOpened ?? false);
 
-    const show = () => { console.log("OPEN"); setOpen(true); };
-    const hide = () => { console.log("HIDE"); setOpen(false); };
+    const show = () => { setOpen(true); };
+    const hide = () => { 
+        setOpen(false); 
+        if(props.onBlur) {props.onBlur()}; 
+    };
 
     // Process changes to the CreatableSelect control and communicate
     // those out as necessary.  

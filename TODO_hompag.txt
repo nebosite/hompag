@@ -1,6 +1,6 @@
 
 TODO
-    [ ] Widget settings should be a full sized dialog off to the side of the widget
+    [x] Widget settings should be a full sized dialog off to the side of the widget
     [ ] Search widget 
         - when the input is blank, show grey placeholder text to identify the search
         - Clicking on a blank input shows a search dropdown to pick from
