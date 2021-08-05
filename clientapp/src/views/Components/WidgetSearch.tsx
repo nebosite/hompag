@@ -41,9 +41,7 @@ export class WidgetSearchData extends WidgetModelData
     @observable private _searchType: string = searches[0].name
     get searchType() {return this._searchType}
     set searchType(value:string) {
-        console.log(`Setting search type to : ${value} ${this._searchType}`)
         if(value === this._searchType) return;
-        console.log(`Setting search type to : ${value}`)
         this._searchType = value;
         this.save();
     }

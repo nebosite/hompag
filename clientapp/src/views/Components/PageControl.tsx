@@ -19,6 +19,7 @@ import Combobox from "./ComboBox";
 import WidgetSearch from "./WidgetSearch";
 import Row from "./Row";
 import { WidgetConfigurator } from "./WidgetConfigurator";
+import WidgetSpotify from "./WidgetSpotify";
 
 
 interface PageSettingsControlProps
@@ -275,6 +276,7 @@ extends React.Component<PageControlProps, PageControlState>
                 case WidgetType.Editor: 
                 case WidgetType.RichText: return <WidgetRichText context={container} />; 
                 case WidgetType.Search: return <WidgetSearch context={container} />; 
+                case WidgetType.Spotify: return <WidgetSpotify context={container} />;
                 //case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
                 default: return <WidgetDefault pageItem={container} />
             }

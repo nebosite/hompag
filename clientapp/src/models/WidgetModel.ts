@@ -8,6 +8,7 @@ export enum WidgetType
     Editor = "Editor",
     RichText = "RichText",
     Search = "Search",
+    Spotify = "Spotify"
 }
 
 export class WidgetModelData {

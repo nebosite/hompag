@@ -1,15 +1,13 @@
 
 TODO
     [x] Widget settings should be a full sized dialog off to the side of the widget
-    [ ] Search widget 
+    [x] Search widget 
         - when the input is blank, show grey placeholder text to identify the search
         - Clicking on a blank input shows a search dropdown to pick from
-    [ ] Cache pages
-        - keep track of page versionson the server
-        - remember local versions of pages
-        - ask server for page versions and load the ones out of date
     [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
-    
+        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
+        https://developer.spotify.com/documentation/
+        - Control pause, play, skip, position
 
 
 NEW
@@ -19,6 +17,10 @@ NEW
         [ ] Cache items in memory
         [ ] Write changes on shutdown or after 5 minutes of inactivity
     [ ] Bug:  '* ' at the front of a line of links removes to end of the line
+    [ ] Cache pages
+        - keep track of page versionson the server
+        - remember local versions of pages
+        - ask server for page versions and load the ones out of date
 
 
 WIDGET IDEAS

@@ -13,7 +13,12 @@ export class GLOBALS {
 }
 
 document.title = GLOBALS.Title;
-
+const autoRedirect = window.sessionStorage.getItem("autoredirect");
+if( autoRedirect){
+    console.log(`Redirection to: ${autoRedirect}`)
+    window.sessionStorage.removeItem("autoredirect")
+    setTimeout(()=>{window.location.href = autoRedirect},10)
+}
 
 const urlParts = trimChars(window.location.pathname, ['/']).split('/',2);
 const pageName = urlParts[0];
