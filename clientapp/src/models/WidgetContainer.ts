@@ -30,6 +30,8 @@ export class WidgetContainer {
     @observable foregroundColorValue = ColorValue.V1_ExtraDark
     @observable foregroundColorIndex = ColorIndex.Foreground
 
+    @observable state_configuring = false;
+
     get ref_widget() {return this.parentPage.getWidget(this.widgetId)}
 
     get colorTheme() { 

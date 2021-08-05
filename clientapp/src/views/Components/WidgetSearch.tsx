@@ -27,6 +27,10 @@ const searches:SearchConfig[] = [
     {   name: "Rhymes", 
         createSubmitUrl: (searchText: string) => `https://rhymezone.com/r/rhyme.cgi?Word=${searchText}&typeofrhyme=perfect`
     },
+    {   name: "Adobe", 
+        createSubmitUrl: (searchText: string) => `https://inside.corp.adobe.com/search.html#q=${searchText}&t=intranet`
+    },
+    
 
 ]
 

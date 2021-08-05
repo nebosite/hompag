@@ -18,6 +18,7 @@ import {CgCloseR} from 'react-icons/cg'
 import Combobox from "./ComboBox";
 import WidgetSearch from "./WidgetSearch";
 import Row from "./Row";
+import { WidgetConfigurator } from "./WidgetConfigurator";
 
 
 interface PageSettingsControlProps
@@ -340,6 +341,10 @@ extends React.Component<PageControlProps, PageControlState>
                     >
                         {pageModel.widgetContainers.map(c => (
                             <div key={c.getKey()} data-grid={c}>
+                                {c.state_configuring
+                                    ?   <WidgetConfigurator context={c} />
+                                    : null}
+                                
                                 <WidgetFrame context={c} >
                                     {renderPageItem(c)}
                                 </WidgetFrame>

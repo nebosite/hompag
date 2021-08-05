@@ -6,7 +6,6 @@ import './WidgetEditor.module.css';
 import appStyles from '../AppStyles.module.css';
 import styles from './WidgetEditor.module.css';
 import { Editor } from '@tinymce/tinymce-react';
-import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { registerType } from "models/hompagTypeHelper";
 import { WidgetModelData, WidgetType } from "models/WidgetModel";
 
@@ -75,30 +74,28 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
         const widget = context.ref_widget;
         const data = widget.data as WidgetRichTextData
         //const color = context.colorTheme.color;
-        const editorBackground= context.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright);
-        const editorColor= context.colorTheme.color(ColorIndex.Foreground, ColorValue.V2_Dark);
+        const editorBackground= context.colorTheme.color(context.backGroundColorIndex, context.backGroundColorValue);
+        const editorColor= context.colorTheme.color(context.foregroundColorIndex, context.foregroundColorValue);
 
         const height = context.h * context.parentPage.rowHeight;
 
-
+        
         const handleEditorChange = (event: any) => {
             data.body = this.state.editor.contentDocument.body.innerHTML
             // console.log(`The htm}l is: ${context.ref_data.body}`)
         }
 
-        
+        if(this.state?.editor) {
+            this.state.editor.getBody().style.backgroundColor = editorBackground;
+            this.state.editor.getBody().style.color = editorColor;
+        }
 
         return (
             <div className={`${appStyles.Filler} ${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
                 <Editor
-                    onMouseEnter={(evt, editor) => {
-                        editor.getBody().style.backgroundColor = editorBackground;
-                        editor.getBody().style.color = editorColor;
-                    }}
                     onInit={(evt, editor) => {
                         this.setState({editor}) 
                         editor.getBody().style.backgroundColor = editorBackground;
-                        editor.getBody().style.color = editorColor;
                         editor.getBody().style.color = editorColor;
                         
 
