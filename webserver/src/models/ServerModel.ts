@@ -5,14 +5,28 @@ import moment from "moment";
 import { VERSION } from ".."; 
 
 
+export interface VersionedItem
+{
+    id: string
+    versions: number[]
+}
+
+export interface ItemReturn
+{
+    id: string
+    version: number
+    data: string
+}
+
+
 export interface IPageAccess
 {
-    getPage(pageId: string): Promise<string | null>;
-    getPageList(): Promise<string[]>;
-    storePage(id: string, data: string): Promise<null>;
-    storeWidget(id: string, data: string): Promise<null>;
-    getWidget(id: string): Promise<string | null>;
-
+    getPage(pageId: string, version: number | undefined): Promise<ItemReturn | null>;
+    getPageList(): Promise<VersionedItem[]>;
+    storePage(id: string, version: number, data: string): Promise<void>;
+    storeWidget(id: string, version: number, data: string): Promise<void>;
+    getWidget(id: string, version: number | undefined): Promise<ItemReturn | null>;
+    getWidgetList(ids: string[]): Promise<VersionedItem[]>;
 }
 
 export interface IListener{
