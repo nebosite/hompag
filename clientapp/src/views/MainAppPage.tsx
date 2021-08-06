@@ -4,6 +4,7 @@ import { inject, observer } from "mobx-react";
 import styles from './AppStyles.module.css';
 import { AppModel } from "models/AppModel";
 import { PageControl } from "./Components/PageControl";
+import Row from "./Components/Row";
 
 
 @inject("appModel")
@@ -20,6 +21,12 @@ extends React.Component<{appModel?: AppModel}>
 
     return ( 
         <div className={styles.mainPage}>
+            {appModel.recentError
+                ?   <Row>
+                        <div style={{background: "red", color: "yellow"}}>Background Error: {appModel.recentError}</div>
+                        <button onClick={()=>appModel.recentError = undefined}>dismiss</button>
+                    </Row>
+                : null}
             {appModel.page 
                 ? <PageControl pageModel={appModel.page} />
                 : <div>Loading... </div>}

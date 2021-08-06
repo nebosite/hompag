@@ -130,7 +130,7 @@ export class SpotifyData extends WidgetModelData
     @observable private _accessToken?: {value: string, expireTime: number} 
     get accessToken() {return this._accessToken}
     set accessToken(value:{value: string, expireTime: number}) {
-        if(this._accessToken && value.value === this._accessToken.value) return;
+        if(this._accessToken && value && value.value === this._accessToken.value) return;
         this._accessToken = value;
         this.save();
     }
@@ -158,8 +158,16 @@ export class SpotifyData extends WidgetModelData
             console.log("Whoops: tried to call spotify, but api is not available")
         }
 
-        const response = await api.restGet<SpotifyPlayerResponse>("me/player");
-        this.state_playdata = response;
+        try {
+            const response = await api.restGet<SpotifyPlayerResponse>("me/player");
+            this.state_playdata = response;
+
+        }
+        catch(err) {
+            console.log(`Spotify api eror: ${err}`)
+            this.state_playdata = null;
+            this.accessToken = null;
+        }
     }
 }
 

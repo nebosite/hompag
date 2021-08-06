@@ -23,7 +23,7 @@ interface PageRequestResponse
 export class AppModel {
     @observable serverStatus:any = null;
     @observable page: PageModel;
-    @observable pageError?: string;
+    @observable recentError?: string;
 
     //private _localStorage:ILocalStorage;
     private _api = new RestHelper("/api/");
@@ -72,7 +72,7 @@ export class AppModel {
 
         const pageData = await this._api.restGet<PageRequestResponse>(`pages/${name}`);
         if(pageData.errorMessage) {
-            this.pageError = pageData.errorMessage;
+            this.recentError = pageData.errorMessage;
         }
         else if(!pageData.data) {
             const freshPage = new PageModel(this);
@@ -169,14 +169,23 @@ export class AppModel {
     }
 
     // -------------------------------------------------------------------
+    // reportError
+    // -------------------------------------------------------------------
+    reportError(label: string, err: any)
+    {
+        this.recentError = `${label}: ${err}`
+        console.log(this.recentError)
+    }
+
+    // -------------------------------------------------------------------
     // savePage 
     // -------------------------------------------------------------------
-    savePage(page: PageModel)
+    savePage(pageToSave: PageModel)
     {
-        const pageToSave = this.page;
         console.log(`Saving page ${pageToSave.name}`)
         this._savePageThrottler.run(() => {
             this._api.restPost(`pages/${pageToSave.name}`, this._serializer.stringify({id: this.getUpdateId(), data: pageToSave}))
+                .catch(err => this.reportError("Save Page", err))
         });
     }
 
@@ -188,6 +197,7 @@ export class AppModel {
         const payload = this._serializer.stringify({id: this.getUpdateId(), data: widget});
         console.log(`Writing widget: ${widget.id}`)
         this._api.restPost(`widgets/${widget.id}`, payload)
+            .catch(err => this.reportError("Save Widget", err))
     }
 }
  

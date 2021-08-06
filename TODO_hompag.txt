@@ -7,10 +7,15 @@ TODO
     [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
         - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
         https://developer.spotify.com/documentation/
-        - Control pause, play, skip, position
+        - Query for current playlist, all playlists
+        - Controls: pause, play, skip, position
+        - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
+            - Randomly choose songs based on if you answered questions correctly
+        
 
 
 NEW
+    [ ] React Service Runner? (Question on reddit)
     [ ] Local caching to make the page keep working when the server is offline
         - Highest Write ID wins - should be easy to do this if the server is caching too
     [ ] Versioning on the server
@@ -24,16 +29,11 @@ NEW
 
 
 WIDGET IDEAS
-    - Scribble notes
+    - Weather watcher
+    - Scribble notes (perfect pencil)
     - Stacked TODO
     - Alfred TODO
     [ ] widget: Rule-base homepage:  Work page shows from 8am-5pm M-F
-    - Searches 
-        Google
-        Thesaurus
-        Rymes
-        Inside Adobe
-    - Choose color scheme
     - Ping tester - ping known locations around the world
     - Abacus
     - Real-time growing plant
