@@ -78,7 +78,7 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
         }
 
         return (
-            <Row style={{fontSize: '10px', padding:'5px', paddingLeft: '0px', paddingRight: '0px'}}> 
+            <Row style={{fontSize: '10px', padding:'5px', paddingLeft: '3px', paddingTop: "7px", paddingRight: '0px'}}> 
                 
                 
                 <div style={{position: "relative"}}>

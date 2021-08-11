@@ -3,11 +3,10 @@ import React from "react";
 import 'draft-js/dist/Draft.css';
 import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
 import './WidgetEditor.module.css';
-import appStyles from '../AppStyles.module.css';
 import styles from './WidgetEditor.module.css';
 import { Editor } from '@tinymce/tinymce-react';
 import { registerType } from "models/hompagTypeHelper";
-import { WidgetModelData, WidgetType } from "models/WidgetModel";
+import { WidgetModelData, WidgetType } from "models/WidgetModel"; 
 
 export class WidgetRichTextData extends WidgetModelData
 {
@@ -47,7 +46,7 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
             for (let entry of entries) {
                 if(entry.contentRect) {
                     const h = entry.contentRect.height
-                    editorElement.style.height = `${h + 18}px`;
+                    editorElement.style.height = `${h+18}px`;
                 } 
                 
                 // Browser compat?  Not sure what to do if there is no rect.  The code below doesn't
@@ -91,12 +90,13 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
         }
 
         return (
-            <div className={`${appStyles.Filler} ${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
+            <div className={`${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
                 <Editor
                     onInit={(evt, editor) => {
                         this.setState({editor}) 
                         editor.getBody().style.backgroundColor = editorBackground;
                         editor.getBody().style.color = editorColor;
+                        editor.getBody().style.border = undefined;
                         
 
                         // On click, navigate to links
@@ -149,9 +149,9 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
                     apiKey="i9mbmtxj437lrd1i9a3vsf1e3cg88gbxmkzbcncacfwbj0l0"
                     onChange={handleEditorChange}
                     init={{
-                        height: height + 20,
+                        height: height,
                         menubar: false,
-                        skin: 'small',
+                        skin: 'borderless',
                         icons: 'small',
                         indentation: "10px",
                         toolbar: false,//'bold italic color | outdent indent | bullist numlist | code',

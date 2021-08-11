@@ -4,6 +4,40 @@ TODO
     [x] Search widget 
         - when the input is blank, show grey placeholder text to identify the search
         - Clicking on a blank input shows a search dropdown to pick from
+    [ ] Cache pages
+        - keep track of page versionson the server
+        - remember local versions of pages
+        - ask server for page versions and load the ones out of date
+    [ ] Local caching to make the page keep working when the server is offline
+        - Highest Write ID wins - should be easy to do this if the server is caching too
+    [ ] Versioning on the server
+        [ ] Cache items in memory
+        [ ] Write changes on shutdown or after 5 minutes of inactivity
+        
+
+
+NEW
+    [ ] Bug: Drag area is invisible
+    [ ] Right-click TODO straight to todo widtget
+    [ ] Visual
+        [ ] Replace borders with whitespace
+    [ ] Hide editor garbage until loaded
+    [ ] Define my own search engine
+    [ ] Bullet auto text does not always work:
+            Tooling
+            • Crashcow / local / git / 
+            • Tricorder
+
+            JIRA
+            * ???
+            
+            
+    [ ] Soften borders
+    [ ] Add a few more color schemes
+        - Need to have better color choices
+        - choices should be pure colors without values
+    [ ] React Service Runner? (Question on reddit)
+    [ ] Bug:  '* ' at the front of a line of links removes to end of the line
     [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
         - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
         https://developer.spotify.com/documentation/
@@ -11,24 +45,12 @@ TODO
         - Controls: pause, play, skip, position
         - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
             - Randomly choose songs based on if you answered questions correctly
-        
-
-
-NEW
-    [ ] React Service Runner? (Question on reddit)
-    [ ] Local caching to make the page keep working when the server is offline
-        - Highest Write ID wins - should be easy to do this if the server is caching too
-    [ ] Versioning on the server
-        [ ] Cache items in memory
-        [ ] Write changes on shutdown or after 5 minutes of inactivity
-    [ ] Bug:  '* ' at the front of a line of links removes to end of the line
-    [ ] Cache pages
-        - keep track of page versionson the server
-        - remember local versions of pages
-        - ask server for page versions and load the ones out of date
 
 
 WIDGET IDEAS
+    - frequent links
+    - Archive
+    - See recent bookmarks
     - Weather watcher
     - Scribble notes (perfect pencil)
     - Stacked TODO
@@ -51,11 +73,8 @@ WIDGET IDEAS
 IMPORTANT
    
 BACKLOG
-    [ ] Links
-        [ ] Auto-include selected text in the link
-        [ ] Decorator includes spaces
-        [ ] Cancel does not cancel the link
-    [ ] Server should watch the file system for changes
+    [ ] Make it work across machines
+        [ ] Server should watch the file system for changes
         [ ] A connected client has a visible page + widgets
         [ ] Push an update to the client any page or widgets change
     [ ] should not try to save any content with null data
