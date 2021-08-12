@@ -2,12 +2,11 @@ import { observer } from "mobx-react";
 import React from "react";
 import 'draft-js/dist/Draft.css';
 import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
-import './WidgetEditor.module.css';
-import appStyles from '../AppStyles.module.css';
-import styles from './WidgetEditor.module.css';
+import './WidgetRichText.module.css';
+import styles from './WidgetRichText.module.css';
 import { Editor } from '@tinymce/tinymce-react';
 import { registerType } from "models/hompagTypeHelper";
-import { WidgetModelData, WidgetType } from "models/WidgetModel";
+import { WidgetModelData, WidgetType } from "models/WidgetModel"; 
 
 export class WidgetRichTextData extends WidgetModelData
 {
@@ -47,7 +46,7 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
             for (let entry of entries) {
                 if(entry.contentRect) {
                     const h = entry.contentRect.height
-                    editorElement.style.height = `${h + 18}px`;
+                    editorElement.style.height = `${h+18}px`;
                 } 
                 
                 // Browser compat?  Not sure what to do if there is no rect.  The code below doesn't
@@ -91,12 +90,24 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
         }
 
         return (
-            <div className={`${appStyles.Filler} ${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
+            <div className={`${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
+                {
+                    this.state?.editor 
+                        ? null
+                        : <div className={styles.editorCover} 
+                        style={{
+                            background: editorBackground,
+                            width: context.w * context.parentPage.columnWidth - 5,
+                            height: context.h * context.parentPage.rowHeight - 5
+                        }}></div> 
+                }
+                 
                 <Editor
                     onInit={(evt, editor) => {
                         this.setState({editor}) 
                         editor.getBody().style.backgroundColor = editorBackground;
                         editor.getBody().style.color = editorColor;
+                        editor.getBody().style.border = undefined;
                         
 
                         // On click, navigate to links
@@ -136,22 +147,27 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
                             // Note that the character from &nbsp; is different that an ascii space.  That's
                             // why the match has two spaces in the 2nd character place.  They are actually 
                             // different character codes. 
-                            if(e.key === ' ' && caretPos === 2 && (txtData.match(/^[*-][  ]/)))
+                            const keyWasSpace = e.key === ' '
+                            const startsWithBullet = txtData[0] === '*' || txtData[0] === '-'
+                            if(keyWasSpace && caretPos === 2 && startsWithBullet)
                             {
-                                if(sel.focusNode.parentElement.constructor.name === "HTMLParagraphElement")
+                                const parentType = sel.focusNode.parentElement.constructor.name
+
+                                if(parentType === "HTMLParagraphElement" || parentType === "HTMLElement")
                                 {
                                     sel.focusNode.parentElement.outerHTML = `<ul><li>${txtData.substr(2)}</li></ul>`
                                 }
-                            }                        
+
+                            }     
                         });
                     }}
                     initialValue={data?.body ?? `<p>A shiny new text area</p>`}
                     apiKey="i9mbmtxj437lrd1i9a3vsf1e3cg88gbxmkzbcncacfwbj0l0"
                     onChange={handleEditorChange}
                     init={{
-                        height: height + 20,
+                        height: height + 18,
                         menubar: false,
-                        skin: 'small',
+                        skin: 'borderless',
                         icons: 'small',
                         indentation: "10px",
                         toolbar: false,//'bold italic color | outdent indent | bullist numlist | code',

@@ -27,7 +27,7 @@ export class WidgetContainer {
     @observable h: number;
     @observable backGroundColorValue = ColorValue.V7_ExtraBright
     @observable backGroundColorIndex = ColorIndex.Background
-    @observable foregroundColorValue = ColorValue.V1_ExtraDark
+    @observable foregroundColorValue = ColorValue.V3_Shaded
     @observable foregroundColorIndex = ColorIndex.Foreground
 
     @observable state_configuring = false;

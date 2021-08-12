@@ -8,6 +8,7 @@ import React from "react";
 import Combobox from "./ComboBox";
 import Row from "./Row";
 import appStyles from '../AppStyles.module.css';
+import styles from '../AppStyles.module.css';
 
 
 interface SearchConfig
@@ -18,10 +19,10 @@ interface SearchConfig
 
 const searches:SearchConfig[] = [
     {   name: "Google", 
-    createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
+        createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
     },
-    {   name: "Google2", 
-    createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
+    {   name: "Amazon", 
+        createSubmitUrl: (searchText: string) => `https://www.amazon.com/s?k=${searchText}`
     },
     {   name: "Thesaurus", 
         createSubmitUrl: (searchText: string) => `https://www.thesaurus.com/browse/${searchText}`
@@ -78,7 +79,7 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
         }
 
         return (
-            <Row style={{fontSize: '10px', padding:'5px', paddingLeft: '0px', paddingRight: '0px'}}> 
+            <Row style={{fontSize: '10px', padding:'5px', paddingLeft: '3px', paddingTop: "6px", paddingRight: '0px'}}> 
                 
                 
                 <div style={{position: "relative"}}>
@@ -107,6 +108,7 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
                         : null
                     }                    
                     <input  type="text" 
+                            className={styles.searchInput}
                             value={ this.state.searchText }
                             style={{width: `${pixelWidth - 22}px`}}
                             onClick={()=>this.setState({choosing: false})}

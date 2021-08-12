@@ -1,45 +1,31 @@
 
 TODO
-    [x] Widget settings should be a full sized dialog off to the side of the widget
-    [x] Search widget 
-        - You DEFINITELY need to TDD the page memory cache
-        - when the input is blank, show grey placeholder text to identify the search
-        - Clicking on a blank input shows a search dropdown to pick from
-        - To support sharing in the future, you will need to persist some metadata around items:
-            Who owns it
-            If it has an alias for sharing
+        
         
     [ ] Cache pages
         - keep track of page versionson the server
         - remember local versions of pages
         - ask server for page versions and load the ones out of date
-    
-    [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
-        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
-        https://developer.spotify.com/documentation/
-        - Query for current playlist, all playlists
-        - Controls: pause, play, skip, position
-        - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
-            - Randomly choose songs based on if you answered questions correctly
-        
-
-
-NEW
-    [ ] React Service Runner? (Question on reddit)
     [ ] Local caching to make the page keep working when the server is offline
         - Highest Write ID wins - should be easy to do this if the server is caching too
     [ ] Versioning on the server
         [ ] Cache items in memory
         [ ] Write changes on shutdown or after 5 minutes of inactivity
-    [ ] Bug:  '* ' at the front of a line of links removes to end of the line
+        
+
+NEW
 
 
 WIDGET IDEAS
+    - frequent links
+    - Archive
+    - See recent bookmarks
     - Weather watcher
     - Scribble notes (perfect pencil)
     - Stacked TODO
     - Alfred TODO
-    [ ] widget: Rule-base homepage:  Work page shows from 8am-5pm M-F
+        - Right-click->Add to TODO   puts link straight to todo widtget
+    - Rule-base homepage:  Work page shows from 8am-5pm M-F
     - Ping tester - ping known locations around the world
     - Abacus
     - Real-time growing plant
@@ -57,17 +43,24 @@ WIDGET IDEAS
 IMPORTANT
    
 BACKLOG
-    [ ] Links
-        [ ] Auto-include selected text in the link
-        [ ] Decorator includes spaces
-        [ ] Cancel does not cancel the link
-    [ ] Server should watch the file system for changes
+    [ ] Define my own search engine
+    [ ] Hovering over links should show url
+    [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
+        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
+        https://developer.spotify.com/documentation/
+        - Query for current playlist, all playlists
+        - Controls: pause, play, skip, position
+        - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
+            - Randomly choose songs based on if you answered questions correctly
+    [ ] Make it work across machines
+        [ ] Server should watch the file system for changes
         [ ] A connected client has a visible page + widgets
         [ ] Push an update to the client any page or widgets change
     [ ] should not try to save any content with null data
     [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
 
 MAYBE NEVER
+    [ ] React Service Runner? (Question on reddit)
     [ ] Start with a smaller window height and expand as items get close to the bottom
     [ ] Link tooltip with options
         - Edit link
@@ -89,6 +82,20 @@ MAYBE NEVER
 
 
 -- DONE ---------------------------------------------------------------------
+
+    [x] Widget settings should be a full sized dialog off to the side of the widget
+    [x] Search widget 
+        - when the input is blank, show grey placeholder text to identify the search
+        - Clicking on a blank input shows a search dropdown to pick from
+    [x] Bug: Drag area is invisible
+    [x] Visual Replace borders with whitespace
+    [x] Hide editor garbage until loaded
+    [x] Bullet auto text does not always work:
+    [x] Soften borders
+    [x] Bug:  '* ' at the front of a line of links removes to end of the line
+    [x] Add a few more color schemes             https://color.adobe.com/search?q=most-popular
+        - Need to have better color choices
+        - choices should be pure colors without values
 
     [x] Make links clickable
     [x] Color Theme picker

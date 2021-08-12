@@ -11,6 +11,15 @@
     color: black;
 }
 
+.editorCover {
+    background: #00000000;
+    z-index: 2;
+    position: absolute;
+    width: 100%; /* Need a specific value to work */
+    height: 100%;
+    border-radius: 5px;
+}
+
 .we_makelinkDialog {
     font-size: 14px;
     position: absolute;
