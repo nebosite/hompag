@@ -1,36 +1,41 @@
 import { ILogger } from "../helpers/logger";
-import { IPageAccess, ItemReturn, VersionedItem } from "./ServerModel";
+import { hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
 
 interface CacheInfo
 {
+    itemType: string
     id: string
+    isLatest: boolean
     version: number
     written: boolean
-    arrivalTime: number
     data?: string
 }
-export class PageCache implements IPageAccess{
 
-    _deepStore: IPageAccess;
 
-    _pages = new Map<string, CacheInfo[]>();
-    _widgets = new Map<string, CacheInfo[]>();
-    _recentUpdates = new Array<CacheInfo>();
+export class PageCache implements IItemStore{
+
+    _deepStore: IItemStore;
+
+    _cache = new Map<hompagItemType, Map<string, CacheInfo[]>>();
+    _recentUpdates =    new Array<CacheInfo>();
     _loadingTask:Promise<void>;
     _logger: ILogger;
 
     //------------------------------------------------------------------------------------------
     // ctor
     //------------------------------------------------------------------------------------------
-    constructor(deepStore: IPageAccess, logger: ILogger)
+    constructor(deepStore: IItemStore, logger: ILogger)
     {
         this._deepStore = deepStore;
         this._logger = logger;
 
         this._loadingTask = new Promise<void>(async (resolve) => {
-            const pages = await deepStore.getPageList();
+            const pages = await deepStore.getIdList(hompagItemType.page);
+            this._cache.set(hompagItemType.page, new Map<string, CacheInfo[]>())
+            this._cache.set(hompagItemType.widget, new Map<string, CacheInfo[]>())
+            const pageCache = this._cache.get(hompagItemType.page);
             pages.forEach(p => {
-                this._pages.set(p.id, p.versions.map(version => ({id: p.id, version, written: true, arrivalTime: 0})))
+                pageCache!.set(p, new Array<CacheInfo>())
             })
             resolve();
         })
@@ -47,94 +52,75 @@ export class PageCache implements IPageAccess{
     }
 
     //------------------------------------------------------------------------------------------
-    // storePage
+    // get the cache that holds a particular item
     //------------------------------------------------------------------------------------------
-    async storePage(id: string, version: number, data: string): Promise<void> {
+    async getItemCache(itemType: hompagItemType, id: string)
+    {
         await this._loadingTask;
-        if(!this._pages.has(id))
+        const itemCache = this._cache.get(itemType)
+        if(!itemCache) throw Error(`No cache for ${itemType}`)
+
+        if(!itemCache.has(id))
         {
-            this._pages.set(id, [])
+            itemCache.set(id, [])
         }
 
-        const info = {id, version, written: false, arrivalTime: Date.now(), data}
-        this._pages.get(id)?.unshift(info)
+        return itemCache.get(id)!;
+    }
+
+    //------------------------------------------------------------------------------------------
+    // return the ids of all the items for a particular type
+    //------------------------------------------------------------------------------------------
+    async getIdList(itemType: hompagItemType): Promise<string[]>
+    {
+        await this._loadingTask;
+        const itemCache = this._cache.get(itemType)
+        if(!itemCache) return [];
+        return Array.from(itemCache.keys())
+    }
+
+    //------------------------------------------------------------------------------------------
+    // storeItem
+    //------------------------------------------------------------------------------------------
+    async storeItem(itemType: hompagItemType, id: string, version: number, data: string): Promise<void> {
+        const itemCache = await this.getItemCache(itemType, id);
+
+        itemCache.forEach(i => i.isLatest = false);
+        const info:CacheInfo = {itemType, id, isLatest:true, version, written: false, data}
+        itemCache.unshift(info)
         this._recentUpdates.push(info);
     }
 
-    //------------------------------------------------------------------------------------------
-    // getPage
-    //------------------------------------------------------------------------------------------
-    async getPage(id: string, version: number | undefined): Promise<ItemReturn | null> {
-        if(!this._pages.has(id))
-        {
-            this._pages.set(id, [])
-        }
 
-        let foundVersion = this._pages.get(id)?.find(p => !version || p.version === version);
-        if(!foundVersion || !foundVersion.data) {
-            const deepVersion = await this._deepStore.getPage(id, version);
-            if(!deepVersion) return null;
+    //------------------------------------------------------------------------------------------
+    // getItem
+    //------------------------------------------------------------------------------------------
+    async getItem(itemType: hompagItemType, id: string, requestedVersion: number | undefined): Promise<ItemReturn | null> {
+        const itemCache = await this.getItemCache(itemType, id);
 
-            if(foundVersion ){
-                foundVersion.data = deepVersion.data;
+        const loadVersionFromDeepStore = async () => {
+            const deepItem = await this._deepStore.getItem(itemType, id, requestedVersion);
+            if(!deepItem) return undefined;
+            const info = {
+                id,
+                itemType,
+                isLatest: requestedVersion === undefined,
+                version: deepItem.version,
+                written: true,
+                data: deepItem.data
             }
-            else {
-                foundVersion = {
-                    id, 
-                    version: deepVersion.version, 
-                    written: true, 
-                    arrivalTime: 0, 
-                    data: deepVersion.data}
-
-                this._pages.get(id)?.push(foundVersion)                
-            }
+            itemCache.push(info)    
+            return info;        
         }
 
-        return {
-            id,
-            version:foundVersion.version,
-            data: foundVersion.data! 
-        }
+        let item = requestedVersion 
+            ? itemCache.find(w => w.version === requestedVersion)
+            : itemCache.find(w => w.isLatest)
+
+        
+        if(!item) item = await loadVersionFromDeepStore();
+
+        if(item) return {type: itemType, id, version: item!.version, data: item!.data!}
+        else return null;
     }
-
-    //------------------------------------------------------------------------------------------
-    // getPageList
-    //------------------------------------------------------------------------------------------
-    async getPageList(): Promise<VersionedItem[]> {
-        return Array.from(this._pages.keys()).map(k => {
-            return {
-                id: k,
-                versions: this._pages.get(k)!.map(i => i.version)
-            }
-        })
-    }
-
-
-     //------------------------------------------------------------------------------------------
-    // storeWidget
-    //------------------------------------------------------------------------------------------
-    async storeWidget(id: string, version: number, data: string): Promise<void> {
-        if(!this._widgets.has(id))
-        {
-            this._widgets.set(id, [])
-        }
-
-        const info = {id, version, written: false, arrivalTime: Date.now(), data}
-        this._widgets.get(id)?.unshift(info)
-        this._recentUpdates.push(info);
-    }
-
-    //------------------------------------------------------------------------------------------
-    // getWidget
-    //------------------------------------------------------------------------------------------
-    getWidget(id: string): Promise<string | null> {
-        throw new Error("Method not implemented.");
-    }
-    //------------------------------------------------------------------------------------------
-    // getWidgetList
-    //------------------------------------------------------------------------------------------
-    getWidgetList(ids: string[]): Promise<VersionedItem[]> {
-        throw new Error("Method not implemented.");
-    }
-
 }
