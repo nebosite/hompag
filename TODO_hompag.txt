@@ -1,18 +1,5 @@
 
 TODO
-    [x] Widget settings should be a full sized dialog off to the side of the widget
-    [x] Search widget 
-        - when the input is blank, show grey placeholder text to identify the search
-        - Clicking on a blank input shows a search dropdown to pick from
-    [x] Bug: Drag area is invisible
-    [x] Visual Replace borders with whitespace
-    [x] Hide editor garbage until loaded
-    [x] Bullet auto text does not always work:
-    [x] Soften borders
-    [x] Bug:  '* ' at the front of a line of links removes to end of the line
-    [x] Add a few more color schemes             https://color.adobe.com/search?q=most-popular
-        - Need to have better color choices
-        - choices should be pure colors without values
         
         
     [ ] Cache pages
@@ -25,17 +12,6 @@ TODO
         [ ] Cache items in memory
         [ ] Write changes on shutdown or after 5 minutes of inactivity
         
-
-    {name: "Miami Hot Dog", colors: ["#0DFF33","#193CFF","#CFFF01","#FF0038","#FFC50D"]},
-    {name: "Lagoon Puppy", colors: ["#0C41F8","#0B6FD9","#00B4F0","#0BD9D6","#0CF8B2"]},
-    {name: "Prairie Chicken", colors: ["#0DFC63","#1ED90B","#97F001","#D9CF0B","#FAC700"]},
-    {name: "Moab 7-11", colors: ["#FCD50D","#D99D0B","#F08C00","#D95D0B","#FA3800"]},
-    {name: "Lincoln on Mars", colors: ["#FCA90D","#D9720B","#F04D01","#D9260B","#FA002B"]},
-    {name: "Emperor Foobar", colors: ["#F80DFF","#8F0BDE","#4700F5","#0B17DE","#0063FF"]},
-    {name: "Kindergarten Recess", colors: ["#11FF00","#00A5E0","#8300F5","#DE2B0B","#FFC200"]},
-    {name: "Rascal Opportunist", colors: ["#F50C90","#F5AC18","#6500F5","#22F518","#005FF5"]},
-    {name: "Regolith Camping", colors: ["#ffffff","#E5DFC1","#E0DFD5","#665500","#C2C0B8"]},
-
 
 NEW
 
@@ -106,6 +82,20 @@ MAYBE NEVER
 
 
 -- DONE ---------------------------------------------------------------------
+
+    [x] Widget settings should be a full sized dialog off to the side of the widget
+    [x] Search widget 
+        - when the input is blank, show grey placeholder text to identify the search
+        - Clicking on a blank input shows a search dropdown to pick from
+    [x] Bug: Drag area is invisible
+    [x] Visual Replace borders with whitespace
+    [x] Hide editor garbage until loaded
+    [x] Bullet auto text does not always work:
+    [x] Soften borders
+    [x] Bug:  '* ' at the front of a line of links removes to end of the line
+    [x] Add a few more color schemes             https://color.adobe.com/search?q=most-popular
+        - Need to have better color choices
+        - choices should be pure colors without values
 
     [x] Make links clickable
     [x] Color Theme picker
