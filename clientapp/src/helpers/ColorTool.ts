@@ -2,11 +2,11 @@ import { registerType } from "models/hompagTypeHelper"
 import { colorThemes } from "models/PageModel"
 
 export enum ColorIndex {
-    Foreground = 0,
-    Background = 1,
-    Highlight = 2,
+    Background = 0,
+    Foreground = 1,
+    Special = 2,
     Shadow = 3,
-    Special = 4
+    Highlight = 4,
 }
 
 export enum ColorValue {

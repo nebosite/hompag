@@ -60,7 +60,7 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
             return {
                 value: theme.name,
                 label:  <div className={styles.divRow}>
-                    <div style={{width:"110px", fontSize:"80%"}}>{theme.name}</div> 
+                    <div style={{width:"160px", fontSize:"80%"}}>{theme.name}</div> 
                     {theme.colors.map(c => <div style={{background: c, width: "12px", height: "12px"}}></div>)}
                 </div>
             }

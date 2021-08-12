@@ -135,7 +135,12 @@ export class SpotifyData extends WidgetModelData
         this.save();
     }
 
-    @observable state_playdata: SpotifyPlayerResponse = null
+    @observable _state_playdata: SpotifyPlayerResponse = null
+    get state_playdata() {return this._state_playdata}
+    set state_playdata(value:SpotifyPlayerResponse) {
+        this._state_playdata = value;
+        this.save();
+    }
 
     ref_spotify:RestHelper = null;  
     get api() {
@@ -154,9 +159,7 @@ export class SpotifyData extends WidgetModelData
 
     async getCurrentlyPlaying() {
         const api = this.api;
-        if(!api) {
-            console.log("Whoops: tried to call spotify, but api is not available")
-        }
+        if(!api) return;
 
         try {
             const response = await api.restGet<SpotifyPlayerResponse>("me/player");

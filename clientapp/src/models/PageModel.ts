@@ -12,10 +12,21 @@ registerProperty("PageModel", "widgetContainers", (t,n,o) => {
 
 // https://color.adobe.com/explore
 export const colorThemes = [
-    {name: "Desert", colors: ["#FFA100","#FFCF00","#FF0051","#007DFF","#0004FF"]},
-    {name: "Sepia Vintage", colors: ["#063647","#458985","#DFDFC9","#DBA67B","#A55C55"]},
-    {name: "Poster", colors: ["#2A2359","#04C4D9","#D8F2F0","#F2CB07","#F26716"]},
-    {name: "Complementarios", colors: ["#5433CC","#FFEA29","#FFFDED","#3C258F","#FFF48C",]},
+    {name: "Seattle Laserbeam", colors: ["#ADFF0D","#0CE811","#00FF94","#00CBEB","#0058FF"]},
+    {name: "Piñata Heartbreak", colors: ["#FFC119","#DA0DFF","#4E00FF","#97FF19","#0D46FF"]},
+    {name: "Miami Hot Dog", colors: ["#0DFF33","#193CFF","#CFFF01","#FF0038","#FFC50D"]},
+    {name: "Lagoon Puppy", colors: ["#0C41F8","#0B6FD9","#00B4F0","#0BD9D6","#0CF8B2"]},
+    {name: "Prairie Chicken", colors: [ "#0DFC63","#FAC700","#1ED90B","#97F001","#D9CF0B"]},
+    {name: "Moab 7-11", colors: ["#FCD50D","#D99D0B","#F08C00","#D95D0B","#FA3800"]},
+    {name: "Lincoln on Mars", colors: ["#FCA90D","#D9720B","#F04D01","#D9260B","#FA002B"]},
+    {name: "Emperor Foobar", colors: ["#F80DFF","#8F0BDE","#4700F5","#0B17DE","#0063FF"]},
+    {name: "Kindergarten Recess", colors: ["#11FF00","#00A5E0","#8300F5","#DE2B0B","#FFC200"]},
+    {name: "Rascal Opportunist", colors: ["#F50C90","#F5AC18","#6500F5","#22F518","#005FF5"]},
+    {name: "Regolith Camping", colors: ["#ffffff","#E5DFC1","#E0DFD5","#665500","#C2C0B8"]},
+    {name: "Portales on my Mind", colors: ["#FFA100","#FFCF00","#FF0051","#007DFF","#0004FF"]},
+    {name: "Sepia Virus", colors: ["#063647","#458985","#DFDFC9","#DBA67B","#A55C55"]},
+    {name: "Poster Adult", colors: ["#2A2359","#04C4D9","#D8F2F0","#F2CB07","#F26716"]},
+    {name: "Complements on the Chorf", colors: ["#5433CC","#FFEA29","#FFFDED","#3C258F","#FFF48C",]},
 ]
 
 // -------------------------------------------------------------------

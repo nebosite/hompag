@@ -186,7 +186,7 @@ body {
 
 .widgetFrame .ConfigButton {
     background:  #00000000;
-    color:  #00000040;
+    color:  #00000020;
     display:table-cell; 
     position:absolute; 
     right: 3px;
@@ -264,4 +264,9 @@ body {
     position: absolute;
     top: 5px;
     left: 5px;
+}
+
+.searchInput {
+    border: 0px;
+    border-bottom: 1px solid #00000040;
 }

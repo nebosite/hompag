@@ -34,8 +34,12 @@ ul {
    background: #00000030; 
 }
 
+a {
+    color: inherit;
+}
+
 a:visited {
-    color: #00000080
+    color: inherit;
 }
 
 a:focus {
@@ -44,9 +48,9 @@ a:focus {
 }
 
 a:hover {
-    border: 1px solid black;
+    border: 1px solid #00000040;
     margin-right: -1px;
-
+    cursor: pointer;
 }
 
 a:active {

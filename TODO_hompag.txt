@@ -4,6 +4,17 @@ TODO
     [x] Search widget 
         - when the input is blank, show grey placeholder text to identify the search
         - Clicking on a blank input shows a search dropdown to pick from
+    [x] Bug: Drag area is invisible
+    [x] Visual Replace borders with whitespace
+    [x] Hide editor garbage until loaded
+    [x] Bullet auto text does not always work:
+    [x] Soften borders
+    [x] Bug:  '* ' at the front of a line of links removes to end of the line
+    [x] Add a few more color schemes             https://color.adobe.com/search?q=most-popular
+        - Need to have better color choices
+        - choices should be pure colors without values
+        
+        
     [ ] Cache pages
         - keep track of page versionson the server
         - remember local versions of pages
@@ -15,36 +26,18 @@ TODO
         [ ] Write changes on shutdown or after 5 minutes of inactivity
         
 
+    {name: "Miami Hot Dog", colors: ["#0DFF33","#193CFF","#CFFF01","#FF0038","#FFC50D"]},
+    {name: "Lagoon Puppy", colors: ["#0C41F8","#0B6FD9","#00B4F0","#0BD9D6","#0CF8B2"]},
+    {name: "Prairie Chicken", colors: ["#0DFC63","#1ED90B","#97F001","#D9CF0B","#FAC700"]},
+    {name: "Moab 7-11", colors: ["#FCD50D","#D99D0B","#F08C00","#D95D0B","#FA3800"]},
+    {name: "Lincoln on Mars", colors: ["#FCA90D","#D9720B","#F04D01","#D9260B","#FA002B"]},
+    {name: "Emperor Foobar", colors: ["#F80DFF","#8F0BDE","#4700F5","#0B17DE","#0063FF"]},
+    {name: "Kindergarten Recess", colors: ["#11FF00","#00A5E0","#8300F5","#DE2B0B","#FFC200"]},
+    {name: "Rascal Opportunist", colors: ["#F50C90","#F5AC18","#6500F5","#22F518","#005FF5"]},
+    {name: "Regolith Camping", colors: ["#ffffff","#E5DFC1","#E0DFD5","#665500","#C2C0B8"]},
+
 
 NEW
-    [ ] Bug: Drag area is invisible
-    [ ] Right-click TODO straight to todo widtget
-    [ ] Visual
-        [ ] Replace borders with whitespace
-    [ ] Hide editor garbage until loaded
-    [ ] Define my own search engine
-    [ ] Bullet auto text does not always work:
-            Tooling
-            • Crashcow / local / git / 
-            • Tricorder
-
-            JIRA
-            * ???
-            
-            
-    [ ] Soften borders
-    [ ] Add a few more color schemes
-        - Need to have better color choices
-        - choices should be pure colors without values
-    [ ] React Service Runner? (Question on reddit)
-    [ ] Bug:  '* ' at the front of a line of links removes to end of the line
-    [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
-        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
-        https://developer.spotify.com/documentation/
-        - Query for current playlist, all playlists
-        - Controls: pause, play, skip, position
-        - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
-            - Randomly choose songs based on if you answered questions correctly
 
 
 WIDGET IDEAS
@@ -55,7 +48,8 @@ WIDGET IDEAS
     - Scribble notes (perfect pencil)
     - Stacked TODO
     - Alfred TODO
-    [ ] widget: Rule-base homepage:  Work page shows from 8am-5pm M-F
+        - Right-click->Add to TODO   puts link straight to todo widtget
+    - Rule-base homepage:  Work page shows from 8am-5pm M-F
     - Ping tester - ping known locations around the world
     - Abacus
     - Real-time growing plant
@@ -73,6 +67,15 @@ WIDGET IDEAS
 IMPORTANT
    
 BACKLOG
+    [ ] Define my own search engine
+    [ ] Hovering over links should show url
+    [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
+        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
+        https://developer.spotify.com/documentation/
+        - Query for current playlist, all playlists
+        - Controls: pause, play, skip, position
+        - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
+            - Randomly choose songs based on if you answered questions correctly
     [ ] Make it work across machines
         [ ] Server should watch the file system for changes
         [ ] A connected client has a visible page + widgets
@@ -81,6 +84,7 @@ BACKLOG
     [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
 
 MAYBE NEVER
+    [ ] React Service Runner? (Question on reddit)
     [ ] Start with a smaller window height and expand as items get close to the bottom
     [ ] Link tooltip with options
         - Edit link
