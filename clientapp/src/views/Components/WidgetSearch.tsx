@@ -18,10 +18,10 @@ interface SearchConfig
 
 const searches:SearchConfig[] = [
     {   name: "Google", 
-    createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
+        createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
     },
-    {   name: "Google2", 
-    createSubmitUrl: (searchText: string) => `https://www.google.com/search?hl=en&q=${searchText}`
+    {   name: "Amazon", 
+        createSubmitUrl: (searchText: string) => `https://www.amazon.com/s?k=${searchText}`
     },
     {   name: "Thesaurus", 
         createSubmitUrl: (searchText: string) => `https://www.thesaurus.com/browse/${searchText}`
