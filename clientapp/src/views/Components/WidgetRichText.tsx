@@ -171,12 +171,12 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
                         icons: 'small',
                         indentation: "10px",
                         toolbar: false,//'bold italic color | outdent indent | bullist numlist | code',
-                        contextmenu: "bold italic link lists | code",
+                        contextmenu: "bold italic link | code",
                         toolbar_location: 'bottom',
-                        plugins: [
-                            'advlist autolink lists link image charmap print preview anchor',
-                            'searchreplace visualblocks code',
-                            'insertdatetime media table paste code'
+                        plugins: [ 'link code'
+                            // 'advlist autolink lists link image charmap print preview anchor',
+                            // 'searchreplace visualblocks code',
+                            // 'insertdatetime media table paste code'
                         ],
                         content_css: './editor.css',
                     }}

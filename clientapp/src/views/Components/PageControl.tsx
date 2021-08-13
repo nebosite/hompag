@@ -271,7 +271,7 @@ extends React.Component<PageControlProps, PageControlState>
 
         const renderPageItem = (container: WidgetContainer) => {
             if(!draggingOK) return <div>...</div>
-            switch(container.ref_widget.widgetType) {
+            switch(container.ref_widget?.widgetType) { 
                 case WidgetType.Picker: return <WidgetPicker context={container} />; 
                 case WidgetType.Editor: 
                 case WidgetType.RichText: return <WidgetRichText context={container} />; 

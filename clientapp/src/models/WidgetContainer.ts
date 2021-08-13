@@ -1,7 +1,6 @@
 import { registerType } from "./hompagTypeHelper";
 import { observable, makeObservable, reaction } from "mobx";
 import { PageModel } from "./PageModel";
-import { generateStringId } from "helpers/randomHelper";
 import { WidgetType } from "./WidgetModel";
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 
@@ -10,7 +9,7 @@ registerType("WidgetContainer", bag => new WidgetContainer())
 const knownDataTypes = new Map<WidgetType, string>()
 export const registerDataTypeForWidgetType =(widgetType: WidgetType, dataType: string) =>
 {
-    console.log(`Registering data type '${dataType}' for widget type '${widgetType}'`)
+    //console.log(`Registering data type '${dataType}' for widget type '${widgetType}'`)
     knownDataTypes.set(widgetType, dataType);
 }
 export const dataTypeForWidgetType = (widgetType: WidgetType) => knownDataTypes.get(widgetType);
@@ -20,7 +19,7 @@ export const dataTypeForWidgetType = (widgetType: WidgetType) => knownDataTypes.
 // Generic class for holding widget data
 // -------------------------------------------------------------------
 export class WidgetContainer {
-    @observable widgetId: string = generateStringId(); 
+    @observable widgetId: string = undefined; 
     @observable x: number;
     @observable y: number;
     @observable w: number;
@@ -32,7 +31,7 @@ export class WidgetContainer {
 
     @observable state_configuring = false;
 
-    get ref_widget() {return this.parentPage.getWidget(this.widgetId)}
+    get ref_widget() { return this.parentPage?.getWidget(this.widgetId)}
 
     get colorTheme() { 
         const returnMe = this.parentPage?.colorTheme;
@@ -45,11 +44,11 @@ export class WidgetContainer {
     // -------------------------------------------------------------------
     // ctor 
     // -------------------------------------------------------------------
-    constructor(parent: PageModel = null)
+    constructor(parent: PageModel = null, widgetId: string | undefined = undefined)
     {
         makeObservable(this);
+        this.widgetId = widgetId;
         this.parentPage = parent;
-        this.parentPage?.getWidget(this.widgetId, false);
 
         reaction( 
             () => [this.x, this.y, this.w, this.h, this.foregroundColorIndex, this.foregroundColorValue,

@@ -6,13 +6,13 @@ import { AppModel } from "models/AppModel";
 import { trimChars } from "helpers/textHelpers";
 import { GetStartedModel } from "models/GetStartedModel";
 import { GetStartedPage } from "views/GetStartedPage";
+import { makeLocalStorage } from "models/LocalStorage";
 const packageInfo = require("../package.json");
 export class GLOBALS {
      static Version = packageInfo.version;
      static Title = `hompag ${(process.env.NODE_ENV === "development") ? "DEV": "" } ${GLOBALS.Version} `;
 }
 
-document.title = GLOBALS.Title;
 const autoRedirect = window.sessionStorage.getItem("autoredirect");
 if( autoRedirect){
     console.log(`Redirection to: ${autoRedirect}`)
@@ -22,6 +22,7 @@ if( autoRedirect){
 
 const urlParts = trimChars(window.location.pathname, ['/']).split('/',2);
 const pageName = urlParts[0];
+document.title = (pageName ?? "(picking)") + ": " + GLOBALS.Title ;
 if(pageName === "")
 {
     const getStartedModel = new GetStartedModel();
@@ -32,7 +33,7 @@ if(pageName === "")
 
 }
 else {
-    const theAppModel:AppModel = new AppModel(pageName);
+    const theAppModel:AppModel = new AppModel(pageName, makeLocalStorage());
 
     ReactDOM.render(
         <Provider appModel={theAppModel}> 

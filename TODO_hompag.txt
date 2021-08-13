@@ -6,13 +6,39 @@ TODO
             or if the server is going down
         - Keep versions and never overwrite
     [ ] Cache pages on the client   
-        [ ] Set up a local store for page and widget access
-        [ ] At first, load everything from Cache
+        [x] Set up a local store for page and widget access
+        [x] At first, load everything from Cache
+        [x] Fix problems
+            - Version you save is actually wrong - don't serialize it
+            - Mark the version as -1 to signal that you are in the middle of saving the page
+                or maybe use setTimeout on the server to send the updates
+                or maybe just both
         [ ] pass the page widget list to server and get all the versions
         [ ] For each widget, if the version is newer, load from the server
-        
-
+    [ ] Will caching the page load cause an issue?
 NEW
+    [ ] Perf: components that are expensive to evaluate:
+        PageControl - 27ms
+            Combobox 5.6
+            widgetConfigurator 4 ms
+        loadWidgetContent - 15 ms serial!
+        Web sockets seem to load multiple times
+        AppStyles.module.css - 3ms
+        TinyMCE is just super expesive
+            - Keeps loading .css files
+            - keeps loading a bunch of plugins
+            - Theme loading was 100ms!!!
+    [ ] Perf Mobx is expensive (~100ms to render from widget updates)
+        https://medium.com/workday-engineering/react-performance-and-mobx-b038085ecb72
+        [ ] For batching:
+            Batch the loading of content into holder objects, then assign them all in the same action
+        [ ] don't create object and lambas in the react compenent declarations
+        [ ] Avoid looking at properties of observables until the last second.  eg, avoid this:
+            <Mycomponent somevalue={myObservable.value} />
+    [ ] Perf Network
+        
+        
+    [ ] Intercept Ctrl-S on the page to prevent accidentally trying to save it
     [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
 
 WIDGET IDEAS

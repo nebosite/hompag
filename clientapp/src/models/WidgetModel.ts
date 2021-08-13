@@ -20,11 +20,11 @@ export class WidgetModelData {
 
 export class WidgetModel {
     id: string 
-    version: number = 0;
+    version: number = -999;
     alias: string = null
     @observable data: WidgetModelData = null
 
-    @observable private _myType: WidgetType = WidgetType.Picker;
+    @observable private _myType: WidgetType = undefined;
     get widgetType() { return this._myType}
     set widgetType(value: WidgetType) { action(()=> {
             if(this._myType === WidgetType.Picker)
@@ -34,6 +34,10 @@ export class WidgetModel {
                 this._myType = value;
                 console.log(`new type: ${value}`)
                 this.save();
+            }
+            else if(!this._myType && value === WidgetType.Picker)
+            {
+                this._myType = value;
             }
             else {
                 console.log(`WEIRD:  Widget trying to change type from ${this._myType} to ${value}`)

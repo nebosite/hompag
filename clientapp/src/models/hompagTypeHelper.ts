@@ -29,6 +29,7 @@ export class hompagTypeHelper implements ITypeHelper
     shouldStringify(typeName: string, propertyName: string, object: any): boolean {
         if(propertyName.startsWith("ref_")) return false;
         if(propertyName.startsWith("state_")) return false;
+        if((typeName === "WidgetModel" || typeName === "PageModel") && propertyName === "version") return false;
         return true;
     }
 

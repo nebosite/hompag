@@ -1,7 +1,7 @@
 
 import BruteForceSerializer from "helpers/BruteForceSerializer";
 import { IDataChangeListener, WebSocketListener } from "helpers/DataChangeListener";
-import { RestHelper } from "helpers/RestHelper";
+import { ILocalStorage, RestHelper } from "helpers/RestHelper";
 import { ThrottledAction } from "helpers/ThrottledAction";
 import { action, makeObservable, observable } from "mobx";
 import { hompagTypeHelper, registerGlobalItem } from "./hompagTypeHelper";
@@ -9,7 +9,7 @@ import { PageModel } from "./PageModel";
 import { WidgetModel, WidgetType } from "./WidgetModel";
 import { dataTypeForWidgetType } from "./WidgetContainer"; 
 
-
+const WIDGET_VERSION_ISLOADING = -1;
 
 interface ItemRequestResponse
 {
@@ -26,6 +26,11 @@ interface StoreResponse
     data: number;
     errorMessage: string;
 }
+interface WidgetVersionResponse
+{
+    data: {id: string, version: number}[];
+    errorMessage: string;
+}
 
 // -------------------------------------------------------------------
 // The AppModel
@@ -35,8 +40,8 @@ export class AppModel {
     @observable page: PageModel;
     @observable recentError?: string;
 
-    //private _localStorage:ILocalStorage;
-    private _api = new RestHelper("/api/");
+    private _localStorage:ILocalStorage;
+    private _api:RestHelper;
     private _serializer: BruteForceSerializer;
     private _typeHelper: hompagTypeHelper;
     private _dataChangeListener: IDataChangeListener
@@ -45,23 +50,30 @@ export class AppModel {
     // -------------------------------------------------------------------
     // ctor 
     // -------------------------------------------------------------------
-    constructor(pageName: string)
+    constructor(pageName: string, storage: ILocalStorage)
     {
         makeObservable(this);
+        this._localStorage = storage;
+        this._api = new RestHelper("/api/", this._localStorage); 
         registerGlobalItem("theApp", this);
         this._typeHelper = new hompagTypeHelper();
         this._serializer = new BruteForceSerializer(this._typeHelper)
-        this._dataChangeListener = new WebSocketListener((type, itemId, version) => {
+        this._dataChangeListener = new WebSocketListener(async (type, itemId, version) => {
 
-            console.log(`Data change: ${type}.${itemId}.${version}`)
-            if(type === "page" && this.page.name === itemId && this.page.version !== version) {
-                this.loadPage(itemId);           
+            console.log(`Server says this changed: ${type}.${itemId}.${version}`)
+            if(type === "page" 
+                && this.page
+                && this.page.name === itemId 
+                && this.page.version !== version
+                && this.page.version !== WIDGET_VERSION_ISLOADING) {
+                console.log(`Initiating load: ${this.page.name}.${this.page.version}`)
+                this.loadPage(itemId, false);           
             }
             else if(type === "widget") {
-                const foundWidget = this.getWidget(itemId,false)
-                if(foundWidget && foundWidget.version !== version)
+                const foundWidget = this.page.getWidget(itemId)
+                if(foundWidget && foundWidget.version !== version && foundWidget.version !== WIDGET_VERSION_ISLOADING)
                 {
-                    this.loadWidgetContent(foundWidget)   
+                    this.loadWidgetContent(foundWidget, false)   
                 }
             } 
         })
@@ -73,15 +85,13 @@ export class AppModel {
     // -------------------------------------------------------------------
     // loadPage 
     // -------------------------------------------------------------------
-    async loadPage(name: string)
+    async loadPage(name: string, useCache: boolean = true)
     {
-        console.log("Entering loadPage()")
-
         // Allow any active page saves to complete by adding a new throttler
         // for the newly loaded page
         this._savePageThrottler = new ThrottledAction(500)
 
-        const pageData = await this._api.restGet<ItemRequestResponse>(`pages/${name}`);
+        const pageData = await this._api.restGet<ItemRequestResponse>(`pages/${name}`, useCache);
         if(pageData.errorMessage) {
             this.recentError = pageData.errorMessage;
         }
@@ -96,7 +106,8 @@ export class AppModel {
                     const loadedPage = this._serializer.parse<PageModel>(pageData.data.data);
                     this.page = loadedPage;
                     this.page.version = pageData.data.version;
-                    console.log(`PAGE LOADED ${loadedPage.name}.${loadedPage.version}`)
+                    //console.log(`Page loaded: ${this.page.name}.${this.page.version} [${this.page.widgetIds.join(',')}]`)
+                    setTimeout(() => {this.refreshWidgets(this.page)}, 100)
                 })()
             }
             catch(err)
@@ -109,22 +120,48 @@ export class AppModel {
     }
 
     // -------------------------------------------------------------------
+    // refreshWidgets - ask the server for widget versions and reload the
+    //                  content fromt he server if the widget is not the
+    //                  latest version
+    // -------------------------------------------------------------------
+    async refreshWidgets(page: PageModel)
+    {
+        console.log("Refreshing widgets")
+        const response = await this._api.restGet<WidgetVersionResponse>(
+            `query?type=widgetversions&ids=${page.widgetIds.join(',')}`, false);
+
+        if(response.errorMessage) {
+            this.recentError = response.errorMessage;
+        }
+        else {
+            response.data.forEach(async(i) => {
+                const widget = this.getWidget(i.id);
+                if(widget.version !== i.version) {
+                    console.log(`Loading from server:  widget ${i.id}.${i.version} because version is ${widget.version}`)
+                    this.loadWidgetContent(widget, false);
+                }
+            })
+        }
+           
+    }
+
+    // -------------------------------------------------------------------
     // loadWidget - restore widget contents from server 
     // -------------------------------------------------------------------
-    async loadWidgetContent(widget: WidgetModel)
+    async loadWidgetContent(widget: WidgetModel, useCache: boolean = true)
     {
-        let response =  await this._api.restGet<ItemRequestResponse>(`widgets/${widget.id}`);
+        let response =  await this._api.restGet<ItemRequestResponse>(`widgets/${widget.id}`, useCache);
         if(response.data)
         {
             const loadedWidget = JSON.parse(response.data.data);
-            if(!loadedWidget) throw Error(`Data was not a Widget: ${response.data}`)
+            if(!loadedWidget) throw Error(`Data was not a Widget: ${response.data}`) 
             let loadedData = loadedWidget.data
 
             loadedWidget.data = this._typeHelper.constructType(dataTypeForWidgetType(loadedWidget._myType)) as any;
             Object.assign(loadedWidget.data, loadedData);
             widget.loadFrom(loadedWidget); 
             widget.version = response.data.version;
-            console.log(`Widget loaded: ${widget.id}.${widget.version}`)
+            //console.log(`Widget loaded: ${widget.id}.${widget.version}`)
         }
         else if(response.errorMessage) {
             console.log(`No data for ${widget.id}:  ${response.errorMessage}`)
@@ -134,19 +171,17 @@ export class AppModel {
     private _widgetContent = new Map<string, WidgetModel>()
 
     // -------------------------------------------------------------------
-    // getWidget
+    // getWidgetLoadLater 
     // -------------------------------------------------------------------
-    getWidget(widgetId: string, loadIfNotFound: boolean)
+    getWidget(widgetId: string)
     {
-        if(!this._widgetContent.has(widgetId)){
+        if(!this._widgetContent.has(widgetId)) {
             const newContent = new WidgetModel(this, widgetId);
             this._widgetContent.set(widgetId, newContent)
-            if(loadIfNotFound) {
-                this.loadWidgetContent(newContent)
-            }
+            this.loadWidgetContent(newContent)
         }
 
-        return this._widgetContent.get(widgetId);
+        return this._widgetContent.get(widgetId)
     }
 
     // -------------------------------------------------------------------
@@ -171,7 +206,9 @@ export class AppModel {
     // -------------------------------------------------------------------
     savePage(pageToSave: PageModel)
     {
-        console.log(`Saving page ${pageToSave.name}`)
+        const originalVersion = pageToSave.version;
+        console.log(`Saving page ${pageToSave.name}.${pageToSave.version}`)
+        pageToSave.version = WIDGET_VERSION_ISLOADING;
         this._savePageThrottler.run(async () => {
             const payload = this._serializer.stringify({id: 0, data: pageToSave})
             const response = await this._api.restPost<StoreResponse>(`pages/${pageToSave.name}`, payload)
@@ -179,10 +216,11 @@ export class AppModel {
             if(response.errorMessage)
             {
                 this.reportError("Save Page", response.errorMessage)
+                pageToSave.version = originalVersion
             }
             else {
-                pageToSave.version = response.data!
-                console.log(`New Page Version: ${pageToSave.version}`)
+                pageToSave.version = response.data
+                console.log(`New Page Version: ${pageToSave.version} (${JSON.stringify(response)})`)
             }
         });
     }
@@ -192,7 +230,9 @@ export class AppModel {
     // -------------------------------------------------------------------
     async saveWidgetData(widget: WidgetModel)
     {
+        const originalVersion = widget.version;
         const payload = this._serializer.stringify({id: 0, data: widget});
+        widget.version = WIDGET_VERSION_ISLOADING;
         console.log(`Writing widget: ${widget.id}`)
         const response = await this._api.restPost<StoreResponse>(`widgets/${widget.id}`, payload)
             .catch(err => ({errorMessage: err} as StoreResponse))
@@ -200,9 +240,11 @@ export class AppModel {
         if(response.errorMessage)
         {
             this.reportError("Save Widget", response.errorMessage)
+            widget.version = originalVersion;
         }
         else {
             widget.version = response.data!
+            console.log(`New Widget Version: ${widget.version}`)
         }
     }
 }

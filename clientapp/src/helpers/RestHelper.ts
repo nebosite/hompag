@@ -124,6 +124,9 @@ export class RestHelper implements IRestHelper
             const cachedString = await this._cache.loadObject<{data: string}>(query);
             if(cachedString) return cachedString.data;
         }
+        if(!shouldCache) {
+            this._cache.removeObject(query);
+        }
 
         const request = { method: method, body: jsonBody, headers: this._headers };
 

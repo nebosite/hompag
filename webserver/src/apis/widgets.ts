@@ -15,7 +15,7 @@ import { safeSend } from "../helpers/SafeSend";
 //     }
 // };
 // ---------------------------------------------------------------------------------
-// REST Api to retrieve a page
+// REST Api to retrieve a widget
 // ---------------------------------------------------------------------------------
 export function getWidget(logger:ILogger) {
 
@@ -28,14 +28,14 @@ export function getWidget(logger:ILogger) {
 };
 
 // ---------------------------------------------------------------------------------
-// REST Api to store a page
+// REST Api to store a widget
 // ---------------------------------------------------------------------------------
 export function storeWidget(logger:ILogger) {
     return async (req: Request, res: Response) => {
         await safeSend(res, logger, req.url, async () => {
             const id = req.params.id;
-            await serverModel.storeWidget(id, req.body)
-            return "OK"
+            return await serverModel.storeWidget(id, req.body)
         })   
     }
 };
+

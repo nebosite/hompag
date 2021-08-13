@@ -34,8 +34,7 @@ export function storePage(logger:ILogger) {
     return async (req: Request, res: Response) => {
         await safeSend(res, logger, req.url, async () => {
             const pageId = req.params.id;
-            await serverModel.storePage(pageId, req.body)
-            return "OK"
+            return await serverModel.storePage(pageId, req.body)
         })   
     }
 };

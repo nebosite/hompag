@@ -54,12 +54,19 @@ export class PageAccessLocalDisk implements IItemStore
     // ---------------------------------------------------------------------------------
     getVersionList(itemType: hompagItemType, id: string): Promise<number[]> {
         return new Promise<number[]>((resolve, reject) => {
-            const itemFolder = path.join(this._storeLocation, `${itemType}/${id}`)
+            const itemFolder =  path.join(this._storeLocation, `${itemType}/${id}`)
+            if(!fs.existsSync(itemFolder)){
+                fs.mkdirSync(itemFolder)
+            }
+            
             fs.readdir(itemFolder,  (err: string, files: any[]) => {
+                
                 if (err) {
                     this._logger.logError(`Cannot load Item '${itemType}/${id}': ` + err)
                     resolve([])
                 } 
+
+                if(!files) return [];
 
                 const output = files.map(f => {
                     const versionText = (f as string).replace(/\.json$/i, "")

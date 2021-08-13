@@ -35,7 +35,7 @@ if(hash.access_token)
     window.sessionStorage.setItem("spotify_access_token",JSON.stringify(tokenToSave))
 }
 
-console.log(`Access token: ${hash.access_token}`)
+//console.log(`Access token: ${hash.access_token}`)
 
 interface SpotifyDevice {
     id: string,

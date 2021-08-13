@@ -3,6 +3,8 @@ import { ColorTool } from "helpers/ColorTool";
 import { action, makeObservable, observable, reaction } from "mobx";
 import { AppModel } from "./AppModel";
 import { WidgetContainer } from "./WidgetContainer";
+import { WidgetType } from "./WidgetModel";
+import { generateStringId } from "helpers/randomHelper";
 
 
 registerType("PageModel", bag => new PageModel(bag.get("theApp")))
@@ -35,13 +37,15 @@ export const colorThemes = [
 export class PageModel
 {
     name: string;
-    version: number = 0;
+    version: number = -999;
     @observable widgetContainers: WidgetContainer[] = observable<WidgetContainer>([])
     @observable columnCount = 24;
     @observable columnWidth = 50;
     @observable rowHeight = 50;
     get pageWidth() {return this.columnCount * this.columnWidth}; 
     @observable colorTheme: ColorTool;  
+
+    get widgetIds() {return this.widgetContainers.map(c => c.widgetId)}
 
     private ref_App: AppModel; 
 
@@ -96,13 +100,20 @@ export class PageModel
         const columns = Math.max(1, column2-column1);
         const rows = Math.max(1, row2-row1);
 
-        const newItem = new WidgetContainer(this);
+        const widgetId = generateStringId(); 
+        const newWidget = this.ref_App.getWidget(widgetId);
+        newWidget.widgetType = WidgetType.Picker;
+
+        const newItem = new WidgetContainer();
         action(() => {
+            newItem.widgetId = widgetId;
             newItem.x = column1;
             newItem.y = row1;
             newItem.w = columns;
             newItem.h = rows;
-            this.widgetContainers.push(newItem) 
+            this.widgetContainers.push(newItem)
+            newItem.parentPage = this;
+            console.log(`New container2: ${newItem.widgetId} : ${newItem.ref_widget.widgetType}`)
         })();
         
     }
@@ -113,7 +124,7 @@ export class PageModel
     setSomethingOnContainer(id: string, setter: (widget: WidgetContainer)=> void)
     {
         const container = this.widgetContainers.find(wc => wc.getKey() === id)
-        console.log(`Setting something on ${container?.ref_widget.id}`)
+        //console.log(`Setting something on ${container?.ref_widget.id}`)
         if(container)
         {
             action(() => setter(container))()
@@ -149,8 +160,12 @@ export class PageModel
     // -------------------------------------------------------------------
     // getWidget 
     // -------------------------------------------------------------------
-    getWidget(id: string, loadIfNotFound: boolean = true)
+    getWidget(id: string)
     {
-        return this.ref_App.getWidget(id, loadIfNotFound)
+        if(this.widgetContainers.find(c => c.widgetId === id))
+        {
+            return this.ref_App.getWidget(id)  
+        }
+        return null;
     }
 }

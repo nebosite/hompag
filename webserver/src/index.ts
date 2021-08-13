@@ -11,6 +11,7 @@ import { getWidget, storeWidget } from './apis/widgets';
 import { handleSocket } from './apis/handleSocket';
 import { VERSION } from './GLOBALS';
 import { PageCache } from './models/PageCache';
+import { handleQueries } from './apis/query';
 
 
 // ---------------------------------------------------------------------------------
@@ -67,6 +68,7 @@ app.get("/api/pages/:id", getPage(logger))
 app.get("/api/pages", getPages(logger))
 app.post("/api/widgets/:id", storeWidget(logger))
 app.get("/api/widgets/:id", getWidget(logger))
+app.get("/api/query", handleQueries(logger))
 
 app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger));
 

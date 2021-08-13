@@ -12,7 +12,6 @@ extends React.Component<{pageItem: WidgetContainer}>
     render() {
         return (
             <div>
-                I appear to be an unknown kind of widget: {this.props.pageItem.ref_widget.widgetType}
             </div> 
         );
     }; 
