@@ -1,20 +1,19 @@
 
 TODO
         
-        
-    [ ] Cache pages
-        - keep track of page versionson the server
-        - remember local versions of pages
-        - ask server for page versions and load the ones out of date
-    [ ] Local caching to make the page keep working when the server is offline
-        - Highest Write ID wins - should be easy to do this if the server is caching too
-    [ ] Versioning on the server
-        [ ] Cache items in memory
-        [ ] Write changes on shutdown or after 5 minutes of inactivity
+    [x] Cache pages on the server 
+        - Only save page to disk if they haven't been touched for a minute  
+            or if the server is going down
+        - Keep versions and never overwrite
+    [ ] Cache pages on the client   
+        [ ] Set up a local store for page and widget access
+        [ ] At first, load everything from Cache
+        [ ] pass the page widget list to server and get all the versions
+        [ ] For each widget, if the version is newer, load from the server
         
 
 NEW
-
+    [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
 
 WIDGET IDEAS
     - frequent links
@@ -60,6 +59,8 @@ BACKLOG
     [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
 
 MAYBE NEVER
+    [ ] Local caching to make the page keep working when the server is offline
+        - Highest Write ID wins - should be easy to do this if the server is caching too
     [ ] React Service Runner? (Question on reddit)
     [ ] Start with a smaller window height and expand as items get close to the bottom
     [ ] Link tooltip with options

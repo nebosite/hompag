@@ -2,17 +2,29 @@
 
 import { Logger } from "../helpers/logger";
 import moment from "moment";
-import { VERSION } from ".."; 
+import { VERSION } from "../GLOBALS";
 
 
-export interface IPageAccess
+export interface ItemReturn
 {
-    getPage(pageId: string): Promise<string | null>;
-    getPageList(): Promise<string[]>;
-    storePage(id: string, data: string): Promise<null>;
-    storeWidget(id: string, data: string): Promise<null>;
-    getWidget(id: string): Promise<string | null>;
+    id: string
+    type: hompagItemType
+    version: number
+    data: string
+}
 
+export enum hompagItemType
+{
+    page= "page",
+    widget = "widget",
+}
+
+
+export interface IItemStore
+{
+    getItem(itemType: hompagItemType, id: string, version: number | undefined): Promise<ItemReturn | null>;
+    getIdList(itemType: hompagItemType): Promise<string[]>;
+    storeItem(itemType: hompagItemType, id: string, version: number, data: string): Promise<void>;
 }
 
 export interface IListener{
@@ -27,12 +39,12 @@ export interface IListener{
 export class ServerModel {
     logger: Logger
     private _startTime = Date.now();
-    private _pageAccess: IPageAccess;
+    private _pageAccess: IItemStore;
     private _listeners = new Map<string, IListener>();
     //------------------------------------------------------------------------------------------
     // ctor
     //------------------------------------------------------------------------------------------
-    constructor(logger: Logger, pageAccess: IPageAccess)
+    constructor(pageAccess: IItemStore, logger: Logger)
     {
         this.logger = logger;
         this._pageAccess = pageAccess;
@@ -57,9 +69,17 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // getPage
     //------------------------------------------------------------------------------------------
-    async getPage(pageId: string) 
+    async getPage(pageId: string, version: number | undefined = undefined) 
     {
-        return await this._pageAccess.getPage(pageId);
+        return await this._pageAccess.getItem(hompagItemType.page, pageId, version);
+    }
+
+    //------------------------------------------------------------------------------------------
+    // getWidget
+    //------------------------------------------------------------------------------------------
+    async getWidget(id: string, version: number | undefined = undefined) 
+    {
+        return await this._pageAccess.getItem(hompagItemType.widget, id, version);
     }
 
     //------------------------------------------------------------------------------------------
@@ -67,7 +87,24 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     async getPages() 
     {
-        return (await this._pageAccess.getPageList());
+        return (await this._pageAccess.getIdList(hompagItemType.page));
+    }
+
+    //------------------------------------------------------------------------------------------
+    // storeItem
+    //------------------------------------------------------------------------------------------
+    async storeItem(itemType: hompagItemType, id: string, payload: string)
+    {
+        const updateDetails = JSON.parse(payload) as {id: number, data: any}
+        const version = Math.floor(Date.now())
+        await this._pageAccess.storeItem(
+            itemType, 
+            id, 
+            version, 
+            JSON.stringify(updateDetails.data,null,2))
+        
+        this.sendAlert({type: itemType, itemId: id, version})
+        return version;
     }
 
     //------------------------------------------------------------------------------------------
@@ -75,10 +112,7 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     async storePage(pageId: string, payload: string) 
     {
-        const updateDetails = JSON.parse(payload) as {id: number, data: any}
-        await this._pageAccess.storePage(pageId, JSON.stringify(updateDetails.data,null,2))
-        
-        this.sendAlert({type: "page", itemId: pageId, updateId: updateDetails.id})
+        return this.storeItem(hompagItemType.page, pageId, payload);
     }
 
     //------------------------------------------------------------------------------------------
@@ -86,25 +120,14 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     async storeWidget(widgetId: string,  payload: string) 
     {
-        const updateDetails = JSON.parse(payload) as {id: number, data: any}
-
-        await this._pageAccess.storeWidget(widgetId, JSON.stringify(updateDetails.data,null,2))
-        this.sendAlert({type: "widget", itemId: widgetId, updateId: updateDetails.id})
+        return this.storeItem(hompagItemType.widget, widgetId, payload);
     }
 
     //------------------------------------------------------------------------------------------
     // sendAlert
     //------------------------------------------------------------------------------------------
-    sendAlert(info: {type: string, itemId: string, updateId: number}) {
+    sendAlert(info: {type: string, itemId: string, version: number}) {
         this._listeners.forEach(l => l.send(info))
-    }
-
-    //------------------------------------------------------------------------------------------
-    // getWidget
-    //------------------------------------------------------------------------------------------
-    async getWidget(id: string) 
-    {
-        return await this._pageAccess.getWidget(id);
     }
 
     //------------------------------------------------------------------------------------------

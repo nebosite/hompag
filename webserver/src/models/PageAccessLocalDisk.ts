@@ -1,9 +1,9 @@
 import { ILogger } from "../helpers/logger";
-import { IPageAccess } from "./ServerModel";
+import { hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
 const fs = require('fs')
 const path = require('path');
 
-export class PageAccessLocalDisk implements IPageAccess
+export class PageAccessLocalDisk implements IItemStore
 {
     private _logger: ILogger;
     private _storeLocation: string;
@@ -11,117 +11,119 @@ export class PageAccessLocalDisk implements IPageAccess
     // ---------------------------------------------------------------------------------
     // ctor
     // ---------------------------------------------------------------------------------
-    constructor(logger: ILogger, storeLocation: string)
+    constructor(storeLocation: string, logger: ILogger)
     {
         this._logger = logger;
         this._storeLocation = storeLocation;
+        if (!fs.existsSync(this._storeLocation)) {
+            throw Error(`Store location is not valid: ${this._storeLocation}`)
+        }
     }
 
     // ---------------------------------------------------------------------------------
     // name converters
     // ---------------------------------------------------------------------------------
-    pageToFileName =    (pageId: string) => `_page_${pageId}.json`;
-    widgetToFileName =  (pageId: string) => `_widget_${pageId}.json`;
+    pageToFileName =    (pageId: string) => `_page_${pageId}`;
+    widgetToFileName =  (pageId: string) => `_widget_${pageId}`;
+
 
     // ---------------------------------------------------------------------------------
-    // getPageList
+    // getIdList
     // ---------------------------------------------------------------------------------
-    getPageList():Promise<string[]> {
-
+    getIdList(itemType: hompagItemType): Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
-            
-            if (!fs.existsSync(this._storeLocation)) {
-                this._logger.logError(`Store location is not valid: ${this._storeLocation}`)
+            const typeFolder = path.join(this._storeLocation, itemType)
+            if(!fs.existsSync(typeFolder)){
+                this._logger.logLine(`${itemType} folder does not exist`)
                 resolve([])
             }
-            else {
-                fs.readdir(this._storeLocation ,  (err: string, files: any[]) => {
-                    if (err) {
-                        this._logger.logError('Unable to scan directory: ' + err)
-                        resolve([])
-                    } 
 
-                    const output:string[] = [];
-                    files.forEach(f => {
-                        const match = f.match(/_page_(.*)\.json/);
-                        if(match) output.push(match[1])
-                    })
-                    resolve(output);
-                })
-            }            
+            fs.readdir(typeFolder,  (err: string, files: any[]) => {
+                if (err) {
+                    this._logger.logError('Unable to scan directory: ' + err)
+                    resolve([])
+                } 
+
+                resolve(files as string[]);
+            })
+        })
+    }
+
+    // ---------------------------------------------------------------------------------
+    // getVersionList
+    // ---------------------------------------------------------------------------------
+    getVersionList(itemType: hompagItemType, id: string): Promise<number[]> {
+        return new Promise<number[]>((resolve, reject) => {
+            const itemFolder = path.join(this._storeLocation, `${itemType}/${id}`)
+            fs.readdir(itemFolder,  (err: string, files: any[]) => {
+                if (err) {
+                    this._logger.logError(`Cannot load Item '${itemType}/${id}': ` + err)
+                    resolve([])
+                } 
+
+                const output = files.map(f => {
+                    const versionText = (f as string).replace(/\.json$/i, "")
+                    try {
+                        return Number.parseInt(versionText)
+                    }
+                    catch(e)
+                    {
+                        return -1;
+                    }
+                }).filter(i => i >= 0)
+                output.sort((a,b) => b-a);
+                resolve(output);
+            })
         })
     }
 
     // ---------------------------------------------------------------------------------
     // getThing
     // ---------------------------------------------------------------------------------
-    getThing(fileName: string) {
-        fileName = path.join(this._storeLocation, fileName)
+    async getItem(itemType: hompagItemType, id: string, version: number | undefined) {
+        if(!version) {
+            const versions = await this.getVersionList(itemType, id);
+            if(!versions || versions.length === 0) return null;
+            version = versions[0];
+        }
 
-        return new Promise<string | null>((resolve, reject) => {
-            if (!fs.existsSync(fileName)) {
-                this._logger.logLine(`Tried to load non-existent file: ${fileName}`)
-                resolve(null)
-            }
-            else {
-                fs.readFile(fileName, 'utf8' , (err: any, data: any) => {
-                        if (err) {
-                            reject (Error(`Error reading file '${fileName}': ${err}`))
-                        }
-                        this._logger.logLine(`Loaded file: ${fileName}`)
-                        resolve(data)
-                    }
-                )                  
-            }            
+        const fileName = path.join(this._storeLocation, `${itemType}/${id}/${version}.json`)
+
+        return new Promise<ItemReturn | null>((resolve, reject) => {
+
+            fs.readFile(fileName, 'utf8' , (err: any, data: any) => {
+                if (err) {
+                    reject (`Error reading file '${fileName}': ${err}`)
+                }
+                this._logger.logLine(`Loaded file: ${fileName}`)
+
+                resolve({type: itemType, id, version: version!, data})
+            } )                             
         })
     }
 
     // ---------------------------------------------------------------------------------
-    // getPage
+    // storeItem
     // ---------------------------------------------------------------------------------
-    getPage(pageId: string) {
-        return this.getThing(this.pageToFileName(pageId))
-    }
-
-    // ---------------------------------------------------------------------------------
-    // getWidget
-    // ---------------------------------------------------------------------------------
-    getWidget(widgetId: string) {
-        return this.getThing(this.widgetToFileName(widgetId))
-    }
-
-    // ---------------------------------------------------------------------------------
-    // storePage
-    // ---------------------------------------------------------------------------------
-    async storeThing(fileName:string, data: string)
+    async storeItem(itemType: hompagItemType, id: string, version: number, data: string)
     {
-        fileName = path.join(this._storeLocation, fileName)
-        return new Promise<null>((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
+            const itemFolder =  path.join(this._storeLocation, `${itemType}/${id}`)
+            if(!fs.existsSync(itemFolder)){
+                fs.mkdirSync(itemFolder)
+            }
+
+            const fileName = path.join(itemFolder, `${version}.json`)
             fs.writeFile(fileName, data, (err: any) => {
                     if (err) {
                         reject (Error(`Error writing '${fileName}': ${err}`))
                     }
                     this._logger.logLine(`Stored item at: ${fileName}`)
 
-                    resolve(null)
+                    resolve()
                 }
             )              
         })
-    }
-    // ---------------------------------------------------------------------------------
-    // storePage
-    // ---------------------------------------------------------------------------------
-    async storePage(id: string, data: string)
-    {
-        return this.storeThing(this.pageToFileName(id), data)
-    }
-    
-    // ---------------------------------------------------------------------------------
-    // storePage
-    // ---------------------------------------------------------------------------------
-    async storeWidget(id: string, data: string)
-    {
-        return this.storeThing(this.widgetToFileName(id), data)
     }
 
 }
