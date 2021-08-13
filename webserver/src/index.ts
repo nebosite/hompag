@@ -10,6 +10,7 @@ import {hompag_config} from './config'
 import { getWidget, storeWidget } from './apis/widgets';
 import { handleSocket } from './apis/handleSocket';
 import { VERSION } from './GLOBALS';
+import { PageCache } from './models/PageCache';
 
 
 // ---------------------------------------------------------------------------------
@@ -18,8 +19,12 @@ import { VERSION } from './GLOBALS';
 const port = process.env.PORT || 8101
 export const app = express();
 const app_ws = express_ws(app);
-export const logger = new Logger();
-export const serverModel = new ServerModel(logger, new PageAccessLocalDisk(logger, hompag_config.localStoreLocation));
+const logger = new Logger();
+const pageAccess = new PageCache(
+    new PageAccessLocalDisk(hompag_config.localStoreLocation, logger),
+    logger
+)
+export const serverModel = new ServerModel(pageAccess, logger);
 
 logger.logLine("##################################################################################")
 logger.logLine("## Starting hompag Server  v" + VERSION)
@@ -78,6 +83,25 @@ logger.logLine(`Client root = ${clientAppRoot}`)
 app.get('', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); })
 app.use('/', express.static(clientAppRoot));
 app.get('/*', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); })
+
+const handleShutdown = async (signal: any) => {
+    logger.logLine(`Bybbye: ${signal} `)
+//    await pageAccess.flushRecents(0, Date.now() + 1000000000) 
+    process.exit(1);
+}
+
+process.on('SIGTERM', handleShutdown);
+process.on('SIGINT', handleShutdown);
+process.on('SIGHUP', handleShutdown);
+process.on('SIGUSR2', handleShutdown);
+process.on('exit', async () => {
+    logger.logLine("Attempting to shut down gracefully...  ")
+    await pageAccess.flushRecents(0, Date.now() + 1000000000) 
+    logger.logLine("Done ------------------------------------------")
+   
+    process.exit(0);
+});
+
 
 // ---------------------------------------------------------------------------------
 // Listen up!

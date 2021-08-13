@@ -28,17 +28,23 @@ export class PageCache implements IItemStore{
     {
         this._deepStore = deepStore;
         this._logger = logger;
+        this._cache.set(hompagItemType.page, new Map<string, CacheInfo>())
+        this._cache.set(hompagItemType.widget, new Map<string, CacheInfo>())
 
-        this._loadingTask = new Promise<void>(async (resolve) => {
+        this._loadingTask = new Promise<void>(async (resolve, reject) => {
              const pages = await deepStore.getIdList(hompagItemType.page);
-             this._cache.set(hompagItemType.page, new Map<string, CacheInfo>())
-             this._cache.set(hompagItemType.widget, new Map<string, CacheInfo>())
-             const pageCache = this._cache.get(hompagItemType.page);
-             pages.forEach(p =>  pageCache!.set(p, null) )
+             if(pages) {
+                 logger.logLine(`Found ${pages.length} pages`)
+                 const pageCache = this._cache.get(hompagItemType.page);
+                 pages.forEach(p =>  pageCache!.set(p, null) )
+             }
+             else {
+                 logger.logLine("No pages found")
+             }
              resolve();
         })
 
-        setTimeout(this.backgroundWriter, 5000)
+        setTimeout(()=> this.backgroundWriter(), 1000)
     }
 
     //------------------------------------------------------------------------------------------
@@ -64,20 +70,31 @@ export class PageCache implements IItemStore{
     //------------------------------------------------------------------------------------------
     // Write widgets to 
     //------------------------------------------------------------------------------------------
-    flushRecents(minAge_ms: number, now: number) {
-        const itemsToFlush =
+    async flushRecents(minAge_ms: number, now: number) {
+
+        const availableItems =
             Array.from(this._recentUpdates.keys())
                 .map(key =>  ({key, info: this._recentUpdates.get(key)!}))
-                .filter(i => now - i.info.version > minAge_ms)
+        
+        const itemsToFlush = availableItems.filter(i => now - i.info.version > minAge_ms)
 
-        itemsToFlush.forEach(i => {
-            this._recentUpdates.delete(i.key)
-            this._deepStore.storeItem(i.info.itemType, i.info.id, i.info.version, i.info.data);
-        })
+        //this._logger.logLine(`Flush status:  [${availableItems.map(i => `${i.info.itemType}.${i.info.id}(${now - i.info.version})`).join(", ")}], ${itemsToFlush.length} flushable`)
+        
+        if(itemsToFlush.length > 0) {
+            itemsToFlush.forEach(i => this._recentUpdates.delete(i.key));
+
+            await Promise.all(itemsToFlush.map(i => {
+                return new Promise<void>(async (resolve) => {            
+                    await this._deepStore.storeItem(i.info.itemType, i.info.id, i.info.version, i.info.data);
+                    resolve();
+                })
+            }));
+        }            
     }
 
+
     //------------------------------------------------------------------------------------------
-    // get the cache that holds a particular item
+    // get the cache that holds a particular item 
     //------------------------------------------------------------------------------------------
     async getItemCache(itemType: hompagItemType)
     {
@@ -108,6 +125,7 @@ export class PageCache implements IItemStore{
         const info:CacheInfo = {itemType, id, isLatest:true, version, data}
         itemCache.set(id, info);
         this._recentUpdates.set(`${itemType}:${id}`,info);
+        this._logger.logLine(`Update Queue is now: ${this._recentUpdates.size}`)
     }
 
     //------------------------------------------------------------------------------------------

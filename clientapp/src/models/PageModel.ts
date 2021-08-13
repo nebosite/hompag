@@ -35,6 +35,7 @@ export const colorThemes = [
 export class PageModel
 {
     name: string;
+    version: number = 0;
     @observable widgetContainers: WidgetContainer[] = observable<WidgetContainer>([])
     @observable columnCount = 24;
     @observable columnWidth = 50;

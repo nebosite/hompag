@@ -11,9 +11,19 @@ import { dataTypeForWidgetType } from "./WidgetContainer";
 
 
 
-interface PageRequestResponse
+interface ItemRequestResponse
 {
-    data: any;
+    data: {
+        type:string,
+        id:string,
+        version: number,
+        data: string};
+    errorMessage: string;
+}
+
+interface StoreResponse
+{
+    data: number;
     errorMessage: string;
 }
 
@@ -31,7 +41,6 @@ export class AppModel {
     private _typeHelper: hompagTypeHelper;
     private _dataChangeListener: IDataChangeListener
     private _savePageThrottler = new ThrottledAction(500)
-    private _reportedSaves = new Map<string,string>()
 
     // -------------------------------------------------------------------
     // ctor 
@@ -42,17 +51,19 @@ export class AppModel {
         registerGlobalItem("theApp", this);
         this._typeHelper = new hompagTypeHelper();
         this._serializer = new BruteForceSerializer(this._typeHelper)
-        this._dataChangeListener = new WebSocketListener((type, itemId, updateId) => {
-            if(!this._reportedSaves.has(updateId))
-            {
-                if(type === "page" && this.page?.name === itemId)
-                {
-                    this.loadPage(itemId);           
-                }
-                else if(type === "widget") {
-                    this.loadWidgetContent(this.getWidget(itemId, false))
-                }                
+        this._dataChangeListener = new WebSocketListener((type, itemId, version) => {
+
+            console.log(`Data change: ${type}.${itemId}.${version}`)
+            if(type === "page" && this.page.name === itemId && this.page.version !== version) {
+                this.loadPage(itemId);           
             }
+            else if(type === "widget") {
+                const foundWidget = this.getWidget(itemId,false)
+                if(foundWidget && foundWidget.version !== version)
+                {
+                    this.loadWidgetContent(foundWidget)   
+                }
+            } 
         })
         if(!this._dataChangeListener) console.log("Just shutting up the compiler")
 
@@ -70,7 +81,7 @@ export class AppModel {
         // for the newly loaded page
         this._savePageThrottler = new ThrottledAction(500)
 
-        const pageData = await this._api.restGet<PageRequestResponse>(`pages/${name}`);
+        const pageData = await this._api.restGet<ItemRequestResponse>(`pages/${name}`);
         if(pageData.errorMessage) {
             this.recentError = pageData.errorMessage;
         }
@@ -82,9 +93,10 @@ export class AppModel {
         else {
             try {
                 action(()=>{
-                    const loadedPage = this._serializer.parse<PageModel>(pageData.data);
+                    const loadedPage = this._serializer.parse<PageModel>(pageData.data.data);
                     this.page = loadedPage;
-                    console.log(`PAGE LOADED ${loadedPage.name}`)
+                    this.page.version = pageData.data.version;
+                    console.log(`PAGE LOADED ${loadedPage.name}.${loadedPage.version}`)
                 })()
             }
             catch(err)
@@ -92,21 +104,7 @@ export class AppModel {
                 console.log(`${err}\nJSON:${pageData.data}`)
                 console.log(`STACK: ${err.stack}`)
             }
-            
-            
-
-            // if(this.page && this.page.name === loadedPage.name)
-            // {
-            //     // for simple page reloads, don't need to download widget content
-            //     loadedPage.widgets.forEach(w => {
-            //         const oldWidget = this.page.widgets.find(ww => ww.i === w.i)
-            //         if(oldWidget) w.ref_data = oldWidget.ref_data;
-            //     })
-            // }
-            // else {
-            //     await Promise.all(loadedPage.widgets.map((w) => this.loadWidget(w)));
-            // }
-
+        
         }        
     }
 
@@ -115,16 +113,18 @@ export class AppModel {
     // -------------------------------------------------------------------
     async loadWidgetContent(widget: WidgetModel)
     {
-        let response =  await this._api.restGet<PageRequestResponse>(`widgets/${widget.id}`);
+        let response =  await this._api.restGet<ItemRequestResponse>(`widgets/${widget.id}`);
         if(response.data)
         {
-            const loadedWidget = JSON.parse(response.data);
+            const loadedWidget = JSON.parse(response.data.data);
             if(!loadedWidget) throw Error(`Data was not a Widget: ${response.data}`)
             let loadedData = loadedWidget.data
 
             loadedWidget.data = this._typeHelper.constructType(dataTypeForWidgetType(loadedWidget._myType)) as any;
             Object.assign(loadedWidget.data, loadedData);
             widget.loadFrom(loadedWidget); 
+            widget.version = response.data.version;
+            console.log(`Widget loaded: ${widget.id}.${widget.version}`)
         }
         else if(response.errorMessage) {
             console.log(`No data for ${widget.id}:  ${response.errorMessage}`)
@@ -157,17 +157,6 @@ export class AppModel {
         return this._typeHelper.constructType(dataTypeForWidgetType(widgetType)) as any;
     }
   
-
-    // -------------------------------------------------------------------
-    // get a unique ID for this update 
-    // -------------------------------------------------------------------
-    getUpdateId()
-    {
-        const updateId = `${Date.now()}`;
-        this._reportedSaves.set(updateId, updateId);
-        return updateId
-    }
-
     // -------------------------------------------------------------------
     // reportError
     // -------------------------------------------------------------------
@@ -183,21 +172,38 @@ export class AppModel {
     savePage(pageToSave: PageModel)
     {
         console.log(`Saving page ${pageToSave.name}`)
-        this._savePageThrottler.run(() => {
-            this._api.restPost(`pages/${pageToSave.name}`, this._serializer.stringify({id: this.getUpdateId(), data: pageToSave}))
-                .catch(err => this.reportError("Save Page", err))
+        this._savePageThrottler.run(async () => {
+            const payload = this._serializer.stringify({id: 0, data: pageToSave})
+            const response = await this._api.restPost<StoreResponse>(`pages/${pageToSave.name}`, payload)
+                .catch(err => ({errorMessage: err} as StoreResponse))
+            if(response.errorMessage)
+            {
+                this.reportError("Save Page", response.errorMessage)
+            }
+            else {
+                pageToSave.version = response.data!
+                console.log(`New Page Version: ${pageToSave.version}`)
+            }
         });
     }
 
     // -------------------------------------------------------------------
     // saveWidgetData 
     // -------------------------------------------------------------------
-    saveWidgetData(widget: WidgetModel)
+    async saveWidgetData(widget: WidgetModel)
     {
-        const payload = this._serializer.stringify({id: this.getUpdateId(), data: widget});
+        const payload = this._serializer.stringify({id: 0, data: widget});
         console.log(`Writing widget: ${widget.id}`)
-        this._api.restPost(`widgets/${widget.id}`, payload)
-            .catch(err => this.reportError("Save Widget", err))
+        const response = await this._api.restPost<StoreResponse>(`widgets/${widget.id}`, payload)
+            .catch(err => ({errorMessage: err} as StoreResponse))
+
+        if(response.errorMessage)
+        {
+            this.reportError("Save Widget", response.errorMessage)
+        }
+        else {
+            widget.version = response.data!
+        }
     }
 }
- 
+

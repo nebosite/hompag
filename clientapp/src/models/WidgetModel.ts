@@ -20,6 +20,7 @@ export class WidgetModelData {
 
 export class WidgetModel {
     id: string 
+    version: number = 0;
     alias: string = null
     @observable data: WidgetModelData = null
 

@@ -11,7 +11,7 @@ export class PageAccessLocalDisk implements IItemStore
     // ---------------------------------------------------------------------------------
     // ctor
     // ---------------------------------------------------------------------------------
-    constructor(logger: ILogger, storeLocation: string)
+    constructor(storeLocation: string, logger: ILogger)
     {
         this._logger = logger;
         this._storeLocation = storeLocation;
@@ -33,6 +33,11 @@ export class PageAccessLocalDisk implements IItemStore
     getIdList(itemType: hompagItemType): Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
             const typeFolder = path.join(this._storeLocation, itemType)
+            if(!fs.existsSync(typeFolder)){
+                this._logger.logLine(`${itemType} folder does not exist`)
+                resolve([])
+            }
+
             fs.readdir(typeFolder,  (err: string, files: any[]) => {
                 if (err) {
                     this._logger.logError('Unable to scan directory: ' + err)

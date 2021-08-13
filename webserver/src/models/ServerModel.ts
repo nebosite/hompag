@@ -44,7 +44,7 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // ctor
     //------------------------------------------------------------------------------------------
-    constructor(logger: Logger, pageAccess: IItemStore)
+    constructor(pageAccess: IItemStore, logger: Logger)
     {
         this.logger = logger;
         this._pageAccess = pageAccess;
@@ -103,7 +103,7 @@ export class ServerModel {
             version, 
             JSON.stringify(updateDetails.data,null,2))
         
-        this.sendAlert({type: hompagItemType.page, itemId: id, updateId: version})
+        this.sendAlert({type: itemType, itemId: id, version})
         return version;
     }
 
@@ -126,7 +126,7 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // sendAlert
     //------------------------------------------------------------------------------------------
-    sendAlert(info: {type: string, itemId: string, updateId: number}) {
+    sendAlert(info: {type: string, itemId: string, version: number}) {
         this._listeners.forEach(l => l.send(info))
     }
 
