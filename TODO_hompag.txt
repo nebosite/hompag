@@ -14,7 +14,7 @@ TODO
         
 
 NEW
-
+    [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
 
 WIDGET IDEAS
     - frequent links

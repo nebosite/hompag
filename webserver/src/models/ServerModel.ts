@@ -2,7 +2,7 @@
 
 import { Logger } from "../helpers/logger";
 import moment from "moment";
-import { VERSION } from ".."; 
+import { VERSION } from "../GLOBALS";
 
 
 export interface ItemReturn

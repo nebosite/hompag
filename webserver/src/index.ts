@@ -9,6 +9,7 @@ import { ServerModel } from './models/ServerModel';
 import {hompag_config} from './config'
 import { getWidget, storeWidget } from './apis/widgets';
 import { handleSocket } from './apis/handleSocket';
+import { VERSION } from './GLOBALS';
 
 
 // ---------------------------------------------------------------------------------
@@ -19,7 +20,6 @@ export const app = express();
 const app_ws = express_ws(app);
 export const logger = new Logger();
 export const serverModel = new ServerModel(logger, new PageAccessLocalDisk(logger, hompag_config.localStoreLocation));
-export const VERSION = require('./version');
 
 logger.logLine("##################################################################################")
 logger.logLine("## Starting hompag Server  v" + VERSION)
