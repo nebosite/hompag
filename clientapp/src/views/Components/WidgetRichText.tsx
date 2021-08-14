@@ -14,7 +14,7 @@ export class WidgetRichTextData extends WidgetModelData
     // THe body state is kept by the editor itself
     private _body: string;
     get body() {return this._body}
-    set body(value: string) {this._body = value; this.save()} 
+    set body(value: string) { this.updateMe(()=>{this._body = value})} 
 
     // Nothing is observable, so this is not needed
     // constructor() {

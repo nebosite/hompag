@@ -131,15 +131,13 @@ export class SpotifyData extends WidgetModelData
     get accessToken() {return this._accessToken}
     set accessToken(value:{value: string, expireTime: number}) {
         if(this._accessToken && value && value.value === this._accessToken.value) return;
-        this._accessToken = value;
-        this.save();
+        this.updateMe(()=>{this._accessToken = value})
     }
 
     @observable _state_playdata: SpotifyPlayerResponse = null
     get state_playdata() {return this._state_playdata}
     set state_playdata(value:SpotifyPlayerResponse) {
-        this._state_playdata = value;
-        this.save();
+        this.updateMe(()=>{this._state_playdata = value})
     }
 
     ref_spotify:RestHelper = null;  

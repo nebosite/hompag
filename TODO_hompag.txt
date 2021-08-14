@@ -2,7 +2,7 @@
 TODO
         
     [x] Intercept Ctrl-S on the page to prevent accidentally trying to save it
-    [ ] Define my own search engine
+    [x] Define my own search engine
     [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
         - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
         https://developer.spotify.com/documentation/

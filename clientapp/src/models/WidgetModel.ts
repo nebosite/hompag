@@ -13,8 +13,13 @@ export enum WidgetType
 
 export class WidgetModelData {
     ref_widgetParent: WidgetModel
-    save() {
-        this.ref_widgetParent.save();
+
+    updateMe(updateAction:()=>void)
+    {
+        action(()=>{
+            updateAction()
+            this.ref_widgetParent.save();
+        })()
     }
 }
 
