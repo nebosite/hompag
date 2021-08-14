@@ -6,6 +6,10 @@ TODO
     [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
         - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
         https://developer.spotify.com/documentation/
+        https://developer.spotify.com/console/player/
+        [ ] Play/pause
+        [ ] seek forward/back
+        [ ] Skip next/prev
         - Query for current playlist, all playlists
         - Controls: pause, play, skip, position
         - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
@@ -17,6 +21,7 @@ TODO
     [ ] Perfect Pencil
 
 NEW
+    [ ] Add a scalable option to put the side inside a page scaler
     [ ] Perf: components that are expensive to evaluate:
         PageControl - 27ms
             Combobox 5.6

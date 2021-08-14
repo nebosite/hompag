@@ -96,6 +96,13 @@ export class RestHelper implements IRestHelper
     }
 
     //------------------------------------------------------------------------------
+    // PUT command
+    //------------------------------------------------------------------------------
+    async restPut(query: string, jsonBody: string = undefined) {
+        return this.restCall("PUT", query, jsonBody, false);
+    }
+
+    //------------------------------------------------------------------------------
     // get a string
     //------------------------------------------------------------------------------
     async restGetText(query: string, shouldCache: boolean = true): Promise<string | null> {
@@ -124,7 +131,7 @@ export class RestHelper implements IRestHelper
             const cachedString = await this._cache.loadObject<{data: string}>(query);
             if(cachedString) return cachedString.data;
         }
-        if(!shouldCache) {
+        if(!shouldCache && this._cache) {
             this._cache.removeObject(query);
         }
 
@@ -140,6 +147,11 @@ export class RestHelper implements IRestHelper
                 } 
 
                 if(response.status === 404) // Not found
+                {
+                    return null;
+                }
+
+                if(response.status === 204) // no content
                 {
                     return null;
                 }
