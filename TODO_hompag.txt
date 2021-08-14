@@ -1,21 +1,21 @@
 
 TODO
         
-    [x] Cache pages on the server 
-        - Only save page to disk if they haven't been touched for a minute  
-            or if the server is going down
-        - Keep versions and never overwrite
-    [ ] Cache pages on the client   
-        [x] Set up a local store for page and widget access
-        [x] At first, load everything from Cache
-        [x] Fix problems
-            - Version you save is actually wrong - don't serialize it
-            - Mark the version as -1 to signal that you are in the middle of saving the page
-                or maybe use setTimeout on the server to send the updates
-                or maybe just both
-        [ ] pass the page widget list to server and get all the versions
-        [ ] For each widget, if the version is newer, load from the server
-    [ ] Will caching the page load cause an issue?
+    [x] Intercept Ctrl-S on the page to prevent accidentally trying to save it
+    [ ] Define my own search engine
+    [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
+        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
+        https://developer.spotify.com/documentation/
+        - Query for current playlist, all playlists
+        - Controls: pause, play, skip, position
+        - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
+            - Randomly choose songs based on if you answered questions correctly
+    [ ] Weather watcher
+        [ ] Weather server:  https://openweathermap.org/api
+        API Key: 95fe6cb163f4d9817acebed6460dc40e
+        - include space weather http://sws-data.sws.bom.gov.au/
+    [ ] Perfect Pencil
+
 NEW
     [ ] Perf: components that are expensive to evaluate:
         PageControl - 27ms
@@ -38,10 +38,18 @@ NEW
     [ ] Perf Network
         
         
-    [ ] Intercept Ctrl-S on the page to prevent accidentally trying to save it
-    [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
 
 WIDGET IDEAS
+    - Movie widget - in one search: common sense, imbd, rotten tomatoes, youtube trailer
+        - Occasionally suggest movies and let you mark them for later
+        - APIS:
+            https://www.commonsensemedia.org/developers/api
+            https://developer.imdb.com/
+            https://developer.fandango.com/rotten_tomatoes
+            https://developers.google.com/youtube/v3
+            
+            
+            
     - frequent links
     - Archive
     - See recent bookmarks
@@ -64,21 +72,15 @@ WIDGET IDEAS
     - Finance watcher
         https://plaid.com/
     - Form Widget - Point it to a URL and it will find the forms
+    - Pictaurus - File access through server
+    - You know, the server can open links for you in the shell
 
 IMPORTANT
    
 BACKLOG
-    [ ] Define my own search engine
     [ ] Hovering over links should show url
-    [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
-        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
-        https://developer.spotify.com/documentation/
-        - Query for current playlist, all playlists
-        - Controls: pause, play, skip, position
-        - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
-            - Randomly choose songs based on if you answered questions correctly
     [ ] Make it work across machines
-        [ ] Server should watch the file system for changes
+        [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
         [ ] A connected client has a visible page + widgets
         [ ] Push an update to the client any page or widgets change
     [ ] should not try to save any content with null data
@@ -109,6 +111,21 @@ MAYBE NEVER
 
 
 -- DONE ---------------------------------------------------------------------
+
+    [x] Cache pages on the server 
+        - Only save page to disk if they haven't been touched for a minute  
+            or if the server is going down
+        - Keep versions and never overwrite
+    [x] Cache pages on the client   
+        [x] Set up a local store for page and widget access
+        [x] At first, load everything from Cache
+        [x] Fix problems
+            - Version you save is actually wrong - don't serialize it
+            - Mark the version as -1 to signal that you are in the middle of saving the page
+                or maybe use setTimeout on the server to send the updates
+                or maybe just both
+        [x] pass the page widget list to server and get all the versions
+        [x] For each widget, if the version is newer, load from the server
 
     [x] Widget settings should be a full sized dialog off to the side of the widget
     [x] Search widget 

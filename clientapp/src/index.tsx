@@ -20,6 +20,14 @@ if( autoRedirect){
     setTimeout(()=>{window.location.href = autoRedirect},10)
 }
 
+window.addEventListener('keydown', (event: any) => {
+
+    if(event.ctrlKey && event.keyCode === 83) { 
+      console.log("Ctrl+S event captured!");
+      event.preventDefault(); 
+    }
+  });
+
 const urlParts = trimChars(window.location.pathname, ['/']).split('/',2);
 const pageName = urlParts[0];
 document.title = (pageName ?? "(picking)") + ": " + GLOBALS.Title ;

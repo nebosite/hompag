@@ -136,6 +136,10 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
                                 editor.execCommand(e.shiftKey ? "Outdent" : "Indent")
                                 e.preventDefault();
                             }
+                            else if(e.ctrlKey && e.keyCode === 83) { 
+                                console.log("Ctrl+S event captured!");
+                                e.preventDefault(); 
+                            }
                         });
                         
                         editor.on('KeyUp', function(e){
