@@ -224,26 +224,28 @@ extends React.Component<{context: WidgetContainer}>
             return Date.now() + Number.parseInt(secondsText) *  1000;
         }
 
-        if(!data.accessToken)
-        {
-            const tokenJson = window.sessionStorage.getItem("spotify_access_token")
-            if(tokenJson){
+        const tokenJson = window.sessionStorage.getItem("spotify_access_token")
+        if(tokenJson) {
+            console.log(`Token JSON: ${tokenJson}`)
+            const token = JSON.parse(tokenJson);
+            if(!data.accessToken || data.accessToken.value !== token.access_token)
+            {
                 setTimeout(()=>{
-                    const token = JSON.parse(tokenJson);
                     data.accessToken = {
                         value: token.access_token,
                         expireTime:getExpireTime(token.expires_in)
                     }    
                 },0)       
             }
-
         }
 
         const clearAccessToken = () => {
             setTimeout(()=>{
-                data.accessToken = undefined;
-                data.state_playdata = undefined;
                 window.sessionStorage.removeItem("spotify_access_token")
+                setTimeout(() => {
+                    data.accessToken = undefined;
+                    data.state_playdata = undefined;
+                },150)
             },0)
         }
 
