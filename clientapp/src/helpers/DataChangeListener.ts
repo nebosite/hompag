@@ -6,13 +6,8 @@ export interface IDataChangeListener {
     readonly isOpen: boolean;
     readonly isClosed: boolean;
     readonly closeCode: number;
-}
-
-export interface DataChangeAlert
-{
-    type: string;
-    itemId: string;
-    version: number;
+    send(sendMe: any): void;
+    addListener(type: string, listener: (data: any)=>void):void
 }
 
 // -------------------------------------------------------------------
@@ -23,11 +18,12 @@ export class WebSocketListener implements IDataChangeListener {
     isClosed: boolean = false;
     closeCode: number = 0;
     private _websocket: WebSocket;
+    private _listeners = new Map<string, ((data: any)=>void)[]>()
 
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(handler: (type: string, itemId: string, version: number) => void)
+    constructor()
     {
         const url = (window.location.protocol === 'https:' ? 'wss:' : 'ws:') + window.location.host + "/subscribe";
         console.log(`Attempting socket to: ${url}`)
@@ -44,34 +40,63 @@ export class WebSocketListener implements IDataChangeListener {
             this.closeCode = ev.code;
         })
 
-        this._websocket.addEventListener("message", (ev: { data: string; }) => {
-            const message = JSON.parse(ev.data) as DataChangeAlert;
-            handler(message.type, message.itemId, message.version);
+        this._websocket.addEventListener("message", (ev: { data: string }) => {
+            try{
+                const data = JSON.parse(ev.data) as {type: string, data: any}
+                const type = data.type;
+                if(!type) throw Error("Missing socket data type")
+
+                const listeners = this._listeners.get(type);
+                if(listeners) {
+                    listeners.forEach(l => l(data.data))
+                }
+                else {
+                    console.log(`No listener for type '${type}`)
+                }
+            }
+            catch(err) {
+                console.log(`Socket receive error: ${err}`)
+            }
         })
     }
 
-    // send(payload: string) {
-    //     let retries = 8;
-    //     let backoffTime = 50;
+    // -------------------------------------------------------------------
+    // addListener
+    // -------------------------------------------------------------------
+    addListener(type:string, listener: (data: any)=>void)
+    {
+        if(!this._listeners.has(type)){
+            this._listeners.set(type, [])
+        }
+        this._listeners.get(type)!.push(listener);
+    }
 
-    //     const delayedSend = () => {
-    //         if(this._websocket.readyState === 1)
-    //         {
-    //             this._websocket.send(payload);      
-    //         }
-    //         else 
-    //         {
-    //             retries--;
-    //             if(retries <= 0)
-    //             {
-    //                 console.log("ERROR: out of retires sending " + payload)
-    //             }
-    //             backoffTime *= 2;
-    //             console.log(`Socket not ready.  Backing off ${backoffTime}ms`)
-    //             setTimeout(delayedSend,backoffTime);
-    //         }
-    //     }
-    //     setTimeout(delayedSend,0);
-    // }
+    // -------------------------------------------------------------------
+    // send
+    // -------------------------------------------------------------------
+    send(sendMe: any) {
+        let payload = JSON.stringify(sendMe);
+        let retries = 8;
+        let backoffTime = 50;
+
+        const delayedSend = () => {
+            if(this._websocket.readyState === 1)
+            {
+                this._websocket.send(payload);      
+            }
+            else 
+            {
+                retries--;
+                if(retries <= 0)
+                {
+                    console.log("ERROR: out of retires sending " + payload)
+                }
+                backoffTime *= 2;
+                console.log(`Socket not ready.  Backing off ${backoffTime}ms`)
+                setTimeout(delayedSend,backoffTime);
+            }
+        }
+        setTimeout(delayedSend,0);
+    }
 }
 

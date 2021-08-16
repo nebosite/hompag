@@ -168,4 +168,14 @@ export class PageModel
         }
         return null;
     }
+
+    // -------------------------------------------------------------------
+    // getStateMaker 
+    // -------------------------------------------------------------------
+    getStateMaker(id: string) {
+        return <T>(name: string, handler: (data: T)=>void)=> 
+        {
+            return this.ref_App.createTransientStateHandler<T>(id, name, handler);
+        }
+    }
 }

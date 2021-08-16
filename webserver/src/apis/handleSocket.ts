@@ -59,10 +59,18 @@ export function handleSocket(socket: WebSocket, req: Request, logger: ILogger) {
         const listener = new WebSocketListener(name, socket, logger, ()=> {serverModel.unregisterListener(name)});
         serverModel.registerListener(listener);
 
-        // ws.on('message', function (msgRaw) {
-        //         const jsonText = msgRaw.toString();
-        //         const msgParsed = JSON.parse(jsonText) as IClusterFunMessage;
-        // });
+        socket.on('message', function (msgRaw:any) {
+            try {
+                const jsonText = msgRaw.toString();
+                const msgParsed = JSON.parse(jsonText) as {type:string, data: any};
+                serverModel.handleMessage(msgParsed);
+
+            }
+            catch(err)
+            {
+                logger.logError(`Messaging error: ${err}`)
+            }
+        });
         
         socket.on('close', (reason) => { listener.close(); });
     } catch (e) {

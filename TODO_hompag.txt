@@ -4,7 +4,19 @@ TODO
         
     [x] Bug: lost some document changes with recent server stop and reboot    
     
+    [x] Spotify keeps trying to reload
+    
     [ ] Spotify API needs to be on the server
+        [ ] Widget does api/spotify/widgetid/login
+        [ ] Server replies with redirect URL
+        [ ] User logs in
+        [ ] Spotify sends credentials to server
+        [ ] Server remembers token under the widget id
+        [ ] Server gets the playstate and sends an update message to clients
+        [ ] Client sends play commands to server
+        [ ] Server forwards commands to spotify
+        [ ] Server re-requests state and forwards to clients
+        
     [ ] put secrets in a config file called secrets.env
         - Weather API
         [ ] Make a template file for secrets

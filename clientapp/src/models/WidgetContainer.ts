@@ -64,4 +64,11 @@ export class WidgetContainer {
         this.parentPage.removeWidget(this);
     }
 
+    // -------------------------------------------------------------------
+    // getStateMaker 
+    // -------------------------------------------------------------------
+    getStateMaker() {
+        return this.parentPage.getStateMaker(this.widgetId);
+    }
+
 }

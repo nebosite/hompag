@@ -33,10 +33,20 @@ export interface IListener{
     send(data: any): Promise<void>
 }
 
+
+export interface TransientStatePacket
+{
+    id: string
+    name: string
+    instance: number
+    data: any
+}
+
 //------------------------------------------------------------------------------------------
 // The state of the server overall
 //------------------------------------------------------------------------------------------
 export class ServerModel {
+    //------------------------------------------------------------------------------------------
     logger: Logger
     private _startTime = Date.now();
     private _pageAccess: IItemStore;
@@ -114,7 +124,7 @@ export class ServerModel {
             version, 
             JSON.stringify(updateDetails.data,null,2))
         
-        this.sendAlert({type: itemType, itemId: id, version})
+        this.sendAlert({type: "itemchange", data: {type: itemType, itemId: id, version}})
         return version;
     }
 
@@ -137,8 +147,15 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // sendAlert
     //------------------------------------------------------------------------------------------
-    sendAlert(info: {type: string, itemId: string, version: number}) {
-        this._listeners.forEach(l => l.send(info))
+    sendAlert(message: { type: string; data: any; }) {
+        this._listeners.forEach(l => l.send(message))
+    }
+
+    //------------------------------------------------------------------------------------------
+    // handleMessage
+    //------------------------------------------------------------------------------------------
+    handleMessage(message: { type: string; data: any; }) {
+        this.sendAlert(message) 
     }
 
     //------------------------------------------------------------------------------------------

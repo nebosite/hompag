@@ -8,6 +8,7 @@ import { hompagTypeHelper, registerGlobalItem } from "./hompagTypeHelper";
 import { PageModel } from "./PageModel";
 import { WidgetModel, WidgetType } from "./WidgetModel";
 import { dataTypeForWidgetType } from "./WidgetContainer"; 
+import { TransientStateHandler, TransientStatePacket } from "./TransientState";
 
 const WIDGET_VERSION_ISLOADING = -1;
 
@@ -32,6 +33,13 @@ interface WidgetVersionResponse
     errorMessage: string;
 }
 
+export interface ItemChange
+{
+    type: string;
+    itemId: string;
+    version: number;
+}
+
 // -------------------------------------------------------------------
 // The AppModel
 // -------------------------------------------------------------------
@@ -46,6 +54,7 @@ export class AppModel {
     private _typeHelper: hompagTypeHelper;
     private _dataChangeListener: IDataChangeListener
     private _savePageThrottler = new ThrottledAction(500)
+    private _transientHandlers = new Map<string, Map<string, TransientStateHandler<unknown>[]>>()
 
     // -------------------------------------------------------------------
     // ctor 
@@ -58,28 +67,72 @@ export class AppModel {
         registerGlobalItem("theApp", this);
         this._typeHelper = new hompagTypeHelper();
         this._serializer = new BruteForceSerializer(this._typeHelper)
-        this._dataChangeListener = new WebSocketListener(async (type, itemId, version) => {
-
-            console.log(`Server says this changed: ${type}.${itemId}.${version}`)
-            if(type === "page" 
-                && this.page
-                && this.page.name === itemId 
-                && this.page.version !== version
-                && this.page.version !== WIDGET_VERSION_ISLOADING) {
-                console.log(`Initiating load: ${this.page.name}.${this.page.version}`)
-                this.loadPage(itemId, false);           
-            }
-            else if(type === "widget") {
-                const foundWidget = this.page.getWidget(itemId)
-                if(foundWidget && foundWidget.version !== version && foundWidget.version !== WIDGET_VERSION_ISLOADING)
-                {
-                    this.loadWidgetContent(foundWidget, false)   
-                }
-            } 
-        })
-        if(!this._dataChangeListener) console.log("Just shutting up the compiler")
+        this._dataChangeListener = new WebSocketListener();
+        this._dataChangeListener.addListener("itemchange", this.handleItemChanges)
+        this._dataChangeListener.addListener("transientchange", this.handleTransientChanges);
 
         setTimeout( ()=> this.loadPage(pageName),1)
+    }
+
+    // -------------------------------------------------------------------
+    // Process incoming transient item changes (pages and widgets)
+    // -------------------------------------------------------------------
+    handleItemChanges = async(data:ItemChange) => {
+        console.log(`Server says this changed: ${data.type}.${data.itemId}.${data.version}`)
+        if(data.type === "page" 
+            && this.page
+            && this.page.name === data.itemId 
+            && this.page.version !== data.version
+            && this.page.version !== WIDGET_VERSION_ISLOADING) {
+            console.log(`Initiating load: ${this.page.name}.${this.page.version}`)
+            this.loadPage(data.itemId, false);           
+        }
+        else if(data.type === "widget") {
+            const foundWidget = this.page.getWidget(data.itemId)
+            if(foundWidget && foundWidget.version !== data.version && foundWidget.version !== WIDGET_VERSION_ISLOADING)
+            {
+                this.loadWidgetContent(foundWidget, false)   
+            }
+        } 
+    }
+
+    // -------------------------------------------------------------------
+    // Process incoming transient state changes
+    // -------------------------------------------------------------------
+    handleTransientChanges = async(data:TransientStatePacket) => {
+        const handlerList = this._transientHandlers.get(data.id)?.get(data.name);
+
+        if(!handlerList) return;
+        handlerList.forEach(h => {
+            if(h.instance !== data.instance) h.receive(data.data);
+        })
+    }
+
+
+    // -------------------------------------------------------------------
+    // Create a transient state handler
+    //  id: Widget id that needs state 
+    // -------------------------------------------------------------------
+    createTransientStateHandler<T>(id: string, name: string, handler: (data: T)=>void)
+    {
+        const sender = (id: string, name: string, instance: number, data: T) => {
+            const sendPacket: TransientStatePacket = {
+                id, name, instance, data
+            }
+            this._dataChangeListener.send({type: "transientchange", data: sendPacket})
+        }
+        const output = new TransientStateHandler(id, name, handler, sender);
+        if(!this._transientHandlers.has(id)) {
+            this._transientHandlers.set(id, new Map<string, TransientStateHandler<unknown>[]>())
+        }
+
+        const nameHandlers = this._transientHandlers.get(id)
+        if(!nameHandlers.has(name)) {
+            nameHandlers.set(name,[])
+        }
+
+        nameHandlers.get(name).push(output as  TransientStateHandler<unknown>);
+        return output;
     }
 
     // -------------------------------------------------------------------
