@@ -8,14 +8,17 @@ TODO
     
     [ ] Spotify API needs to be on the server
         [ ] Widget does api/spotify/widgetid/login
-        [ ] Server replies with redirect URL
+        [ ] Server replies with redirect URL to be executed on the client
         [ ] User logs in
         [ ] Spotify sends credentials to server
-        [ ] Server remembers token under the widget id
+        [ ] Server remembers accesstoken under the widget id
         [ ] Server gets the playstate and sends an update message to clients
         [ ] Client sends play commands to server
         [ ] Server forwards commands to spotify
-        [ ] Server re-requests state and forwards to clients
+        [ ] After sending command, Server re-requests state and forwards to clients
+            - Clients keep widget state as transient values
+        [ ] Keep spotify secrets in the config
+        [ ] Get new secrets for spotify API and weather watcher
         
     [ ] put secrets in a config file called secrets.env
         - Weather API

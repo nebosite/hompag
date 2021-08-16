@@ -34,7 +34,7 @@ hompag is meant to run as a mini web server on your local machine.  This makes y
 **Running hompag**
 
 1. In the root of the hompag repo
-2. `node webserver/dist/index.js &`
+2. `node webserver/dist/index.js`
 
 **Set it up to run whenever the computer starts**
 
