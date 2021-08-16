@@ -3,24 +3,25 @@ TODO
         
     [x] Intercept Ctrl-S on the page to prevent accidentally trying to save it
     [x] Define my own search engine
-    [ ] Spotify widget   https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
-        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
-        https://developer.spotify.com/documentation/
-        https://developer.spotify.com/console/player/
-        [ ] Play/pause
-        [ ] seek forward/back
-        [ ] Skip next/prev
-        - Query for current playlist, all playlists
-        - Controls: pause, play, skip, position
-        - Quiz mode:  Hide the name of the artist/album, on click, show multiple-choice
-            - Randomly choose songs based on if you answered questions correctly
+    [x] Spotify widget
+        [x] Play/pause
+        [x] seek forward/back
+        [x] Skip next/prev
+        
+    [ ] Spotify API needs to be on the server
+    [ ] put secrets in a config file called secrets.env
+        - Weather API
+        [ ] Make a template file for secrets
+
     [ ] Weather watcher
-        [ ] Weather server:  https://openweathermap.org/api
-        API Key: 95fe6cb163f4d9817acebed6460dc40e
+        [ ] Weather server:  https://openweathermap.org/api  (API key is a secret)
         - include space weather http://sws-data.sws.bom.gov.au/
     [ ] Perfect Pencil
 
 NEW
+    [ ] google-like ajax functionality  in the search tool
+        - Remember user searches on the widget
+        - Do a background search 
     [ ] Add a scalable option to put the side inside a page scaler
     [ ] Perf: components that are expensive to evaluate:
         PageControl - 27ms
@@ -83,6 +84,20 @@ WIDGET IDEAS
 IMPORTANT
    
 BACKLOG
+    [ ] Spotify https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
+        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
+        https://developer.spotify.com/documentation/
+        https://developer.spotify.com/console/player/
+        https://developer.spotify.com/documentation/general/guides/scopes/
+        [ ] Quiz mode
+            [ ] Need a way to store personal data on the server
+                - For now, just store the data on the appmodel cache
+            [ ] Show Artist: ??? - click to guess
+                - will need to load playlist first
+                - If not playlist, no guess mode
+            [ ] Show title: ???
+            [ ] Show % correct for last 10 guesses
+            [ ] Once 100%, then just show the artist with a little button to put them back in quiz mode
     [ ] Hovering over links should show url
     [ ] Make it work across machines
         [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
