@@ -123,6 +123,9 @@ extends React.Component<
                         <div style={{marginLeft: "3px"}}>Delete</div>                  
                     </Row>
                 </div>
+                <div className={styles.widgetInfo}>
+                    <div>Id: {context.widgetId}</div>
+                </div>
 
             </div>
 

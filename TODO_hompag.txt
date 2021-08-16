@@ -1,13 +1,9 @@
 
 TODO
         
-    [x] Intercept Ctrl-S on the page to prevent accidentally trying to save it
-    [x] Define my own search engine
-    [x] Spotify widget
-        [x] Play/pause
-        [x] seek forward/back
-        [x] Skip next/prev
         
+    [x] Bug: lost some document changes with recent server stop and reboot    
+    
     [ ] Spotify API needs to be on the server
     [ ] put secrets in a config file called secrets.env
         - Weather API
@@ -19,6 +15,7 @@ TODO
     [ ] Perfect Pencil
 
 NEW
+    [ ] On the server, periodically purge empty folders and 0-length files
     [ ] google-like ajax functionality  in the search tool
         - Remember user searches on the widget
         - Do a background search 
@@ -131,6 +128,15 @@ MAYBE NEVER
 
 
 -- DONE ---------------------------------------------------------------------
+
+Version 0.2/0.2
+    [x] Intercept Ctrl-S on the page to prevent accidentally trying to save it
+    [x] Define my own search engine
+    [x] Spotify widget
+        [x] Play/pause
+        [x] seek forward/back
+        [x] Skip next/prev
+
 
     [x] Cache pages on the server 
         - Only save page to disk if they haven't been touched for a minute  

@@ -112,8 +112,10 @@ export class AppModel {
             }
             catch(err)
             {
-                console.log(`${err}\nJSON:${pageData.data}`)
+                console.log(`${err}\nJSON:${pageData.data.data}`)
                 console.log(`STACK: ${err.stack}`)
+                if(useCache) setTimeout(()=> this.loadPage(name, false),1)
+                else this.recentError = `Could not load page ${name}`           
             }
         
         }        

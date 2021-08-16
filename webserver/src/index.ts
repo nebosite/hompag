@@ -83,23 +83,23 @@ app.get('', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); })
 app.use('/', express.static(clientAppRoot));
 app.get('/*', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); })
 
-const handleShutdown = async (signal: any) => {
-    logger.logLine(`Bybbye: ${signal} `)
-//    await pageAccess.flushRecents(0, Date.now() + 1000000000) 
-    process.exit(1);
+const handleShutdown = async (signal: any) => { 
+    logger.logLine(`B'Bye: ${signal} `)
+    logger.logLine("Attempting to shut down gracefully...   ")
+    await pageAccess.flushRecents(0, Date.now() + 1000000000) 
+    logger.logLine("Done ------------------------------------------")
+    process.exit(0);
 }
 
 process.on('SIGTERM', handleShutdown);
 process.on('SIGINT', handleShutdown);
 process.on('SIGHUP', handleShutdown);
 process.on('SIGUSR2', handleShutdown);
-process.on('exit', async () => {
-    logger.logLine("Attempting to shut down gracefully...  ")
-    await pageAccess.flushRecents(0, Date.now() + 1000000000) 
-    logger.logLine("Done ------------------------------------------")
+
+// process.on('exit', async () => {
    
-    process.exit(0);
-});
+//     setTimeout(()=> process.exit(0), 3000)
+// });
 
 
 // ---------------------------------------------------------------------------------

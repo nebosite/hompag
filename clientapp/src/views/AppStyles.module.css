@@ -106,9 +106,8 @@ body {
     height: 1;
     left: 100px;
     top: 20px;
-    background: white;
-    z-index: 0;
-    opacity: .5;
+    background: #ffffffA0;
+    z-index: 1;
     position:fixed;
 }
 
@@ -221,6 +220,12 @@ body {
     animation-name: borderHighlight;
     animation-duration: 2s;
     animation-iteration-count: infinite;
+}
+
+.widgetConfig .widgetInfo {
+    background-color: #00000020;
+    margin: 10px;
+    font-size: 8px;
 }
 
 .widgetFrame .ConfigSection .configButton {
