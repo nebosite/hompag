@@ -5,6 +5,7 @@ import { WidgetModelData, WidgetType } from "models/WidgetModel";
 import React from "react";
 //import { IoPlaySkipBackOutline, IoPlayBackOutline, IoPlayOutline, IoPlayForwardOutline, IoPlaySkipForwardOutline, IoPauseOutline } from "react-icons/io5"
 import { ObservableState, TransientStateHandler } from "models/TransientState";
+import { RestHelper } from "helpers/RestHelper";
 
 // export const authEndpoint = 'https://accounts.spotify.com/authorize';
 // const clientId = "13d57354b3ce489bbf2dc93f67f7701d";
@@ -132,10 +133,15 @@ interface AccessToken {
     value: string, expireTime: number  
 }
 
+interface ServerResponse {
+    errorMessage?: string
+    data?: any
+}
 
 export class SpotifyTransientState
 {
     accessToken:    ObservableState<AccessToken>;
+    api = new RestHelper("/api/spotify/");
 
     // -------------------------------------------------------------------
     // 
@@ -143,6 +149,24 @@ export class SpotifyTransientState
     constructor(stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
     {
         this.accessToken = new ObservableState<AccessToken>("accessToken", stateMaker)
+    }
+
+    // -------------------------------------------------------------------
+    // Attempt a login
+    // -------------------------------------------------------------------
+    async login(widgetId: string) {
+        const details ={
+            id: widgetId,
+            sendingPageUrl: window.location.href
+        }
+        const response = await this.api.restPost<ServerResponse>("login", JSON.stringify(details));
+        if(response?.data) {
+            console.log(`Server Responded with: ${JSON.stringify(response.data)}`)
+            window.location.href = response.data.redirectTo;
+        }
+        else {
+            console.log(`There was a problem with the spotify login: ${response?.errorMessage}`)
+        }
     }
 
 }
@@ -240,20 +264,21 @@ registerType("SpotifyData", () => new SpotifyData())
 export default class WidgetSpotify 
 extends React.Component<{context: WidgetContainer}> 
 {   
-    // private _transientState: SpotifyTransientState
+    private _transientState: SpotifyTransientState
 
-    // constructor(props: {context: WidgetContainer})
-    // {
-    //     super(props);
+    constructor(props: {context: WidgetContainer})
+    {
+        super(props);
 
         
-    //     this._transientState = new SpotifyTransientState(props.context.getStateMaker())
-    // }
+        this._transientState = new SpotifyTransientState(props.context.getStateMaker())
+    }
 
     // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
     render() {
+        const {context} = this.props;
         //const data = this.props.context.ref_widget.data as SpotifyData; 
 
         // const getExpireTime = (secondsText: string) => {
@@ -319,6 +344,6 @@ extends React.Component<{context: WidgetContainer}>
         //     </div> 
         // );
 
-        return <div>Login to Spotify</div>
+        return <button onClick={()=>this._transientState.login(context.widgetId)}>Login to Spotify</button>
     }; 
 }

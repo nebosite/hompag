@@ -56,6 +56,21 @@ export class MockResponse implements SimpleResponse
     }
 }
 
+export class PageResponse {
+    responseCode = 400
+    content: string
+
+    constructor(content: string)
+    {
+        this.content = content;
+    }
+
+    static Redirect(url: string)
+    {
+        return new PageResponse(`<head><meta http-equiv="Refresh" content="0; URL=${url}"></head>`)
+    }
+}
+
 // ---------------------------------------------------------------------------------
 // Pack up the data and send it back
 // ---------------------------------------------------------------------------------
@@ -63,7 +78,12 @@ export async function safeSend(res: SimpleResponse, logger: ILogger, label: stri
 {
     try {
         const data = await getData();
-        res.send(JSON.stringify({data}));
+        if(data instanceof PageResponse) {
+            res.status(data.responseCode).send(data.content) 
+        }
+        else {
+            res.send(JSON.stringify({data}));
+        }
     }
     catch(err) {
         if(err instanceof UserError){

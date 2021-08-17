@@ -9,15 +9,16 @@ import { ServerModel } from './models/ServerModel';
 import {hompag_config} from './config'
 import { getWidget, storeWidget } from './apis/widgets';
 import { handleSocket } from './apis/handleSocket';
-import { VERSION } from './GLOBALS';
+import { listening_port, VERSION } from './GLOBALS';
 import { PageCache } from './models/PageCache';
 import { handleQueries } from './apis/query';
+import { handleSpotifyCommand } from './apis/spotify';
+import { handleLoginResponse } from './apis/loginResponder';
 
 
 // ---------------------------------------------------------------------------------
 // GLOBAL OBJECTS
 // ---------------------------------------------------------------------------------
-const port = process.env.PORT || 8101
 export const app = express();
 const app_ws = express_ws(app);
 const logger = new Logger();
@@ -25,7 +26,7 @@ const pageAccess = new PageCache(
     new PageAccessLocalDisk(hompag_config.localStoreLocation, logger),
     logger
 )
-export const serverModel = new ServerModel(pageAccess, logger);
+export const serverModel = new ServerModel(hompag_config, pageAccess, logger);
 
 logger.logLine("##################################################################################")
 logger.logLine("## Starting hompag Server  v" + VERSION)
@@ -66,11 +67,17 @@ app.get("/api/am_i_healthy", showHealth);
 app.post("/api/pages/:id", storePage(logger))
 app.get("/api/pages/:id", getPage(logger))
 app.get("/api/pages", getPages(logger))
+
 app.post("/api/widgets/:id", storeWidget(logger))
 app.get("/api/widgets/:id", getWidget(logger))
+
 app.get("/api/query", handleQueries(logger))
 
-app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger));
+app.post("/api/spotify/:command", handleSpotifyCommand(logger))
+
+app.get("/api/loginresponder/:app", handleLoginResponse(logger))
+
+app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger)); 
 
 // ---------------------------------------------------------------------------------
 // app hosting
@@ -106,8 +113,8 @@ process.on('SIGUSR2', handleShutdown);
 // Listen up!
 // ---------------------------------------------------------------------------------
 
-app.listen(port, () => {
-    logger.logLine('listening on ' + port);
+app.listen(listening_port, () => {
+    logger.logLine('listening on ' + listening_port);
 });
 
 

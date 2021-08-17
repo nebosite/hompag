@@ -1,4 +1,16 @@
 
+
+{"redirectTo":"
+https://accounts.spotify.com/authorize?client_id=13d57354b3ce489bbf2dc93f67f7701d&
+redirect_uri=http://localhost:8101/loginresponder/spotify&scope=user-read-currently-playing%20user-read-playback-state%20user-modify-playback-state%20streaming&response_type=code&state=foo"}
+
+
+http://localhost:8101/api/loginresponder/spotify?
+code=AQD5m9PSEXiq6EcRielq_JUImnySbyrft2rJjINWQTLMmXHiB03RXOBesKgFYCtN_WIGOMPxkDBVH_p972VAGp1wTvHnmPEzJ23GwZnfdC8wNuOWM9Xp4Tgb2tn6YQ4MXdt4HJsL70wNMx2j-KFOfKKi0IKmzy-0-r0LLjwB8nRwAmBHv4I2y6KLDKfjOsiOFrBx8jJqrCqlJeIB67paivtQ3LdoY5COjKpqdj5_GGYM1Kq8kdxyPf3TNw_DXaOFOSz9mTs3o3tvwo64LGJDbLmBDTAuj_JbW01bnnd-M_SKbZ-Sgar1mmpbZADHKY5yk9Q
+&state=foo
+
+
+
 TODO
         
         
@@ -7,11 +19,13 @@ TODO
     [x] Spotify keeps trying to reload
     
     [ ] Spotify API needs to be on the server
-        [ ] Widget does api/spotify/widgetid/login
-        [ ] Server replies with redirect URL to be executed on the client
-        [ ] User logs in
-        [ ] Spotify sends credentials to server
-        [ ] Server remembers accesstoken under the widget id
+        [x] Widget does api/spotify/widgetid/login
+        [x] Server replies with redirect URL to be executed on the client
+            https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
+            [x] Put http://localhost:8101/api/loginresponder/spotify in whitelist
+        [x] User logs in
+        [x] Spotify sends credentials to server
+        [x] Server remembers accesstoken under the widget id
         [ ] Server gets the playstate and sends an update message to clients
         [ ] Client sends play commands to server
         [ ] Server forwards commands to spotify
@@ -19,6 +33,7 @@ TODO
             - Clients keep widget state as transient values
         [ ] Keep spotify secrets in the config
         [ ] Get new secrets for spotify API and weather watcher
+        [ ] Server always checks for token expiration on spotify calls and re-requests when it expires
         
     [ ] put secrets in a config file called secrets.env
         - Weather API
@@ -30,6 +45,7 @@ TODO
     [ ] Perfect Pencil
 
 NEW
+    [ ] In the settings page, report recent errors - switch console.log in error locations to report errors
     [ ] On the server, periodically purge empty folders and 0-length files
     [ ] google-like ajax functionality  in the search tool
         - Remember user searches on the widget

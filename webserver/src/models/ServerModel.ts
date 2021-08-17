@@ -1,8 +1,10 @@
 
 
-import { Logger } from "../helpers/logger";
+import { ILogger } from "../helpers/logger";
 import moment from "moment";
 import { VERSION } from "../GLOBALS";
+import { SpotifyModel } from "./SpotifyModel";
+
 
 
 export interface ItemReturn
@@ -42,22 +44,34 @@ export interface TransientStatePacket
     data: any
 }
 
+export interface ServerConfig {
+    spotify: {
+        clientId: string
+        clientSecret: string
+    }
+}
+
 //------------------------------------------------------------------------------------------
 // The state of the server overall
 //------------------------------------------------------------------------------------------
 export class ServerModel {
+
     //------------------------------------------------------------------------------------------
-    logger: Logger
+    logger: ILogger
     private _startTime = Date.now();
     private _pageAccess: IItemStore;
     private _listeners = new Map<string, IListener>();
+
+    spotify: SpotifyModel
+
     //------------------------------------------------------------------------------------------
     // ctor
     //------------------------------------------------------------------------------------------
-    constructor(pageAccess: IItemStore, logger: Logger)
+    constructor(config: ServerConfig, pageAccess: IItemStore, logger: ILogger)
     {
         this.logger = logger;
         this._pageAccess = pageAccess;
+        this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret);
     }
 
     //------------------------------------------------------------------------------------------
@@ -184,5 +198,16 @@ export class ServerModel {
     
     }
 
-}
 
+    //------------------------------------------------------------------------------------------
+    // handleLoginResponse
+    //------------------------------------------------------------------------------------------
+    handleLoginResponse(app: string, query: any, body: any): any {
+        switch(app){
+            case "spotify":  return this.spotify.handleLoginResponse(query); 
+            default: throw new Error(`Unknown login response app: ${app}`)
+        }
+    }
+
+
+}
