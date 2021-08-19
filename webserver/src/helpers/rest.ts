@@ -1,13 +1,20 @@
 var fetch = require('node-fetch')
 
-export function restCall<T>(method: string, headers: any, endpoint:string , body:string = ""): T {
+export async function restCall<T>(
+    method: string, 
+    headers: any, 
+    endpoint:string , 
+    body:string | undefined = undefined) {
     
-    headers['Content-Length'] = body.length
+    if(body) {
+        headers['Content-Length'] = body.length
+    }
 
     const options = {method,headers,body}
-    console.log("FETCH:")
-    console.log(`    ${endpoint}`)
-    console.log(`    ${JSON.stringify(options)}`)
+    // console.log("FETCH:")
+    // console.log(`    ${endpoint}`)
+    // console.log(`    ${JSON.stringify(options)}`)
+
     return fetch(endpoint, options)
-        .then((response:any) => { return response.json() as T })
+            .then((response:any) =>   response.json()) as T
 }

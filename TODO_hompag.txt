@@ -45,6 +45,8 @@ TODO
     [ ] Perfect Pencil
 
 NEW
+    [ ] Sometimes text does not save after typing and there is no newline
+        - Maybe launch a throttle event on each keystroke
     [ ] In the settings page, report recent errors - switch console.log in error locations to report errors
     [ ] On the server, periodically purge empty folders and 0-length files
     [ ] google-like ajax functionality  in the search tool

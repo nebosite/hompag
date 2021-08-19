@@ -51,6 +51,13 @@ export interface ServerConfig {
     }
 }
 
+export interface StatePacket {
+    id: string, 
+    name: string, 
+    instance?: number,
+    data: any
+}
+
 //------------------------------------------------------------------------------------------
 // The state of the server overall
 //------------------------------------------------------------------------------------------
@@ -71,7 +78,11 @@ export class ServerModel {
     {
         this.logger = logger;
         this._pageAccess = pageAccess;
-        this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret);
+
+        const spotifyAlerter = (data: any) => {
+            this.sendAlert({type: "transientchange", data: data} )
+        }
+        this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret, spotifyAlerter);
     }
 
     //------------------------------------------------------------------------------------------

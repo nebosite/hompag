@@ -172,10 +172,10 @@ export class PageModel
     // -------------------------------------------------------------------
     // getStateMaker 
     // -------------------------------------------------------------------
-    getStateMaker(id: string) {
+    getStateMaker(widgetId: string) {
         return <T>(name: string, handler: (data: T)=>void)=> 
         {
-            return this.ref_App.createTransientStateHandler<T>(id, name, handler);
+            return this.ref_App.createTransientStateHandler<T>(widgetId, name, handler);
         }
     }
 }

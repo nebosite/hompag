@@ -113,7 +113,7 @@ export class AppModel {
     // Create a transient state handler
     //  id: Widget id that needs state 
     // -------------------------------------------------------------------
-    createTransientStateHandler<T>(id: string, name: string, handler: (data: T)=>void)
+    createTransientStateHandler<T>(widgetId: string, propertyName: string, handler: (data: T)=>void)
     {
         const sender = (id: string, name: string, instance: number, data: T) => {
             const sendPacket: TransientStatePacket = {
@@ -121,17 +121,17 @@ export class AppModel {
             }
             this._dataChangeListener.send({type: "transientchange", data: sendPacket})
         }
-        const output = new TransientStateHandler(id, name, handler, sender);
-        if(!this._transientHandlers.has(id)) {
-            this._transientHandlers.set(id, new Map<string, TransientStateHandler<unknown>[]>())
+        const output = new TransientStateHandler(widgetId, propertyName, handler, sender);
+        if(!this._transientHandlers.has(widgetId)) {
+            this._transientHandlers.set(widgetId, new Map<string, TransientStateHandler<unknown>[]>())
         }
 
-        const nameHandlers = this._transientHandlers.get(id)
-        if(!nameHandlers.has(name)) {
-            nameHandlers.set(name,[])
+        const nameHandlers = this._transientHandlers.get(widgetId)
+        if(!nameHandlers.has(propertyName)) {
+            nameHandlers.set(propertyName,[])
         }
 
-        nameHandlers.get(name).push(output as  TransientStateHandler<unknown>);
+        nameHandlers.get(propertyName).push(output as  TransientStateHandler<unknown>);
         return output;
     }
 
