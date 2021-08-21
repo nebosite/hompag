@@ -1,13 +1,5 @@
 import { observable, action, makeObservable } from "mobx";
 
-export interface TransientStatePacket
-{
-    id: string
-    name: string
-    instance: number
-    data: any
-}
-
 // -------------------------------------------------------------------
 // This class simplifies how to track transient state as an observable.
 // -------------------------------------------------------------------

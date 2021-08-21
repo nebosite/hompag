@@ -8,7 +8,8 @@ import { hompagTypeHelper, registerGlobalItem } from "./hompagTypeHelper";
 import { PageModel } from "./PageModel";
 import { WidgetModel, WidgetType } from "./WidgetModel";
 import { dataTypeForWidgetType } from "./WidgetContainer"; 
-import { TransientStateHandler, TransientStatePacket } from "./TransientState";
+import { TransientStateHandler } from "./TransientState";
+import { ServerMessageType, StatePacket } from "hompag-common"
 
 const WIDGET_VERSION_ISLOADING = -1;
 
@@ -40,6 +41,8 @@ export interface ItemChange
     version: number;
 }
 
+
+
 // -------------------------------------------------------------------
 // The AppModel
 // -------------------------------------------------------------------
@@ -68,8 +71,8 @@ export class AppModel {
         this._typeHelper = new hompagTypeHelper();
         this._serializer = new BruteForceSerializer(this._typeHelper)
         this._dataChangeListener = new WebSocketListener();
-        this._dataChangeListener.addListener("itemchange", this.handleItemChanges)
-        this._dataChangeListener.addListener("transientchange", this.handleTransientChanges);
+        this._dataChangeListener.addListener(ServerMessageType.item_change, this.handleItemChanges)
+        this._dataChangeListener.addListener(ServerMessageType.transient_change, this.handleTransientChanges);
 
         setTimeout( ()=> this.loadPage(pageName),1)
     }
@@ -99,7 +102,7 @@ export class AppModel {
     // -------------------------------------------------------------------
     // Process incoming transient state changes
     // -------------------------------------------------------------------
-    handleTransientChanges = async(data:TransientStatePacket) => {
+    handleTransientChanges = async(data: StatePacket) => {
         const handlerList = this._transientHandlers.get(data.id)?.get(data.name);
 
         if(!handlerList) return;
@@ -116,10 +119,10 @@ export class AppModel {
     createTransientStateHandler<T>(widgetId: string, propertyName: string, handler: (data: T)=>void)
     {
         const sender = (id: string, name: string, instance: number, data: T) => {
-            const sendPacket: TransientStatePacket = {
+            const sendPacket: StatePacket = {
                 id, name, instance, data
             }
-            this._dataChangeListener.send({type: "transientchange", data: sendPacket})
+            this._dataChangeListener.send({type: ServerMessageType.transient_change, data: sendPacket})
         }
         const output = new TransientStateHandler(widgetId, propertyName, handler, sender);
         if(!this._transientHandlers.has(widgetId)) {
@@ -132,6 +135,7 @@ export class AppModel {
         }
 
         nameHandlers.get(propertyName).push(output as  TransientStateHandler<unknown>);
+        this._dataChangeListener.send({type: ServerMessageType.transient_request, data: {id: widgetId, name: propertyName, instance: output.instance}})
         return output;
     }
 

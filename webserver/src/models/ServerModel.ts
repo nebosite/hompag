@@ -4,7 +4,7 @@ import { ILogger } from "../helpers/logger";
 import moment from "moment";
 import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
-
+import { ServerMessageType } from "hompag-common";
 
 
 export interface ItemReturn
@@ -35,27 +35,11 @@ export interface IListener{
     send(data: any): Promise<void>
 }
 
-
-export interface TransientStatePacket
-{
-    id: string
-    name: string
-    instance: number
-    data: any
-}
-
 export interface ServerConfig {
     spotify: {
         clientId: string
         clientSecret: string
     }
-}
-
-export interface StatePacket {
-    id: string, 
-    name: string, 
-    instance?: number,
-    data: any
 }
 
 //------------------------------------------------------------------------------------------
@@ -80,7 +64,7 @@ export class ServerModel {
         this._pageAccess = pageAccess;
 
         const spotifyAlerter = (data: any) => {
-            this.sendAlert({type: "transientchange", data: data} )
+            this.sendAlert({type: ServerMessageType.transient_change, data: data} )
         }
         this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret, spotifyAlerter);
     }
@@ -149,7 +133,7 @@ export class ServerModel {
             version, 
             JSON.stringify(updateDetails.data,null,2))
         
-        this.sendAlert({type: "itemchange", data: {type: itemType, itemId: id, version}})
+        this.sendAlert({type: ServerMessageType.item_change, data: {type: itemType, itemId: id, version}})
         return version;
     }
 

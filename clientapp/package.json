@@ -53,6 +53,7 @@
         "eslint": "^7.15.0",
         "evergreen-ui": "^6.0.1",
         "history": "^5.0.0",
+        "hompag-common": "file:../common",
         "jira-client": "^6.21.1",
         "mobx": "^6.0.4",
         "mobx-react": "^7.0.5",

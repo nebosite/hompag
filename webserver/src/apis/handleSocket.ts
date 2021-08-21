@@ -4,6 +4,7 @@ import * as WebSocket from 'ws';
 import { Request } from "express";
 import { ILogger } from "../helpers/logger";
 import { IListener } from "../models/ServerModel";
+import { ServerMessageType, StatePacket } from "hompag-common";
 // import { errorCounts, serverModel, logger, throughPut } from "..";
 // import { IClusterFunMessage } from "@clusterfun/clusterfun_lib";
 
@@ -62,7 +63,7 @@ export function handleSocket(socket: WebSocket, req: Request, logger: ILogger) {
         socket.on('message', function (msgRaw:any) {
             try {
                 const jsonText = msgRaw.toString();
-                const msgParsed = JSON.parse(jsonText) as {type:string, data: any};
+                const msgParsed = JSON.parse(jsonText) as {type: ServerMessageType, data: StatePacket};
                 serverModel.handleMessage(msgParsed);
 
             }

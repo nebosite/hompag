@@ -76,6 +76,7 @@ NEW
         
 
 WIDGET IDEAS
+    - Face widget - help me remember faces
     - Movie widget - in one search: common sense, imbd, rotten tomatoes, youtube trailer
         - Occasionally suggest movies and let you mark them for later
         - APIS:

@@ -1,8 +1,8 @@
+import { StatePacket } from "../../../common/dist/main";
 import { objectToUriParams } from "../helpers/httpStuff";
 import { ILogger } from "../helpers/logger";
 import { restCall } from "../helpers/rest";
 import { PageResponse, UserError } from "../helpers/SafeSend";
-import { StatePacket } from "./ServerModel";
 var querystring = require('querystring');
 
 const spotifyTokenEndpoint = "https://accounts.spotify.com/api/token"
