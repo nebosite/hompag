@@ -4,7 +4,7 @@ import { ILogger } from "../helpers/logger";
 import moment from "moment";
 import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
-import { ServerMessageType } from "hompag-common";
+import { ServerMessageType, StatePacket } from "hompag-common";
 
 
 export interface ItemReturn
@@ -63,7 +63,8 @@ export class ServerModel {
         this.logger = logger;
         this._pageAccess = pageAccess;
 
-        const spotifyAlerter = (data: any) => {
+        const spotifyAlerter = (data: StatePacket) => {
+            this.rememberTransientState(data);
             this.sendAlert({type: ServerMessageType.transient_change, data: data} )
         }
         this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret, spotifyAlerter);
@@ -160,11 +161,54 @@ export class ServerModel {
         this._listeners.forEach(l => l.send(message))
     }
 
+
+    // this maps widgetId, stateName to some blob
+    private transientStates = new Map<string, Map<string, any>>();
+
+    //------------------------------------------------------------------------------------------
+    // rememberTransientState
+    //------------------------------------------------------------------------------------------
+    rememberTransientState(packet: StatePacket) 
+    {
+        if(!this.transientStates.has(packet.id))
+        {
+            this.transientStates.set(packet.id, new Map<string, any>())
+        }
+
+        const widgetState = this.transientStates.get(packet.id);
+        if(widgetState) {
+            widgetState?.set(packet.name, packet.data)
+        }
+        else {
+            console.log(`Can't remember state for ${packet.id}`)
+        }
+    }
+
     //------------------------------------------------------------------------------------------
     // handleMessage
     //------------------------------------------------------------------------------------------
-    handleMessage(message: { type: string; data: any; }) {
-        this.sendAlert(message) 
+    handleMessage(message: { type: ServerMessageType; data: any; }) {
+        switch(message.type)
+        {
+            case ServerMessageType.item_change: 
+                this.sendAlert(message); 
+                break;
+            case ServerMessageType.transient_change:
+                this.rememberTransientState(message.data);
+                this.sendAlert(message);
+                break;
+            case ServerMessageType.transient_request:
+                const state = message.data as StatePacket;
+                state.data = this.transientStates.get(state.id)?.get(state.name)
+                return {
+                    type: ServerMessageType.transient_change,
+                    data: state
+                }
+                break;
+            default: 
+                throw Error(`Unknown message type: ${message.type}`)
+        }
+        return null;
     }
 
     //------------------------------------------------------------------------------------------
@@ -193,7 +237,6 @@ export class ServerModel {
     
     }
 
-
     //------------------------------------------------------------------------------------------
     // handleLoginResponse
     //------------------------------------------------------------------------------------------
@@ -203,6 +246,4 @@ export class ServerModel {
             default: throw new Error(`Unknown login response app: ${app}`)
         }
     }
-
-
 }

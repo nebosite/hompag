@@ -19,7 +19,9 @@ export class ObservableState<T>
     constructor(name: string, stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
     {
         makeObservable(this);
-        this._valueHandler = stateMaker<T>(name, (token) => action(()=>this._value = token)())
+        this._valueHandler = stateMaker<T>(name, (token) => action(()=> {
+            this._value = token
+        })())
     }
 }
 

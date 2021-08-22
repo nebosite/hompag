@@ -64,8 +64,13 @@ export function handleSocket(socket: WebSocket, req: Request, logger: ILogger) {
             try {
                 const jsonText = msgRaw.toString();
                 const msgParsed = JSON.parse(jsonText) as {type: ServerMessageType, data: StatePacket};
-                serverModel.handleMessage(msgParsed);
-
+                const returnMessage = serverModel.handleMessage(msgParsed);
+                if(returnMessage) {
+                    // If the instance matches, the receiver will ignore it,
+                    // so set the instance to 0
+                    returnMessage.data.instance = 0 
+                    listener.send(returnMessage);
+                }
             }
             catch(err)
             {

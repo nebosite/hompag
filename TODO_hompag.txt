@@ -26,7 +26,10 @@ TODO
         [x] User logs in
         [x] Spotify sends credentials to server
         [x] Server remembers accesstoken under the widget id
-        [ ] Server gets the playstate and sends an update message to clients
+        [x] Server gets the playstate and sends an update message to clients
+        [x] Client needs to request widget state
+        [ ] Client shows player API 
+            - Show proper text when the api is not playing
         [ ] Client sends play commands to server
         [ ] Server forwards commands to spotify
         [ ] After sending command, Server re-requests state and forwards to clients

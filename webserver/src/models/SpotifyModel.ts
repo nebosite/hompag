@@ -1,6 +1,6 @@
 import { StatePacket } from "../../../common/dist/main";
 import { objectToUriParams } from "../helpers/httpStuff";
-import { ILogger } from "../helpers/logger";
+import { ILogger, LoggerPrefixer } from "../helpers/logger";
 import { restCall } from "../helpers/rest";
 import { PageResponse, UserError } from "../helpers/SafeSend";
 var querystring = require('querystring');
@@ -141,7 +141,7 @@ export class SpotifyModel
         clientSecret: string, 
         _reportStateChange: (state: StatePacket) => void )
     {
-        this._logger = logger;
+        this._logger = new LoggerPrefixer(logger, "Spotify");
         this.clientId = clientId
         this.clientSecret = clientSecret
         this._reportStateChange = _reportStateChange;
@@ -151,8 +151,6 @@ export class SpotifyModel
     // handleLoginResponse
     //------------------------------------------------------------------------------------------
     async handleLoginResponse(query: any) {
-        // this.logger.logLine(`code: ${query.code}`)
-        // this.logger.logLine(`state: ${query.state}`)
         if(!query.code){
             return new PageResponse(`<html> Spotify login failed: ${query.error} </html>`)
         }
@@ -169,8 +167,6 @@ export class SpotifyModel
             client_id : this.clientId,
             client_secret: this.clientSecret
         }
-
-    
 
         const headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         const tokenResponse = await restCall<SpotifyTokenResponse>("POST", headers, spotifyTokenEndpoint, querystring.stringify(tokenRequest))
@@ -195,10 +191,14 @@ export class SpotifyModel
     //------------------------------------------------------------------------------------------
     // callApi
     //------------------------------------------------------------------------------------------
-    callApi<T>(command: string, token: string) {
-        const apiHeaders = {'Authorization': `Bearer ${token}`}
+    async callApi<T>(widgetId: string, method: string, command: string, body:string | undefined = undefined) {
+        const credentials = this._credentialCache.get(widgetId);
+        if(!credentials){
+            throw Error(`Missing credentials for widget id: ${widgetId}`)
+        }
+        const apiHeaders = {'Authorization': `Bearer ${credentials.tokenDetails.access_token}`}
         const endPoint = spotifyApiEndpoint + `/me/${command}`;
-        return restCall<T>("GET", apiHeaders, endPoint)
+        return restCall<T>(method, apiHeaders, endPoint)
     }
 
     //------------------------------------------------------------------------------------------
@@ -206,19 +206,15 @@ export class SpotifyModel
     //------------------------------------------------------------------------------------------
     private async updatePlayerState(widgetId: string)
     {
-        const credentials = this._credentialCache.get(widgetId);
-        if(!credentials){
-            throw Error(`Missing credentials for widget id: ${widgetId}`)
+        const playerState = await this.callApi<SpotifyPlayerResponse>(widgetId, "GET", "player")
+
+        const statePacket: StatePacket = { id: widgetId, name: "playerState", data: undefined}
+        if(playerState) {
+            statePacket.data = {
+                songTitle: playerState.item.name
+            }
         }
 
-        const state = await this.callApi<SpotifyPlayerResponse>("player",credentials.tokenDetails.access_token)
-
-        const data = {
-            songTitle: state.item.name
-        }
-        const statePacket = {
-            id: widgetId, name: "playerState", data
-        }
         this._reportStateChange(statePacket)
     }
 
@@ -245,8 +241,9 @@ export class SpotifyModel
                 const uriParams = {
                     client_id,
                     redirect_uri,
-                    scope: scopes.join("%20"),
+                    scope: scopes.join(" "),
                     response_type: "code",
+                    show_dialog: false,
                     state: stateId
                 }
                 const userRedirect = `${spotifyAuthEndpoint}?${objectToUriParams(uriParams)}`

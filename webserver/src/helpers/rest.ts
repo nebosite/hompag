@@ -1,6 +1,23 @@
 var fetch = require('node-fetch')
 
+//------------------------------------------------------------------------------------------
+// restCall
+//------------------------------------------------------------------------------------------
 export async function restCall<T>(
+    method: string, 
+    headers: any, 
+    endpoint:string , 
+    body:string | undefined = undefined) 
+{
+    const textResponse = await restCallText(method, headers, endpoint, body);
+    if(!textResponse) return null;
+    return JSON.parse(textResponse) as T
+}
+
+//------------------------------------------------------------------------------------------
+// restCallText - No transformation of output
+//------------------------------------------------------------------------------------------
+export async function restCallText(
     method: string, 
     headers: any, 
     endpoint:string , 
@@ -11,10 +28,11 @@ export async function restCall<T>(
     }
 
     const options = {method,headers,body}
-    // console.log("FETCH:")
-    // console.log(`    ${endpoint}`)
-    // console.log(`    ${JSON.stringify(options)}`)
 
     return fetch(endpoint, options)
-            .then((response:any) =>   response.json()) as T
+            .then((response:any) =>  {
+                if(response.status === 204) return null;
+                return response.text()
+            } )
+
 }

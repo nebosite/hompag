@@ -185,7 +185,6 @@ export class AppModel {
     // -------------------------------------------------------------------
     async refreshWidgets(page: PageModel)
     {
-        console.log("Refreshing widgets")
         const response = await this._api.restGet<WidgetVersionResponse>(
             `query?type=widgetversions&ids=${page.widgetIds.join(',')}`, false);
 

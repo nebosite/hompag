@@ -45,3 +45,19 @@ export class Logger implements ILogger
     }
 
 }
+
+
+export class LoggerPrefixer implements ILogger
+{
+    rootLogger: ILogger;
+    prefix: string;
+
+    constructor(rootLogger: ILogger, prefix: string)
+    {
+        this.rootLogger = rootLogger;
+        this.prefix = prefix;  
+    }
+
+    logLine(text: string): void { this.rootLogger.logLine(`${this.prefix}: ${text}`) }
+    logError(text: string): void {this.rootLogger.logError(`${this.prefix}: ${text}`) }
+}

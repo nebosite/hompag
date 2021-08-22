@@ -137,7 +137,6 @@ export class PageCache implements IItemStore{
 
         const loadVersionFromDeepStore = async () => {
             const deepItem = await this._deepStore.getItem(itemType, id, requestedVersion);
-            console.log(`Got from deep store: ${deepItem?.version} ${deepItem?.data.length}`)
             if(!deepItem) return undefined;
             const info = {
                 id,
