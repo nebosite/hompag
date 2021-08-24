@@ -84,7 +84,6 @@ export class PageCache implements IItemStore{
             itemsToFlush.forEach(i => this._recentUpdates.delete(i.key));
 
             await Promise.all(itemsToFlush.map(i => {
-                console.log(`Storing ${i.info.itemType},${i.info.id},${i.info.version}`)
                 return new Promise<void>(async (resolve) => {            
                     await this._deepStore.storeItem(i.info.itemType, i.info.id, i.info.version, i.info.data);
                     resolve();

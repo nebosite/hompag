@@ -3,92 +3,14 @@ import { registerType } from "models/hompagTypeHelper";
 import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
 import { WidgetModelData, WidgetType } from "models/WidgetModel";
 import React from "react";
-//import { IoPlaySkipBackOutline, IoPlayBackOutline, IoPlayOutline, IoPlayForwardOutline, IoPlaySkipForwardOutline, IoPauseOutline } from "react-icons/io5"
+import { IoPlaySkipBackOutline, IoPlayBackOutline, IoPlayOutline, IoPlayForwardOutline, IoPlaySkipForwardOutline, IoPauseOutline } from "react-icons/io5"
 import { ObservableState, TransientStateHandler } from "models/TransientState";
 import { RestHelper } from "helpers/RestHelper";
+import {FaSpotify} from "react-icons/fa"
+import styles from './WidgetSpotify.module.css';
+import Row from "./Row";
+import { SpotifyPlayerState, ServerResponse} from "hompag-common";
 
-// export const authEndpoint = 'https://accounts.spotify.com/authorize';
-// const clientId = "13d57354b3ce489bbf2dc93f67f7701d";
-// const redirectUri = window.location.protocol + "//" + window.location.host;
-// const scopes = [
-//     //https://developer.spotify.com/documentation/general/guides/scopes/
-//   "user-read-currently-playing",
-//   "user-read-playback-state",
-//   "user-modify-playback-state",
-//   "streaming",
-// ];
-
-
-// const hash = window.location.hash
-//   .substring(1)
-//   .split("&")
-//   .reduce(function(initial:any, item:string) {
-//     if (item) {
-//       var parts = item.split("=");
-//       initial[parts[0]] = decodeURIComponent(parts[1]);
-//     }
-//     return initial;
-//   }, {});
-
-// if(hash.access_token)
-// {
-//     const tokenToSave = {
-//         access_token: hash.access_token,    
-//         expires_in: hash.expires_in 
-//     }
-//     window.sessionStorage.setItem("spotify_access_token",JSON.stringify(tokenToSave))
-// }
-
-//console.log(`Access token: ${hash.access_token}`)
-
-
-
-interface ServerResponse {
-    errorMessage?: string
-    data?: any
-}
-
-interface SpotifyPlayerState {
-    songTitle: string
-
-}
-
-
-
-export class SpotifyTransientState
-{
-    playerState:    ObservableState<SpotifyPlayerState>;
-    loggedIn:       ObservableState<boolean>;
-    api = new RestHelper("/api/spotify/");
-
-    // -------------------------------------------------------------------
-    // 
-    // -------------------------------------------------------------------
-    constructor(stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
-    {
-        this.playerState = new ObservableState<SpotifyPlayerState>("playerState", stateMaker)
-        this.loggedIn = new ObservableState<boolean>("loggedIn", stateMaker)
-    } 
-
-    // -------------------------------------------------------------------
-    // Attempt a login
-    // -------------------------------------------------------------------
-    async login(widgetId: string) {
-        const details ={
-            id: widgetId,
-            sendingPageUrl: window.location.href
-        }
-        const response = await this.api.restPost<ServerResponse>("login", JSON.stringify(details));
-        if(response?.data) {
-            console.log(`Server Responded with: ${JSON.stringify(response.data)}`)
-            window.location.href = response.data.redirectTo;
-        }
-        else {
-            console.log(`There was a problem with the spotify login: ${response?.errorMessage}`)
-        }
-    }
-
-}
 
 export class SpotifyData extends WidgetModelData
 {
@@ -176,6 +98,68 @@ export class SpotifyData extends WidgetModelData
     
 }
 
+export class SpotifyTransientState
+{
+    playerState:    ObservableState<SpotifyPlayerState>;
+    loggedIn:       ObservableState<boolean>;
+    api = new RestHelper("/api/spotify/");
+    widgetId: string;
+
+    // -------------------------------------------------------------------
+    // 
+    // -------------------------------------------------------------------
+    constructor(widgetId: string, stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
+    {
+        this.widgetId = widgetId;
+        this.playerState = new ObservableState<SpotifyPlayerState>("playerState", stateMaker)
+        this.loggedIn = new ObservableState<boolean>("loggedIn", stateMaker)
+    } 
+
+    // -------------------------------------------------------------------
+    // Call the server's spotify API
+    // -------------------------------------------------------------------
+    async callApi(api: string, details: any = {})
+    {
+        details.id  = this.widgetId;
+        const response = await this.api.restPost<ServerResponse>(api, JSON.stringify(details));
+        if(!response || response?.errorMessage) {
+            console.log(`There was a problem with the spotify/${api} call: ${response?.errorMessage}`)
+            return null;
+        }
+
+        return response.data;
+    }
+
+    // -------------------------------------------------------------------
+    // Attempt a login
+    // -------------------------------------------------------------------
+    async login() {
+        const response = await this.callApi("login", {sendingPageUrl: window.location.href})
+        if(response) {
+            window.location.href = response.redirectTo;
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // General control methods
+    // -------------------------------------------------------------------
+    refresh =   () =>                 { this.callApi("refresh")}
+    play =      () =>                 { this.callApi("play") }
+    pause =     () =>                 { this.callApi("pause") }
+    next =      () =>                 { this.callApi("next") }
+    prev =      () =>                 { this.callApi("previous") }
+    seek =      (seconds: number) =>  { 
+        const state = this.playerState.value;
+        if(state?.isPlaying)
+        {
+            let position_ms = state.position_ms + seconds * 1000;
+            if(position_ms < 0) position_ms = 0;
+            if(position_ms > state.duration_ms) position_ms = state.duration_ms;
+            this.callApi("seek", {position_ms}) 
+        }
+    }
+}
+
 registerDataTypeForWidgetType(WidgetType.Spotify, "SpotifyData");
 registerType("SpotifyData", () => new SpotifyData())
 
@@ -190,14 +174,61 @@ extends React.Component<{context: WidgetContainer}>
         super(props);
 
         
-        this._transientState = new SpotifyTransientState(props.context.getStateMaker())
+        this._transientState = new SpotifyTransientState(props.context.widgetId, props.context.getStateMaker())
+    }
+
+    // -------------------------------------------------------------------
+    // renderPlayerUI
+    // -------------------------------------------------------------------
+    renderPlayerUI() {
+        const playerState = this._transientState.playerState.value;
+        return <div>
+                <div>Song: {(playerState?.isPlaying ? `${playerState.songTitle} by ${playerState.artist}`: "(Not Playing)")}  </div>
+                <Row style={{fontSize: "30px"}}>
+                    <IoPlaySkipBackOutline onClick={()=>this._transientState.prev()}/> 
+                    <IoPlayBackOutline onClick={()=>this._transientState.seek(-30)}/>
+                    { 
+                        playerState?.isPlaying 
+                            ? <IoPauseOutline onClick={()=>this._transientState.pause()}/>
+                            : <IoPlayOutline onClick={()=>this._transientState.play()}/>
+                    }
+                    <IoPlayForwardOutline onClick={()=>this._transientState.seek(30)}/>
+                    <IoPlaySkipForwardOutline  onClick={()=>this._transientState.next()}/>  
+                </Row>
+
+            </div>
+    }
+
+    // -------------------------------------------------------------------
+    // renderLogin
+    // -------------------------------------------------------------------
+    renderLogin() {
+        const handleLoginClick = () => this._transientState.login();
+        return <button onClick={handleLoginClick}>Login to Spotify</button>
     }
 
     // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
     render() {
-        const {context} = this.props;
+
+        const handleMouseEnter = () => {
+            this._transientState.refresh();
+        }
+
+        return (
+            <div className={styles.spotifyWidget} onMouseEnter={handleMouseEnter}>
+                <div><FaSpotify />Spotify</div>
+                { this._transientState.loggedIn.value 
+                    ? this.renderPlayerUI()
+                    : this.renderLogin()
+                }
+            
+            </div>
+        )
+    }; 
+}
+
         //const data = this.props.context.ref_widget.data as SpotifyData; 
 
         // const getExpireTime = (secondsText: string) => {
@@ -262,15 +293,3 @@ extends React.Component<{context: WidgetContainer}>
         //         <div onClick={()=> this._transientState.foo.value = Date.now().toString()}>Trans: {this._transientState.foo.value} </div>
         //     </div> 
         // );
-
-        return (
-            <div>
-                { this._transientState.loggedIn.value 
-                    ? <div>Now Playing: {this._transientState.playerState.value?.songTitle}</div>
-                    : <button onClick={()=>this._transientState.login(context.widgetId)}>Login to Spotify</button>
-                }
-            
-            </div>
-        )
-    }; 
-}

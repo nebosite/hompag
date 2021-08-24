@@ -1,4 +1,4 @@
-import { StatePacket } from "../../../common/dist/main";
+import { SpotifyPlayerState, StatePacket } from "../../../common/dist/main";
 import { objectToUriParams } from "../helpers/httpStuff";
 import { ILogger, LoggerPrefixer } from "../helpers/logger";
 import { restCall } from "../helpers/rest";
@@ -191,14 +191,16 @@ export class SpotifyModel
     //------------------------------------------------------------------------------------------
     // callApi
     //------------------------------------------------------------------------------------------
-    async callApi<T>(widgetId: string, method: string, command: string, body:string | undefined = undefined) {
+    async callApi<T>(widgetId: string, method: string, command: string | undefined, body:string | undefined = undefined) {
         const credentials = this._credentialCache.get(widgetId);
         if(!credentials){
             throw Error(`Missing credentials for widget id: ${widgetId}`)
         }
         const apiHeaders = {'Authorization': `Bearer ${credentials.tokenDetails.access_token}`}
-        const endPoint = spotifyApiEndpoint + `/me/${command}`;
-        return restCall<T>(method, apiHeaders, endPoint)
+        const endPoint = spotifyApiEndpoint + `/me/player/${command}`;
+        const result = await restCall<T>(method, apiHeaders, endPoint)
+        console.log(`CallAPI: ${method} ${command} => ${JSON.stringify(result).substr(0,120)}`)
+        return result;
     }
 
     //------------------------------------------------------------------------------------------
@@ -206,22 +208,33 @@ export class SpotifyModel
     //------------------------------------------------------------------------------------------
     private async updatePlayerState(widgetId: string)
     {
-        const playerState = await this.callApi<SpotifyPlayerResponse>(widgetId, "GET", "player")
+        this._logger.logLine(`Updating spotify state for ${widgetId}`)
+        try {
+            const playerState = await this.callApi<SpotifyPlayerResponse>(widgetId, "GET", "")
 
-        const statePacket: StatePacket = { id: widgetId, name: "playerState", data: undefined}
-        if(playerState) {
-            statePacket.data = {
-                songTitle: playerState.item.name
+            const statePacket: StatePacket = { id: widgetId, name: "playerState", data: undefined}
+            if(playerState) {
+                statePacket.data = {
+                    songTitle: playerState.item?.name ?? undefined,
+                    artist: playerState.item?.artists[0]?.name ?? undefined,
+                    isPlaying: playerState.is_playing,
+                    position_ms: playerState.progress_ms ?? 0,
+                    duration_ms: playerState.item.duration_ms ?? 0
+                } as SpotifyPlayerState
             }
-        }
 
-        this._reportStateChange(statePacket)
+            this._reportStateChange(statePacket)
+
+        }
+        catch(err) {
+            this._logger.logError(`UpdatePlayerState: ${err}`)
+        }
     }
 
     //------------------------------------------------------------------------------------------
     // handleSpotifyCommand
     //------------------------------------------------------------------------------------------
-    handleSpotifyCommand(command: string, currentUri: string, body: any): any {
+    async handleSpotifyCommand(command: string, currentUri: string, body: any) {
         const widgetId = body.id;
         const client_id = this.clientId; 
         const redirect_uri = `${currentUri}/api/loginresponder/spotify`;
@@ -233,6 +246,9 @@ export class SpotifyModel
           "streaming",
         ];
 
+        const refresh = () => {
+            setTimeout(()=> this.updatePlayerState(widgetId),500)   
+        }
 
         switch(command){
             case "login": 
@@ -250,10 +266,68 @@ export class SpotifyModel
                 return  { 
                     redirectTo: userRedirect
                 }
+            case "refresh":
+                refresh();
+                break;
+            case "play":
+            case "pause":
+                await this.callApi<SpotifyPlayerResponse>(widgetId, "PUT", command)
+                refresh();
+                break;
+            case "next":
+            case "previous":
+                await this.callApi<SpotifyPlayerResponse>(widgetId, "POST", command)
+                refresh();
+                break;
+            case "seek":
+                await this.callApi<SpotifyPlayerResponse>(widgetId, "PUT", `${command}?position_ms=${body.position_ms}`)
+                refresh();
+                break;
+    
             default: throw new UserError(`Unknown spotify command: ${command}`)
         }
+
+        return null;
     }
 
 
 }
 
+
+    // // -------------------------------------------------------------------
+    // // 
+    // // -------------------------------------------------------------------
+    // private putCommand(command: string) {
+    //     setTimeout(async ()=>{
+    //         console.log(`Spotify command: ${command}`)
+    //         await this.api?.restPut(`me/player/${command}`); 
+    //         this.getCurrentlyPlaying()
+    //     })
+    // }
+
+    // // -------------------------------------------------------------------
+    // // 
+    // // -------------------------------------------------------------------
+    // private postCommand(command: string) {
+    //     setTimeout(async ()=>{
+    //         console.log(`Spotify command: ${command}`)
+    //         await this.api?.restPost(`me/player/${command}`,""); 
+    //         this.getCurrentlyPlaying()
+    //     })
+    // }
+
+    // // -------------------------------------------------------------------
+    // // 
+    // // -------------------------------------------------------------------
+    // play = () => this.putCommand("play");
+    // pause = () => this.putCommand("pause");
+    // next = () => this.postCommand("next");
+    // prev = () => this.postCommand("previous");
+    // seek = (delta_s: number) => { 
+    //     if(this.state_playdata) {
+    //         let spot = this.state_playdata.progress_ms + delta_s * 1000;
+    //         if (spot > this.state_playdata.item.duration_ms) spot = this._state_playdata.item.duration_ms;
+    //         if (spot < 0 ) spot = 0;
+    //         this.putCommand(`seek?position_ms=${spot}`);
+    //     }
+    // }

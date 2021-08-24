@@ -6,7 +6,6 @@ import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
 import { ServerMessageType, StatePacket } from "hompag-common";
 
-
 export interface ItemReturn
 {
     id: string

@@ -23,21 +23,6 @@ hompag is meant to run as a mini web server on your local machine.  This makes y
 
 1. Clone this repo:  `git clone https://github.com/nebosite/hompag.git`
 
-2. Set up links to common code:
-
-   ```
-   cd common
-   npm run build
-   cd ../clientapp
-   npm link ../common
-   npm install ../common
-   cd ../webserver
-   npm link ../common
-   npm install ../common
-   ```
-
-   
-
 3. In the root of the hompag repo (`cd hompag`)
    1. Create a config file:  `cp webserver/src/config.ts.template webserver/src/config.ts`
    2. Edit config.ts and follow all the instructions in the comments

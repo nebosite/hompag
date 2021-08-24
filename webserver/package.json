@@ -26,7 +26,6 @@
     "express": "^4.17.1",
     "express-ws": "^5.0.2",
     "fast-xml-parser": "^3.19.0",
-    "hompag-common": "file:../common",
     "jira-client": "^6.21.1",
     "js-base64": "^3.6.0",
     "moment": "^2.29.1",

@@ -9,7 +9,8 @@ import { PageModel } from "./PageModel";
 import { WidgetModel, WidgetType } from "./WidgetModel";
 import { dataTypeForWidgetType } from "./WidgetContainer"; 
 import { TransientStateHandler } from "./TransientState";
-import { ServerMessageType, StatePacket } from "hompag-common"
+import { ServerMessageType, StatePacket } from "hompag-common";
+
 
 const WIDGET_VERSION_ISLOADING = -1;
 
