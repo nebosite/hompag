@@ -177,7 +177,7 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
                         toolbar: false,//'bold italic color | outdent indent | bullist numlist | code',
                         contextmenu: "bold italic link | code",
                         toolbar_location: 'bottom',
-                        plugins: [ 'link code'
+                        plugins: [ 'link code lists'
                             // 'advlist autolink lists link image charmap print preview anchor',
                             // 'searchreplace visualblocks code',
                             // 'insertdatetime media table paste code'

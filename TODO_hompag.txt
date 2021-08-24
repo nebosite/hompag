@@ -28,6 +28,11 @@ TODO
         [x] Server remembers accesstoken under the widget id
         [x] Server gets the playstate and sends an update message to clients
         [x] Client needs to request widget state
+        [ ] Server: Poll spotify 
+            - Every 30 seconds when logged in and not playing
+            - On mouse enter
+            - Every 5 seconds when playing
+            - On clicks
         [ ] Client shows player API 
             - Show proper text when the api is not playing
         [ ] Client sends play commands to server

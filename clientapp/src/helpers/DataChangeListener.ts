@@ -89,10 +89,9 @@ export class WebSocketListener implements IDataChangeListener {
                 retries--;
                 if(retries <= 0)
                 {
-                    console.log("ERROR: out of retires sending " + payload)
+                    console.log("ERROR: Gave up trying to send: " + payload)
                 }
                 backoffTime *= 2;
-                console.log(`Socket not ready.  Backing off ${backoffTime}ms`)
                 setTimeout(delayedSend,backoffTime);
             }
         }

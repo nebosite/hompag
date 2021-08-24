@@ -14,7 +14,11 @@ li {
 
 ul {
     margin: 0px;  
-    padding-left: 15px;
+    padding-left: 8px;
+}
+ol {
+    margin: 0px;  
+    padding-left: 8px;
 }
 
 .mce-toolbar-grp {
