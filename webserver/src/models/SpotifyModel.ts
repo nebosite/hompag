@@ -199,7 +199,6 @@ export class SpotifyModel
         const apiHeaders = {'Authorization': `Bearer ${credentials.tokenDetails.access_token}`}
         const endPoint = spotifyApiEndpoint + `/me/player/${command}`;
         const result = await restCall<T>(method, apiHeaders, endPoint)
-        console.log(`CallAPI: ${method} ${command} => ${JSON.stringify(result).substr(0,120)}`)
         return result;
     }
 
@@ -208,7 +207,6 @@ export class SpotifyModel
     //------------------------------------------------------------------------------------------
     private async updatePlayerState(widgetId: string)
     {
-        this._logger.logLine(`Updating spotify state for ${widgetId}`)
         try {
             const playerState = await this.callApi<SpotifyPlayerResponse>(widgetId, "GET", "")
 
@@ -219,7 +217,7 @@ export class SpotifyModel
                     artist: playerState.item?.artists[0]?.name ?? undefined,
                     isPlaying: playerState.is_playing,
                     position_ms: playerState.progress_ms ?? 0,
-                    duration_ms: playerState.item.duration_ms ?? 0
+                    duration_ms: playerState.item?.duration_ms ?? 0
                 } as SpotifyPlayerState
             }
 
@@ -249,6 +247,8 @@ export class SpotifyModel
         const refresh = () => {
             setTimeout(()=> this.updatePlayerState(widgetId),500)   
         }
+
+        this._logger.logLine(`handling command: ${command}`)
 
         switch(command){
             case "login": 
@@ -289,45 +289,4 @@ export class SpotifyModel
 
         return null;
     }
-
-
 }
-
-
-    // // -------------------------------------------------------------------
-    // // 
-    // // -------------------------------------------------------------------
-    // private putCommand(command: string) {
-    //     setTimeout(async ()=>{
-    //         console.log(`Spotify command: ${command}`)
-    //         await this.api?.restPut(`me/player/${command}`); 
-    //         this.getCurrentlyPlaying()
-    //     })
-    // }
-
-    // // -------------------------------------------------------------------
-    // // 
-    // // -------------------------------------------------------------------
-    // private postCommand(command: string) {
-    //     setTimeout(async ()=>{
-    //         console.log(`Spotify command: ${command}`)
-    //         await this.api?.restPost(`me/player/${command}`,""); 
-    //         this.getCurrentlyPlaying()
-    //     })
-    // }
-
-    // // -------------------------------------------------------------------
-    // // 
-    // // -------------------------------------------------------------------
-    // play = () => this.putCommand("play");
-    // pause = () => this.putCommand("pause");
-    // next = () => this.postCommand("next");
-    // prev = () => this.postCommand("previous");
-    // seek = (delta_s: number) => { 
-    //     if(this.state_playdata) {
-    //         let spot = this.state_playdata.progress_ms + delta_s * 1000;
-    //         if (spot > this.state_playdata.item.duration_ms) spot = this._state_playdata.item.duration_ms;
-    //         if (spot < 0 ) spot = 0;
-    //         this.putCommand(`seek?position_ms=${spot}`);
-    //     }
-    // }

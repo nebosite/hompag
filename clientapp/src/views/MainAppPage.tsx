@@ -1,10 +1,10 @@
 // App Navigation handled here
 import React from "react";
 import { inject, observer } from "mobx-react";
-import styles from './AppStyles.module.css';
+import styles from '../AppStyles.module.css';
 import { AppModel } from "models/AppModel";
-import { PageControl } from "./Components/PageControl";
-import Row from "./Components/Row";
+import { PageControl } from "../Components/PageControl";
+import Row from "../Components/Row";
 
 
 @inject("appModel")

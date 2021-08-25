@@ -8,8 +8,8 @@ import { ObservableState, TransientStateHandler } from "models/TransientState";
 import { RestHelper } from "helpers/RestHelper";
 import {FaSpotify} from "react-icons/fa"
 import styles from './WidgetSpotify.module.css';
-import Row from "./Row";
-import { SpotifyPlayerState, ServerResponse} from "hompag-common";
+import Row from "../Components/Row";
+import { SpotifyPlayerState, SpotifyServerResponse} from "hompag-common";
 
 
 export class SpotifyData extends WidgetModelData
@@ -121,7 +121,7 @@ export class SpotifyTransientState
     async callApi(api: string, details: any = {})
     {
         details.id  = this.widgetId;
-        const response = await this.api.restPost<ServerResponse>(api, JSON.stringify(details));
+        const response = await this.api.restPost<SpotifyServerResponse>(api, JSON.stringify(details));
         if(!response || response?.errorMessage) {
             console.log(`There was a problem with the spotify/${api} call: ${response?.errorMessage}`)
             return null;

@@ -5,11 +5,10 @@ import { registerType } from "models/hompagTypeHelper";
 import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
 import { WidgetModelData, WidgetType } from "models/WidgetModel";
 import React from "react";
-import Combobox from "./ComboBox";
-import Row from "./Row";
 import appStyles from '../AppStyles.module.css';
-import styles from '../AppStyles.module.css';
 import { CgCloseR } from "react-icons/cg";
+import Row from "Components/Row";
+import Combobox from "Components/ComboBox";
 
 
 interface SearchConfig
@@ -135,9 +134,9 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
                 
                 {
                     this.state.editingTemplate
-                        ? <div className={`${styles.widgetConfig}`} style={configStyle} onMouseDown={(e) => e.stopPropagation()}>
+                        ? <div className={`${appStyles.widgetConfig}`} style={configStyle} onMouseDown={(e) => e.stopPropagation()}>
                             <div 
-                                className={styles.closeButton} 
+                                className={appStyles.closeButton} 
                                 style={{right: "3px", top:"3px"}}
                                 onClick={()=> this.setState({editingTemplate: false})}>
                                     <CgCloseR />
@@ -147,7 +146,7 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
                                     <div style={{width:'60px'}}>Name:</div> 
                                     <input  type="text" 
                                         style={{fontSize: '10px'}}
-                                        className={styles.searchInput}
+                                        className={appStyles.searchInput}
                                         value={ data.customName}
                                         onChange={(e) =>  data.customName = e.target.value }  /> 
                                 </Row>
@@ -155,7 +154,7 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
                                     <div style={{width:'60px'}}>Template:</div> 
                                     <input  type="text" 
                                         style={{width:'300px',fontSize: '10px'}}
-                                        className={styles.searchInput}
+                                        className={appStyles.searchInput}
                                         value={ data.customTemplate }
                                         onChange={(e) =>  data.customTemplate = e.target.value }  /> 
                                 </Row>
@@ -188,7 +187,7 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
                         : null
                     }                    
                     <input  type="text" 
-                            className={styles.searchInput}
+                            className={appStyles.searchInput}
                             value={ this.state.searchText }
                             style={{width: `${pixelWidth - 22}px`}}
                             onClick={disableChoosing}

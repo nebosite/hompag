@@ -3,7 +3,7 @@ import { registerType } from "models/hompagTypeHelper";
 import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
 import { WidgetType } from "models/WidgetModel";
 import React from "react";
-import Combobox from "./ComboBox";
+import Combobox from "../Components/ComboBox";
 
 export class WidgetPickerData {
 

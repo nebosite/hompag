@@ -1,7 +1,7 @@
 // App Navigation handled here
 import React from "react";
 import { observer } from "mobx-react";
-import styles from './AppStyles.module.css';
+import styles from '../AppStyles.module.css';
 
 import { GetStartedModel } from "models/GetStartedModel";
 

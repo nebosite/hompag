@@ -15,6 +15,7 @@
         "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
     
         "strict": true /* Enable all strict type-checking options. */,
+        "composite": true,
     
         /* Strict Type-Checking Options */
         // "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,

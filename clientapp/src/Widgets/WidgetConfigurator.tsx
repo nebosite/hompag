@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 import { WidgetContainer } from "models/WidgetContainer";
 import React from "react";
 import styles from '../AppStyles.module.css';
-import Row from "./Row";
+import Row from "../Components/Row";
 import {MdDeleteForever} from 'react-icons/md'
 import {CgCloseR} from 'react-icons/cg'
 

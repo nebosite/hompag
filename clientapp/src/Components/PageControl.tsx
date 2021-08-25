@@ -4,22 +4,22 @@ import { inject, observer } from "mobx-react";
 import ReactGridLayout, { ItemCallback, Layout } from 'react-grid-layout';
 import { colorThemes, PageModel } from "models/PageModel";
 import styles from '../AppStyles.module.css';
-import '../../../node_modules/react-grid-layout/css/styles.css'
-import '../../../node_modules/react-resizable/css/styles.css'
+import '../../node_modules/react-grid-layout/css/styles.css'
+import '../../node_modules/react-resizable/css/styles.css'
 import { ColorIndex, ColorTool, ColorValue } from "helpers/ColorTool";
-import WidgetDefault from "./WidgetDefault";
-import WidgetRichText from "./WidgetRichText";
-import WidgetPicker from "./WidgetPicker";
 import { WidgetContainer } from "models/WidgetContainer";
-import { WidgetFrame } from "./WidgetFrame";
 import { WidgetType } from "models/WidgetModel";
 import { BsGear } from 'react-icons/bs'; 
 import {CgCloseR} from 'react-icons/cg'
 import Combobox from "./ComboBox";
-import WidgetSearch from "./WidgetSearch";
 import Row from "./Row";
-import { WidgetConfigurator } from "./WidgetConfigurator";
-import WidgetSpotify from "./WidgetSpotify";
+import { WidgetConfigurator } from "../Widgets/WidgetConfigurator";
+import WidgetDefault from "Widgets/WidgetDefault";
+import { WidgetFrame } from "Widgets/WidgetFrame";
+import WidgetPicker from "Widgets/WidgetPicker";
+import WidgetRichText from "Widgets/WidgetRichText";
+import WidgetSearch from "Widgets/WidgetSearch";
+import WidgetSpotify from "Widgets/WidgetSpotify";
 
 
 interface PageSettingsControlProps
