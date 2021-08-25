@@ -28,11 +28,10 @@ TODO
         [x] Server remembers accesstoken under the widget id
         [x] Server gets the playstate and sends an update message to clients
         [x] Client needs to request widget state
-        [ ] Server: Poll spotify 
-            - Every 30 seconds when logged in and not playing
-            - On mouse enter
-            - Every 5 seconds when playing
-            - On clicks
+        [x] Server: Poll spotify 
+            [x] Every 20 seconds when logged in
+            [x] On mouse enter
+            [x] On clicks
         [ ] Client shows player API 
             - Show proper text when the api is not playing
         [ ] Client sends play commands to server
@@ -43,6 +42,9 @@ TODO
         [ ] Get new secrets for spotify API and weather watcher
         [ ] Server always checks for token expiration on spotify calls and re-requests when it expires
         
+
+NEW
+    [ ] Generic method for registering a widget
     [ ] put secrets in a config file called secrets.env
         - Weather API
         [ ] Make a template file for secrets
@@ -51,8 +53,6 @@ TODO
         [ ] Weather server:  https://openweathermap.org/api  (API key is a secret)
         - include space weather http://sws-data.sws.bom.gov.au/
     [ ] Perfect Pencil
-
-NEW
     [ ] Sometimes text does not save after typing and there is no newline
         - Maybe launch a throttle event on each keystroke
     [ ] In the settings page, report recent errors - switch console.log in error locations to report errors

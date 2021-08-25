@@ -223,6 +223,10 @@ export class SpotifyModel
 
             this._reportStateChange(statePacket)
 
+            // ping spotify every once in a while because stuff
+            // can happen on other devices. 
+            setTimeout(()=> this.updatePlayerState(widgetId), 20 * 1000)
+
         }
         catch(err) {
             this._logger.logError(`UpdatePlayerState: ${err}`)
@@ -245,7 +249,7 @@ export class SpotifyModel
         ];
 
         const refresh = () => {
-            setTimeout(()=> this.updatePlayerState(widgetId),500)   
+            setTimeout(()=> this.updatePlayerState(widgetId),200)   
         }
 
         this._logger.logLine(`handling command: ${command}`)
