@@ -14,36 +14,10 @@ code=AQD5m9PSEXiq6EcRielq_JUImnySbyrft2rJjINWQTLMmXHiB03RXOBesKgFYCtN_WIGOMPxkDB
 TODO
         
         
-    [x] Bug: lost some document changes with recent server stop and reboot    
-    
-    [x] Spotify keeps trying to reload
-    
-    [ ] Spotify API needs to be on the server
-        [x] Widget does api/spotify/widgetid/login
-        [x] Server replies with redirect URL to be executed on the client
-            https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
-            [x] Put http://localhost:8101/api/loginresponder/spotify in whitelist
-        [x] User logs in
-        [x] Spotify sends credentials to server
-        [x] Server remembers accesstoken under the widget id
-        [x] Server gets the playstate and sends an update message to clients
-        [x] Client needs to request widget state
-        [x] Server: Poll spotify 
-            [x] Every 20 seconds when logged in
-            [x] On mouse enter
-            [x] On clicks
-        [ ] Client shows player API 
-            - Show proper text when the api is not playing
-        [ ] Client sends play commands to server
-        [ ] Server forwards commands to spotify
-        [ ] After sending command, Server re-requests state and forwards to clients
-            - Clients keep widget state as transient values
-        [ ] Keep spotify secrets in the config
-        [ ] Get new secrets for spotify API and weather watcher
-        [ ] Server always checks for token expiration on spotify calls and re-requests when it expires
-        
 
 NEW
+    [ ] Lyrics in Spotify  https://www.lyrics.com/lyrics_api.php
+    [ ] Get new secrets for spotify API and weather watcher
     [ ] Generic method for registering a widget
     [ ] put secrets in a config file called secrets.env
         - Weather API
@@ -170,6 +144,35 @@ MAYBE NEVER
 
 
 -- DONE ---------------------------------------------------------------------
+
+Version 0.3/0.3
+    [x] Bug: lost some document changes with recent server stop and reboot    
+    
+    [x] Spotify keeps trying to reload
+    
+    [x] Spotify API needs to be on the server
+        [x] Widget does api/spotify/widgetid/login
+        [x] Server replies with redirect URL to be executed on the client
+            https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow
+            [x] Put http://localhost:8101/api/loginresponder/spotify in whitelist
+        [x] User logs in
+        [x] Spotify sends credentials to server
+        [x] Server remembers accesstoken under the widget id
+        [x] Server gets the playstate and sends an update message to clients
+        [x] Client needs to request widget state
+        [x] Server: Poll spotify 
+            [x] Every 20 seconds when logged in
+            [x] On mouse enter
+            [x] On clicks
+        [x] Client sends play commands to server
+        [x] Server forwards commands to spotify
+        [x] After sending command, Server re-requests state and forwards to clients
+            - Clients keep widget state as transient values
+        [x] Keep spotify secrets in the config
+        [x] Client shows player API 
+            - Show proper text when the api is not playing
+        [x] Server always checks for token expiration on spotify calls and re-requests when it expires
+
 
 Version 0.2/0.2
     [x] Intercept Ctrl-S on the page to prevent accidentally trying to save it

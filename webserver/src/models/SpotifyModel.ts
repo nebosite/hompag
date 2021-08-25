@@ -21,6 +21,7 @@ interface SpotifyCredentialCache{
     expireDate: number
     tokenDetails: SpotifyTokenResponse
     code: string
+    redirect_uri: string
 }
 
 interface SpotifyTokenResponse {
@@ -159,27 +160,7 @@ export class SpotifyModel
             throw Error(`Whoops:  No state for pending login response`)
         }
         const widgetId = state.details.id;
-        
-        const tokenRequest = {           
-            grant_type : "authorization_code",
-            code: query.code,
-            redirect_uri: state.redirect_uri,
-            client_id : this.clientId,
-            client_secret: this.clientSecret
-        }
-
-        const headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        const tokenResponse = await restCall<SpotifyTokenResponse>("POST", headers, spotifyTokenEndpoint, querystring.stringify(tokenRequest))
-        if(!tokenResponse) throw Error("Spotify login failed with no token received")
-        this._logger.logLine("Spotify successfully logged in.")
-
-        this._reportStateChange({id: widgetId, name: "loggedIn", data: true})
-        const cacheInfo:SpotifyCredentialCache = {
-            expireDate: Date.now() +  tokenResponse.expires_in * 1000 - 60000,
-            code: query.code,
-            tokenDetails: tokenResponse
-        }
-        this._credentialCache.set(widgetId, cacheInfo)
+        await this.refreshToken(widgetId, query.code, state.redirect_uri);
 
         // update the player state after there has been a chance to
         // get the user back to the page
@@ -189,12 +170,48 @@ export class SpotifyModel
     }
 
     //------------------------------------------------------------------------------------------
+    // refreshToken
+    //------------------------------------------------------------------------------------------
+    async refreshToken(widgetId: string, code: string, redirect_uri: string) {
+        const tokenRequest = {           
+            grant_type : "authorization_code",
+            code: code,
+            redirect_uri: redirect_uri,
+            client_id : this.clientId,
+            client_secret: this.clientSecret
+        }
+
+        const headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        const tokenResponse = await restCall<SpotifyTokenResponse>("POST", headers, spotifyTokenEndpoint, querystring.stringify(tokenRequest))
+        if(!tokenResponse) {
+            this._reportStateChange({id: widgetId, name: "loggedIn", data: false})
+            this._logger.logError("Spotify login failed with no token received")
+            return;
+        } 
+
+        this._logger.logLine("Spotify successfully logged in.")
+        this._reportStateChange({id: widgetId, name: "loggedIn", data: true})
+        const cacheInfo:SpotifyCredentialCache = {
+            expireDate: Date.now() +  tokenResponse.expires_in * 1000 - 60000 * 5,
+            code,
+            redirect_uri,
+            tokenDetails: tokenResponse
+        }
+        this._credentialCache.set(widgetId, cacheInfo)
+    }
+
+    //------------------------------------------------------------------------------------------
     // callApi
     //------------------------------------------------------------------------------------------
     async callApi<T>(widgetId: string, method: string, command: string | undefined, body:string | undefined = undefined) {
         const credentials = this._credentialCache.get(widgetId);
         if(!credentials){
+            this._reportStateChange({id: widgetId, name: "loggedIn", data: false})
             throw Error(`Missing credentials for widget id: ${widgetId}`)
+        }
+        if(Date.now() > credentials.expireDate ) {
+            this._logger.logLine("Refreshing access token")
+            this.refreshToken(widgetId, credentials.code, credentials.redirect_uri);
         }
         const apiHeaders = {'Authorization': `Bearer ${credentials.tokenDetails.access_token}`}
         const endPoint = spotifyApiEndpoint + `/me/player/${command}`;
