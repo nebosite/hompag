@@ -66,7 +66,9 @@ Follow these steps to create a new widget type
 
 1. in clientapp/src/Widgets, copy _WidgetTEMPLATE.tsx to Widget[NewType].tsx
 2. In Widget[NewType].tsx, string-replace `_TEMPLATE_` with `[NewType]`
-3. In clientapp/src/WidgetLibrary.ts, add a new line to register your widget type
+3. In clientapp/src/WidgetLibrary.ts
+   1. add a new line to register your widget type
+   2. add a new enum [NewType]="[NewType]"
 
 Your new widget will have two supporting classes for widget state data:
 
