@@ -58,8 +58,20 @@ To create a new widget, drag a box in the open area, then select the type of wid
 1. Follow the setup instructions above to get hompag running
 3. In the webserver folder, start the server like this:  `npm run startdev`
 3. In the clientapp folder, start the webpage app like this:  `npm start`
-4. Use this URL to access to dev client:   http://localhost:3200
-5. To make a new page, simply type the page name in the url.  e.g. you can start with this link:  http://localhost:8101/mycoolnewpage
+4. Use this URL to access to dev client:   http://localhost:3200  (To make a new page, simply type the page name in the url.  e.g. you can start with this link:  http://localhost:8101/mycoolnewpage)
+
+### Creating a new widget type
+
+Follow these steps to create a new widget type
+
+1. in clientapp/src/Widgets, copy _WidgetTEMPLATE.tsx to Widget[NewType].tsx
+2. In Widget[NewType].tsx, string-replace `_TEMPLATE_` with `[NewType]`
+3. In clientapp/src/WidgetLibrary.ts, add a new line to register your widget type
+
+Your new widget will have two supporting classes for widget state data:
+
+* Widget[NewType]Data - this is for data that should persist between sessions.  Follow the get/set observer pattern example for any new properties you add.   
+* [NewType]TransientData - this is for data that should be shared across pages, but should not be permanently stored on the server.   e.g.: Current state of the spotify player uses this. 
 
 
 

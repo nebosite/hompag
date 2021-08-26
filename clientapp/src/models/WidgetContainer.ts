@@ -1,19 +1,9 @@
 import { registerType } from "./hompagTypeHelper";
 import { observable, makeObservable, reaction } from "mobx";
 import { PageModel } from "./PageModel";
-import { WidgetType } from "./WidgetModel";
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 
 registerType("WidgetContainer", bag => new WidgetContainer())
-
-const knownDataTypes = new Map<WidgetType, string>()
-export const registerDataTypeForWidgetType =(widgetType: WidgetType, dataType: string) =>
-{
-    //console.log(`Registering data type '${dataType}' for widget type '${widgetType}'`)
-    knownDataTypes.set(widgetType, dataType);
-}
-export const dataTypeForWidgetType = (widgetType: WidgetType) => knownDataTypes.get(widgetType);
-
 
 // -------------------------------------------------------------------
 // Generic class for holding widget data

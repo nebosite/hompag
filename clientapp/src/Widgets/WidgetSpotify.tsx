@@ -1,7 +1,6 @@
 import { observer } from "mobx-react";
-import { registerType } from "models/hompagTypeHelper";
-import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
-import { WidgetModelData, WidgetType } from "models/WidgetModel";
+import { WidgetContainer } from "models/WidgetContainer";
+import { WidgetModelData } from "models/WidgetModel";
 import React from "react";
 import { IoPlaySkipBackOutline, IoPlayBackOutline, IoPlayOutline, IoPlayForwardOutline, IoPlaySkipForwardOutline, IoPauseOutline } from "react-icons/io5"
 import { ObservableState, TransientStateHandler } from "models/TransientState";
@@ -11,6 +10,7 @@ import styles from './WidgetSpotify.module.css';
 import Row from "../Components/Row";
 import { SpotifyPlayerState, SpotifyServerResponse} from "hompag-common";
 import { clone } from "lodash";
+import { registerWidget, WidgetType } from "widgetLibrary";
 
 
 export class SpotifyData extends WidgetModelData
@@ -121,14 +121,18 @@ export class SpotifyTransientState
     }
 }
 
-registerDataTypeForWidgetType(WidgetType.Spotify, "SpotifyData");
-registerType("SpotifyData", () => new SpotifyData())
-
 @observer
 export default class WidgetSpotify 
 extends React.Component<{context: WidgetContainer}> 
 {   
     private _transientState: SpotifyTransientState
+
+    // -------------------------------------------------------------------
+    // register
+    // -------------------------------------------------------------------
+    static register() {
+        registerWidget(WidgetType.Spotify, c => <WidgetSpotify context={c} />, SpotifyData.name, () => new SpotifyData())    
+    }
 
     // -------------------------------------------------------------------
     // ctor
@@ -155,7 +159,7 @@ extends React.Component<{context: WidgetContainer}>
         const playerState = this._transientState.playerState.value;
 
         return <div>
-                <div>Song: {(playerState?.isPlaying ? `${playerState.songTitle} by ${playerState.artist}`: "(Not Playing)")}  </div>
+                <div>Song: {(playerState?.songTitle ? `${playerState.songTitle} by ${playerState.artist}`: "(Not Playing)")}  </div>
                 <div>Time: {this._transientState.elapsedString}/{this._transientState.durationString}</div>
                 <Row style={{fontSize: "30px"}}>
                     <IoPlaySkipBackOutline onClick={()=>this._transientState.prev()}/> 

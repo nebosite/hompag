@@ -3,8 +3,8 @@ import { ColorTool } from "helpers/ColorTool";
 import { action, makeObservable, observable, reaction } from "mobx";
 import { AppModel } from "./AppModel";
 import { WidgetContainer } from "./WidgetContainer";
-import { WidgetType } from "./WidgetModel";
 import { generateStringId } from "helpers/randomHelper";
+import { WidgetType } from "widgetLibrary";
 
 
 registerType("PageModel", bag => new PageModel(bag.get("theApp")))

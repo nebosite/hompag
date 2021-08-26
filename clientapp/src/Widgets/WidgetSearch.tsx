@@ -1,14 +1,14 @@
 import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import { registerType } from "models/hompagTypeHelper";
-import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
-import { WidgetModelData, WidgetType } from "models/WidgetModel";
+import { WidgetContainer } from "models/WidgetContainer";
+import { WidgetModelData } from "models/WidgetModel";
 import React from "react";
 import appStyles from '../AppStyles.module.css';
 import { CgCloseR } from "react-icons/cg";
 import Row from "Components/Row";
 import Combobox from "Components/ComboBox";
+import { registerWidget, WidgetType } from "widgetLibrary";
 
 
 interface SearchConfig
@@ -66,15 +66,19 @@ export class WidgetSearchData extends WidgetModelData
 
 }
 
-registerDataTypeForWidgetType(WidgetType.Search, "WidgetSearchData");
-registerType("WidgetSearchData", () => new WidgetSearchData())
-
-
 @observer
 export default class WidgetSearch
 extends React.Component<{context: WidgetContainer}, {searchText: string, choosing: boolean, editingTemplate: boolean}> 
 {    
     state = {searchText: "", choosing: false, editingTemplate: false} 
+
+    // -------------------------------------------------------------------
+    // register
+    // -------------------------------------------------------------------
+    static register() {
+        registerWidget(WidgetType.Search, c => <WidgetSearch context={c} />, WidgetSearchData.name, () => new WidgetSearchData())
+    }
+
     // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
@@ -201,3 +205,4 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
         );
     }; 
 }
+

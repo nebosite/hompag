@@ -1,15 +1,8 @@
 import { ThrottledAction } from "helpers/ThrottledAction";
 import { action, makeObservable, observable } from "mobx";
+import { WidgetType } from "widgetLibrary";
 import { AppModel } from "./AppModel";
 
-export enum WidgetType
-{
-    Picker = "Picker",
-    Editor = "Editor",
-    RichText = "RichText",
-    Search = "Search",
-    Spotify = "Spotify"
-}
 
 export class WidgetModelData {
     ref_widgetParent: WidgetModel

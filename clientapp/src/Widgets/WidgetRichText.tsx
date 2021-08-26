@@ -1,12 +1,12 @@
 import { observer } from "mobx-react";
 import React from "react";
 import 'draft-js/dist/Draft.css';
-import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
+import { WidgetContainer } from "models/WidgetContainer";
 import './WidgetRichText.module.css';
 import styles from './WidgetRichText.module.css';
 import { Editor } from '@tinymce/tinymce-react';
-import { registerType } from "models/hompagTypeHelper";
-import { WidgetModelData, WidgetType } from "models/WidgetModel"; 
+import { WidgetModelData } from "models/WidgetModel"; 
+import { registerWidget, WidgetType } from "widgetLibrary";
 
 export class WidgetRichTextData extends WidgetModelData
 {
@@ -23,16 +23,18 @@ export class WidgetRichTextData extends WidgetModelData
     // }
 }
 
-registerDataTypeForWidgetType(WidgetType.Editor, "WidgetRichTextData");
-registerDataTypeForWidgetType(WidgetType.RichText, "WidgetRichTextData");
-registerType("WidgetRichTextData", () => new WidgetRichTextData())
-registerType("WidgetEditorData", () => new WidgetRichTextData())
-
 @observer
 export default class WidgetRichText 
 extends React.Component<{context: WidgetContainer},{editor: any}> 
 {    
     resizeOberver: ResizeObserver
+
+    // -------------------------------------------------------------------
+    // register
+    // -------------------------------------------------------------------
+    static register() {
+        registerWidget(WidgetType.RichText, c => <WidgetRichText context={c} />, WidgetRichTextData.name, () => new WidgetRichTextData())
+    }
 
     // -------------------------------------------------------------------
     // componentDidMount - set up resize listener

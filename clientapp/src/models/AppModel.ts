@@ -6,10 +6,10 @@ import { ThrottledAction } from "helpers/ThrottledAction";
 import { action, makeObservable, observable } from "mobx";
 import { hompagTypeHelper, registerGlobalItem } from "./hompagTypeHelper";
 import { PageModel } from "./PageModel";
-import { WidgetModel, WidgetType } from "./WidgetModel";
-import { dataTypeForWidgetType } from "./WidgetContainer"; 
+import { WidgetModel } from "./WidgetModel";
 import { TransientStateHandler } from "./TransientState";
 import { ServerMessageType, StatePacket } from "hompag-common";
+import { dataTypeForWidgetType, WidgetType } from "widgetLibrary";
 
 
 const WIDGET_VERSION_ISLOADING = -1;
@@ -75,7 +75,10 @@ export class AppModel {
         this._dataChangeListener.addListener(ServerMessageType.item_change, this.handleItemChanges)
         this._dataChangeListener.addListener(ServerMessageType.transient_change, this.handleTransientChanges);
 
-        setTimeout( ()=> this.loadPage(pageName),1)
+        setTimeout( ()=> {
+            console.log("TAG: AppModel.loadpage")
+            this.loadPage(pageName)
+        },1)
     }
 
     // -------------------------------------------------------------------

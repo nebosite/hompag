@@ -7,6 +7,7 @@ import { trimChars } from "helpers/textHelpers";
 import { GetStartedModel } from "models/GetStartedModel";
 import { GetStartedPage } from "views/GetStartedPage";
 import { makeLocalStorage } from "models/LocalStorage";
+import { registerWidgets } from "widgetLibrary";
 const packageInfo = require("../package.json");
 export class GLOBALS {
      static Version = packageInfo.version;
@@ -41,6 +42,7 @@ if(pageName === "")
 
 }
 else {
+    registerWidgets();
     const theAppModel:AppModel = new AppModel(pageName, makeLocalStorage());
 
     ReactDOM.render(

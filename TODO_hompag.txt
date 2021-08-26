@@ -1,24 +1,18 @@
 
 
-{"redirectTo":"
-https://accounts.spotify.com/authorize?client_id=13d57354b3ce489bbf2dc93f67f7701d&
-redirect_uri=http://localhost:8101/loginresponder/spotify&scope=user-read-currently-playing%20user-read-playback-state%20user-modify-playback-state%20streaming&response_type=code&state=foo"}
-
-
-http://localhost:8101/api/loginresponder/spotify?
-code=AQD5m9PSEXiq6EcRielq_JUImnySbyrft2rJjINWQTLMmXHiB03RXOBesKgFYCtN_WIGOMPxkDBVH_p972VAGp1wTvHnmPEzJ23GwZnfdC8wNuOWM9Xp4Tgb2tn6YQ4MXdt4HJsL70wNMx2j-KFOfKKi0IKmzy-0-r0LLjwB8nRwAmBHv4I2y6KLDKfjOsiOFrBx8jJqrCqlJeIB67paivtQ3LdoY5COjKpqdj5_GGYM1Kq8kdxyPf3TNw_DXaOFOSz9mTs3o3tvwo64LGJDbLmBDTAuj_JbW01bnnd-M_SKbZ-Sgar1mmpbZADHKY5yk9Q
-&state=foo
 
 
 
 TODO
-        
+    [x] Generic method for registering a widget       
+    [ ] New Widget: Shell Commander - run shell commands via the server
+    [ ] Spotify: Select playlist
+        - Should also be able to handle pseudo-playlists
         
 
 NEW
     [ ] Lyrics in Spotify  https://www.lyrics.com/lyrics_api.php
     [ ] Get new secrets for spotify API and weather watcher
-    [ ] Generic method for registering a widget
     [ ] put secrets in a config file called secrets.env
         - Weather API
         [ ] Make a template file for secrets
@@ -46,14 +40,6 @@ NEW
             - Keeps loading .css files
             - keeps loading a bunch of plugins
             - Theme loading was 100ms!!!
-    [ ] Perf Mobx is expensive (~100ms to render from widget updates)
-        https://medium.com/workday-engineering/react-performance-and-mobx-b038085ecb72
-        [ ] For batching:
-            Batch the loading of content into holder objects, then assign them all in the same action
-        [ ] don't create object and lambas in the react compenent declarations
-        [ ] Avoid looking at properties of observables until the last second.  eg, avoid this:
-            <Mycomponent somevalue={myObservable.value} />
-    [ ] Perf Network
         
         
 
@@ -97,12 +83,7 @@ WIDGET IDEAS
 IMPORTANT
    
 BACKLOG
-    [ ] Spotify https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
-        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
-        https://developer.spotify.com/documentation/
-        https://developer.spotify.com/console/player/
-        https://developer.spotify.com/documentation/general/guides/scopes/
-        [ ] Quiz mode
+    [ ] Spotify Quiz mode
             [ ] Need a way to store personal data on the server
                 - For now, just store the data on the appmodel cache
             [ ] Show Artist: ??? - click to guess
@@ -120,6 +101,14 @@ BACKLOG
     [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
 
 MAYBE NEVER
+    [ ] Perf Mobx is expensive (~100ms to render from widget updates)
+        https://medium.com/workday-engineering/react-performance-and-mobx-b038085ecb72
+        [ ] For batching:
+            Batch the loading of content into holder objects, then assign them all in the same action
+        [ ] don't create object and lambas in the react compenent declarations
+        [ ] Avoid looking at properties of observables until the last second.  eg, avoid this:
+            <Mycomponent somevalue={myObservable.value} />
+    [ ] Perf Network
     [ ] Local caching to make the page keep working when the server is offline
         - Highest Write ID wins - should be easy to do this if the server is caching too
     [ ] React Service Runner? (Question on reddit)
@@ -178,6 +167,11 @@ Version 0.2/0.2
     [x] Intercept Ctrl-S on the page to prevent accidentally trying to save it
     [x] Define my own search engine
     [x] Spotify widget
+        Spotify https://levelup.gitconnected.com/how-to-build-a-spotify-player-with-react-in-15-minutes-7e01991bc4b6 
+        - ClientID: 13d57354b3ce489bbf2dc93f67f7701d
+        https://developer.spotify.com/documentation/
+        https://developer.spotify.com/console/player/
+        https://developer.spotify.com/documentation/general/guides/scopes/
         [x] Play/pause
         [x] seek forward/back
         [x] Skip next/prev

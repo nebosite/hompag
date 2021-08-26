@@ -1,38 +1,41 @@
 import { observer } from "mobx-react";
-import { registerType } from "models/hompagTypeHelper";
-import { registerDataTypeForWidgetType, WidgetContainer } from "models/WidgetContainer";
-import { WidgetType } from "models/WidgetModel";
+import { WidgetContainer } from "models/WidgetContainer";
 import React from "react";
+import { registerWidget, WidgetType } from "widgetLibrary";
 import Combobox from "../Components/ComboBox";
 
-export class WidgetPickerData {
-
-}
-
-registerDataTypeForWidgetType(WidgetType.Picker, "WidgetPickerData");
-registerType("WidgetPickerData", () => new WidgetPickerData())
-
+export class WidgetPickerData { }
 
 @observer
 export default class WidgetPicker 
 extends React.Component<{context: WidgetContainer}> 
 {    
     // -------------------------------------------------------------------
+    // register
+    // -------------------------------------------------------------------
+    static register() {
+        registerWidget(WidgetType.Picker, c => <WidgetPicker context={c} />, WidgetPickerData.name, () => new WidgetPickerData())
+    }
+
+    // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
     render() {
         const widget = this.props.context.ref_widget;
-        const hideTypes = [WidgetType.Picker, WidgetType.Editor]
+        const hideTypes = [WidgetType._TEMPLATE_, WidgetType.Picker, WidgetType.Editor]
 
         const selectWidgetType = (selectedType: string) =>
         {
             widget.widgetType = selectedType as WidgetType;
         }
 
+        const pickableItmes = Object.keys(WidgetType)
+                                .filter(k => hideTypes.indexOf(k as WidgetType) === -1)
+                                .map(k => {return {value: k, label: k}})
         return (
             <div style={{height:"500px", fontSize:"10px"}}>
                 <Combobox
-                    itemsSource={Object.keys(WidgetType).filter(k => hideTypes.indexOf(k as WidgetType) === -1).map(k => {return {value: k, label: k}})}
+                    itemsSource={pickableItmes}
                     onSelectValue={selected => selectWidgetType(selected)}
                     selectedItem={widget.widgetType}
                     placeholder="What am I?"
@@ -44,3 +47,4 @@ extends React.Component<{context: WidgetContainer}>
         );
     };
 }
+

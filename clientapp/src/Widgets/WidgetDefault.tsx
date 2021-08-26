@@ -1,18 +1,17 @@
-import { observer } from "mobx-react";
 import { WidgetContainer } from "models/WidgetContainer";
 import React from "react";
 
-@observer
 export default class WidgetDefault 
-extends React.Component<{pageItem: WidgetContainer}> 
+extends React.Component<{context: WidgetContainer}> 
 {    
     // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
-    render() {
-        return (
-            <div>
-            </div> 
-        );
-    }; 
+    render = () => <div> 
+                    {
+                        this.props.context.ref_widget?.widgetType
+                            ? "I am a {this.props.context.ref_widget.widgetType}"
+                            : ""
+                    }
+             </div> 
 }

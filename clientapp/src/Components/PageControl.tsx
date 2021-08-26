@@ -8,21 +8,17 @@ import '../../node_modules/react-grid-layout/css/styles.css'
 import '../../node_modules/react-resizable/css/styles.css'
 import { ColorIndex, ColorTool, ColorValue } from "helpers/ColorTool";
 import { WidgetContainer } from "models/WidgetContainer";
-import { WidgetType } from "models/WidgetModel";
 import { BsGear } from 'react-icons/bs'; 
 import {CgCloseR} from 'react-icons/cg'
 import Combobox from "./ComboBox";
 import Row from "./Row";
-import { WidgetConfigurator } from "../Widgets/WidgetConfigurator";
+import { WidgetConfigurator } from "./WidgetConfigurator";
 import WidgetDefault from "Widgets/WidgetDefault";
 import { WidgetFrame } from "Widgets/WidgetFrame";
-import WidgetPicker from "Widgets/WidgetPicker";
-import WidgetRichText from "Widgets/WidgetRichText";
-import WidgetSearch from "Widgets/WidgetSearch";
-import WidgetSpotify from "Widgets/WidgetSpotify";
+import { renderWidget } from "widgetLibrary";
 
 
-interface PageSettingsControlProps
+interface PageSettingsControlProps 
 {
     pageModel?: PageModel
 }
@@ -271,15 +267,8 @@ extends React.Component<PageControlProps, PageControlState>
 
         const renderPageItem = (container: WidgetContainer) => {
             if(!draggingOK) return <div>...</div>
-            switch(container.ref_widget?.widgetType) { 
-                case WidgetType.Picker: return <WidgetPicker context={container} />; 
-                case WidgetType.Editor: 
-                case WidgetType.RichText: return <WidgetRichText context={container} />; 
-                case WidgetType.Search: return <WidgetSearch context={container} />; 
-                case WidgetType.Spotify: return <WidgetSpotify context={container} />;
-                //case "Colors": return <ColorPalette pageModel={pageItem.parentPage} />
-                default: return <WidgetDefault pageItem={container} />
-            }
+            const widgetControl = renderWidget(container.ref_widget?.widgetType, container)
+            return widgetControl ?? <WidgetDefault context={container} />
         } 
 
         const widgetDragStop:ItemCallback = (layout: Layout[],
