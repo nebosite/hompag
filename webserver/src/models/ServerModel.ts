@@ -102,12 +102,12 @@ export class ServerModel {
     }
 
     //------------------------------------------------------------------------------------------
-    // getWidgetVersion - get latest version for a widget
+    // getItemVersion - get latest version for an item
     //------------------------------------------------------------------------------------------
-    async getWidgetVersion(id: string) 
+    async getItemVersion(type: hompagItemType, id: string) 
     {
         // get latest item and
-        const item = await this._pageAccess.getItem(hompagItemType.widget, id, undefined);
+        const item = await this._pageAccess.getItem(type, id, undefined);
         if(!item) return null;
         return item.version;
     }

@@ -29,7 +29,7 @@ interface StoreResponse
     data: number;
     errorMessage: string;
 }
-interface WidgetVersionResponse
+interface ItemVersionResponse
 {
     data: {id: string, version: number}[];
     errorMessage: string;
@@ -51,6 +51,7 @@ export class AppModel {
     @observable serverStatus:any = null;
     @observable page: PageModel;
     @observable recentError?: string;
+    @observable safeToSave = false;
 
     private _localStorage:ILocalStorage;
     private _api:RestHelper;
@@ -79,6 +80,40 @@ export class AppModel {
             console.log("TAG: AppModel.loadpage")
             this.loadPage(pageName)
         },1)
+
+        setTimeout(this.validateLocalPageVersion,500)
+    }
+
+    // -------------------------------------------------------------------
+    // Make sure we don't have an old version of the page because
+    // we don't want to accidental overwrite a newer version
+    // -------------------------------------------------------------------
+    validateLocalPageVersion = async () => {
+        const response = await this._api.restGet<ItemVersionResponse>(
+            `query?type=pageversions&ids=${this.page.name}`, false);
+        if(response.errorMessage)
+        {
+            this.recentError = response.errorMessage;
+        }
+        else {
+            if(response.data.length === 0)
+            {
+                action(()=>{this.recentError = "Could not validate page version"})()
+            }
+            else {
+                const version = response.data[0].version;
+                if(!version || version === this.page.version) {
+                    action(()=>{this.safeToSave = true})()
+                }
+                else if(version < this.page.version) {
+                    action(()=>{this.recentError = `Local version (${Date.now() - this.page.version}) is newer than server version (${Date.now() - version})`})()
+                }
+                else {
+                    await this.loadPage(this.page.name, false)
+                    action(()=>{this.safeToSave = true})()
+                }
+            }
+        }
     }
 
     // -------------------------------------------------------------------
@@ -184,12 +219,12 @@ export class AppModel {
 
     // -------------------------------------------------------------------
     // refreshWidgets - ask the server for widget versions and reload the
-    //                  content fromt he server if the widget is not the
+    //                  content from the server if the widget is not the
     //                  latest version
     // -------------------------------------------------------------------
     async refreshWidgets(page: PageModel)
     {
-        const response = await this._api.restGet<WidgetVersionResponse>(
+        const response = await this._api.restGet<ItemVersionResponse>(
             `query?type=widgetversions&ids=${page.widgetIds.join(',')}`, false);
 
         if(response.errorMessage) {
@@ -268,6 +303,10 @@ export class AppModel {
     // -------------------------------------------------------------------
     savePage(pageToSave: PageModel)
     {
+        if(!this.safeToSave) {
+            console.log("Can't save page yet")
+            return;
+        }
         const originalVersion = pageToSave.version;
         console.log(`Saving page ${pageToSave.name}.${pageToSave.version}`)
         pageToSave.version = WIDGET_VERSION_ISLOADING;

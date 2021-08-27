@@ -5,6 +5,8 @@
 
 TODO
     [x] Generic method for registering a widget       
+    [x] Bug: Cached items are overwriting newer data on the server
+    [ ] Why is spotify not working?
     [ ] New Widget: Shell Commander - run shell commands via the server
     [ ] Spotify: Select playlist
         - Should also be able to handle pseudo-playlists

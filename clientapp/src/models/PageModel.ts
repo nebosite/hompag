@@ -132,7 +132,6 @@ export class PageModel
         else {
             console.log(`ERROR: Can't find widget with ID: ${id}`)
         }
-
     }
 
     // -------------------------------------------------------------------
