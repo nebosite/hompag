@@ -4,8 +4,6 @@
 
 
 TODO
-    [x] Generic method for registering a widget       
-    [x] Bug: Cached items are overwriting newer data on the server
     [ ] Why is spotify not working?
     [ ] New Widget: Shell Commander - run shell commands via the server
     [ ] Spotify: Select playlist
@@ -135,6 +133,11 @@ MAYBE NEVER
 
 
 -- DONE ---------------------------------------------------------------------
+
+    [x] Generic method for registering a widget       
+    [x] Bug: Cached items are overwriting newer data on the server
+    [x] Song timer seems to be getting multiple updates 
+        - The actual song time should not come from the transient value
 
 Version 0.3/0.3
     [x] Bug: lost some document changes with recent server stop and reboot    

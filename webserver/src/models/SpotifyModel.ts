@@ -220,6 +220,8 @@ export class SpotifyModel
         return result;
     }
 
+    private _stateWatchers = new Map<string, number>();
+
     //------------------------------------------------------------------------------------------
     // updatePlayerState
     //------------------------------------------------------------------------------------------
@@ -239,12 +241,19 @@ export class SpotifyModel
                 } as SpotifyPlayerState
             }
 
+            // Kick off another update in the future to keep track of changes coming
+            // from other devices.
+            if(!this._stateWatchers.has(widgetId))
+            {
+                const delay_ms = 20 * 1000;
+                this._stateWatchers.set(widgetId, Date.now() + delay_ms)
+                setTimeout(() => {
+                    this._stateWatchers.delete(widgetId);
+                    this.updatePlayerState(widgetId);
+                }, delay_ms)
+            }
+
             this._reportStateChange(statePacket)
-
-            // ping spotify every once in a while because stuff
-            // can happen on other devices. 
-            setTimeout(()=> this.updatePlayerState(widgetId), 20 * 1000)
-
         }
         catch(err) {
             this._logger.logError(`UpdatePlayerState: ${err}`)

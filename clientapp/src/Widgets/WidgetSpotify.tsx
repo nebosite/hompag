@@ -9,8 +9,8 @@ import {FaSpotify} from "react-icons/fa"
 import styles from './WidgetSpotify.module.css';
 import Row from "../Components/Row";
 import { SpotifyPlayerState, SpotifyServerResponse} from "hompag-common";
-import { clone } from "lodash";
 import { registerWidget, WidgetType } from "widgetLibrary";
+import { action, makeObservable, observable } from "mobx";
 
 
 export class SpotifyData extends WidgetModelData
@@ -32,8 +32,12 @@ export class SpotifyTransientState
     api = new RestHelper("/api/spotify/");
     widgetId: string;
 
-    get elapsedString() { return this.msToTimeString(this.playerState.value?.position_ms ?? 0) }
+    get elapsedString() { return this.msToTimeString(this.playerPosition ?? 0) }
     get durationString() { return this.msToTimeString(this.playerState.value?.duration_ms ?? 0) }
+
+    @observable private _playerPosition = 0;
+    get playerPosition() {return this._playerPosition}
+    set playerPosition(value: number) {action(()=>{this._playerPosition = value})()}
 
     private stopped = false;
     // -------------------------------------------------------------------
@@ -41,20 +45,21 @@ export class SpotifyTransientState
     // -------------------------------------------------------------------
     constructor(widgetId: string, stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
     {
+        makeObservable(this);
         this.widgetId = widgetId;
         this.playerState = new ObservableState<SpotifyPlayerState>("playerState", stateMaker)
         this.loggedIn = new ObservableState<boolean>("loggedIn", stateMaker)
 
         const ticker = ()=>{
-            if(this.playerState.value?.isPlaying && this.playerState.value.duration_ms > 0) {
-                const newValue = clone(this.playerState.value);
-                newValue.position_ms += 1000;
-                this.playerState.value = newValue;
-                if(newValue.position_ms > (newValue.position_ms + 2000)) {
-                    this.refresh(); 
+            if(this.playerState.value?.isPlaying && this.playerState.value?.duration_ms > 0) {
+                this.playerPosition = Date.now() - this.playerState.updateTime + this.playerState.value.position_ms;
+                if(this.playerPosition > this.playerState.value.duration_ms) {
+                    console.log("refreshing Spotify player status...")
+                    this.refresh();
                 }
             }
-            if(!this.stopped) setTimeout(ticker, 1000);
+            if(!this.stopped) setTimeout(ticker, 200);
+            else console.log("Spotify Ticker is Stopped")
         }
         ticker();
     } 

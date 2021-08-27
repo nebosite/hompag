@@ -15,12 +15,16 @@ export class ObservableState<T>
         })();
     }    
 
+    @observable private _updateTime = Date.now();
+    get updateTime() { return this._updateTime}
+
     private _valueHandler: TransientStateHandler<T>
     constructor(name: string, stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
     {
         makeObservable(this);
         this._valueHandler = stateMaker<T>(name, (token) => action(()=> {
             this._value = token
+            this._updateTime = Date.now()
         })())
     }
 }
