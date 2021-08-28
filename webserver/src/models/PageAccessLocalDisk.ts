@@ -1,12 +1,15 @@
+import { ServerConfigType } from "hompag-common";
 import { ILogger } from "../helpers/logger";
 import { hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
 const fs = require('fs')
-const path = require('path');
+const path = require('path'); 
 
 export class PageAccessLocalDisk implements IItemStore
 {
     private _logger: ILogger;
     private _storeLocation: string;
+
+    private _folders = new Map<string, string>();
 
     // ---------------------------------------------------------------------------------
     // ctor
@@ -18,6 +21,18 @@ export class PageAccessLocalDisk implements IItemStore
         if (!fs.existsSync(this._storeLocation)) {
             throw Error(`Store location is not valid: ${this._storeLocation}`)
         }
+
+        const addFolder = (name: string) => { 
+            const folderName =  path.join(this._storeLocation, name)
+            if(!fs.existsSync(folderName)){
+                fs.mkdirSync(folderName)
+            }
+            this._folders.set(name, folderName);
+        }
+
+        addFolder("page");
+        addFolder("widget");
+        addFolder("config");
     }
 
     // ---------------------------------------------------------------------------------
@@ -32,8 +47,8 @@ export class PageAccessLocalDisk implements IItemStore
     // ---------------------------------------------------------------------------------
     getIdList(itemType: hompagItemType): Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
-            const typeFolder = path.join(this._storeLocation, itemType)
-            if(!fs.existsSync(typeFolder)){
+            const typeFolder = this._folders.get(itemType);
+            if(!typeFolder || !fs.existsSync(typeFolder)){
                 this._logger.logLine(`${itemType} folder does not exist`)
                 resolve([])
             }
@@ -54,10 +69,7 @@ export class PageAccessLocalDisk implements IItemStore
     // ---------------------------------------------------------------------------------
     getVersionList(itemType: hompagItemType, id: string): Promise<number[]> {
         return new Promise<number[]>((resolve, reject) => {
-            const itemFolder =  path.join(this._storeLocation, `${itemType}/${id}`)
-            if(!fs.existsSync(itemFolder)){
-                fs.mkdirSync(itemFolder)
-            }
+            const itemFolder = this.ensureItemFolder(itemType, id);
             
             fs.readdir(itemFolder,  (err: string, files: any[]) => {
                 
@@ -110,15 +122,30 @@ export class PageAccessLocalDisk implements IItemStore
     }
 
     // ---------------------------------------------------------------------------------
+    // ensureItemFolder
+    // ---------------------------------------------------------------------------------
+    private ensureItemFolder(itemType: hompagItemType, id: string)
+    {
+        const itemRootFolder = this._folders.get(itemType);
+        if(!itemRootFolder || !fs.existsSync(itemRootFolder)){
+            this._logger.logError(`No root folder for ${itemType} items`)
+            return []
+        }
+      
+        const itemFolder =  path.join(itemRootFolder, id)
+        if(!fs.existsSync(itemFolder)){
+            fs.mkdirSync(itemFolder)
+        }
+        return itemFolder;
+    }
+
+    // ---------------------------------------------------------------------------------
     // storeItem
     // ---------------------------------------------------------------------------------
     async storeItem(itemType: hompagItemType, id: string, version: number, data: string)
     {
         return new Promise<void>((resolve, reject) => {
-            const itemFolder =  path.join(this._storeLocation, `${itemType}/${id}`)
-            if(!fs.existsSync(itemFolder)){
-                fs.mkdirSync(itemFolder)
-            }
+            const itemFolder = this.ensureItemFolder(itemType, id);
 
             const fileName = path.join(itemFolder, `${version}.json`)
             fs.writeFile(fileName, data, (err: any) => {
@@ -133,4 +160,18 @@ export class PageAccessLocalDisk implements IItemStore
         })
     }
 
+    // ---------------------------------------------------------------------------------
+    // getConfig
+    // ---------------------------------------------------------------------------------
+    async getConfig(type: ServerConfigType) {
+        const fileName = path.join(this._storeLocation, `config/${type}.json`)
+
+        return new Promise<string>((resolve, reject) => {
+            fs.readFile(fileName, 'utf8' , (err: any, data: any) => {
+                if (err) {  reject (`Error reading file '${fileName}': ${err}`) }
+                this._logger.logLine(`Loaded config: ${fileName}`)
+                resolve(data)
+            } )                             
+        })
+    }
 }

@@ -1,3 +1,4 @@
+import { ServerConfigType } from "hompag-common";
 import { doNothing } from "../helpers/asyncHelper";
 import { ILogger } from "../helpers/logger";
 import { hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
@@ -169,5 +170,12 @@ export class PageCache implements IItemStore{
     {
         const itemCache = await this.getItemCache(itemType);
         itemCache.delete(id);
+    }
+
+    //------------------------------------------------------------------------------------------
+    // getConfig
+    //------------------------------------------------------------------------------------------
+    async getConfig(configType: ServerConfigType) {
+        return this._deepStore.getConfig(configType) 
     }
 }

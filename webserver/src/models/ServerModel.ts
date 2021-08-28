@@ -4,7 +4,7 @@ import { ILogger } from "../helpers/logger";
 import moment from "moment";
 import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
-import { ServerMessageType, StatePacket } from "hompag-common";
+import { ServerConfigType, ServerMessageType, StatePacket } from "hompag-common";
 
 export interface ItemReturn
 {
@@ -26,6 +26,7 @@ export interface IItemStore
     getItem(itemType: hompagItemType, id: string, version: number | undefined): Promise<ItemReturn | null>;
     getIdList(itemType: hompagItemType): Promise<string[]>;
     storeItem(itemType: hompagItemType, id: string, version: number, data: string): Promise<void>;
+    getConfig(configType: ServerConfigType): Promise<string>;
 }
 
 export interface IListener{
@@ -244,5 +245,12 @@ export class ServerModel {
             case "spotify":  return this.spotify.handleLoginResponse(query); 
             default: throw new Error(`Unknown login response app: ${app}`)
         }
+    }
+
+    //------------------------------------------------------------------------------------------
+    // getActionList
+    //------------------------------------------------------------------------------------------
+    async getActionList() {
+        return JSON.parse(await this._pageAccess.getConfig(ServerConfigType.Action))
     }
 }
