@@ -23,13 +23,13 @@ enum OnChangeEnum {
 // Input bindings for the combobox
 type ComboboxProps = {
     itemsSource: ComboboxItem[];
-    selectedItem: any;
+    selectedItem?: any;
     onSelectValue: (selectedItem: any) => void;
     placeholder?: string;
     menuWidth?: string;
     width?: string;
     styleOverride?: any;
-    startOpened?: boolean;
+    startOpened?: boolean; 
     onBlur?: ()=>void;
 };
 

@@ -4,6 +4,7 @@ import WidgetPicker from "Widgets/WidgetPicker";
 import WidgetRichText from "Widgets/WidgetRichText";
 import WidgetSearch from "Widgets/WidgetSearch";
 import WidgetSpotify from "Widgets/WidgetSpotify"
+import WidgetServerAction from "Widgets/WidgetServerAction";
 import Widget_TEMPLATE_ from "Widgets/_WidgetTEMPLATE";
 
 // -------------------------------------------------------------------
@@ -16,16 +17,18 @@ export function registerWidgets()
     WidgetSpotify.register();
     WidgetRichText.register();
     WidgetSearch.register();
+    WidgetServerAction.register();
 }
 
 export enum WidgetType
 {
-    _TEMPLATE_ = "Template",
+    _TEMPLATE_ = "_TEMPLATE_",
     Picker = "Picker",
     Editor = "Editor",
     RichText = "RichText",
     Search = "Search",
-    Spotify = "Spotify"
+    Spotify = "Spotify",
+    ServerAction = "ServerAction",
 }
 
 

@@ -4,6 +4,7 @@
 
 
 TODO
+    [ ] Bug: clicking resize while picking turns off picker
     [ ] Why is spotify not working?
     [ ] New Widget: Shell Commander - run shell commands via the server
     [ ] Spotify: Select playlist
