@@ -81,7 +81,7 @@ export class RestHelper implements IRestHelper
             {
                 this._cache.removeObject(query);
             }
-            console.log(`Non-Json body returned on ${this.apiRoot}${query}\nResponse: ${jsonBody}` ) ;
+            console.log(`Non-Json body returned on ${this.apiRoot}${query}\nResponse: ${jsonBody}\nStack:\n${err.stack}` ) ;
             return {} as T;
         }
     }

@@ -17,6 +17,7 @@ export function handleQueries(logger:ILogger) {
         const output:{id:string, version:number | null}[] = []
         for(let i = 0; i < ids.length; i++)
         {
+            if(ids[i].trim() === "") continue;
             output.push({id: ids[i], version: await serverModel.getItemVersion(type, ids[i])})
         }
         

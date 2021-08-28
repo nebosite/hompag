@@ -4,6 +4,7 @@ import { WidgetContainer } from "models/WidgetContainer";
 import React from "react";
 import styles from '../AppStyles.module.css';
 import {GoEllipsis} from 'react-icons/go' 
+import { action } from "mobx";
 
 @inject("appModel")
 @observer
@@ -39,13 +40,13 @@ extends React.Component<
                 <div className={`${styles.Interior}`}>
                     <div className={`${styles.DragHandle} widgetFrameDragHandleTag`} />
                     <div className={`${styles.ConfigButton}`} 
-                        onClick={()=>context.state_configuring = true}><GoEllipsis /></div>
+                        onClick={()=>action(()=>context.state_configuring = true)()}><GoEllipsis /></div>
                     <div className={`${styles.Contents}`}
                         style={{
                             height: `${context.h * context.parentPage.rowHeight-6}px`,
                         }}
                     >
-                        <div className={styles.Filler2}>
+                        <div className={styles.Filler2}> 
                             {this.props.children}
                         </div>
                     </div>

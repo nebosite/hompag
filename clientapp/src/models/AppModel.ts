@@ -232,11 +232,17 @@ export class AppModel {
         }
         else {
             response.data.forEach(async(i) => {
-                const widget = this.getWidget(i.id);
-                if(widget.version !== i.version) {
-                    console.log(`Loading from server:  widget ${i.id}.${i.version} because version is ${widget.version}`)
-                    this.loadWidgetContent(widget, false);
+                if(i.id) {
+                    const widget = this.getWidget(i.id);
+                    if(widget && widget.id && widget.version !== i.version) {
+                        console.log(`Loading from server:  widget ${i.id}.${i.version} because version is ${widget.version}`)
+                        this.loadWidgetContent(widget, false);
+                    }                    
                 }
+                else {
+                    console.log(`WEIRD: Got an empty id from the server: ${JSON.stringify(response)}`)
+                }
+
             })
         }
            
@@ -247,6 +253,10 @@ export class AppModel {
     // -------------------------------------------------------------------
     async loadWidgetContent(widget: WidgetModel, useCache: boolean = true)
     {
+        if(!widget?.id) {
+            console.log("WEIRD: Tried load a widget without an id")
+            return;
+        }
         let response =  await this._api.restGet<ItemRequestResponse>(`widgets/${widget.id}`, useCache);
         if(response.data)
         {

@@ -6,6 +6,7 @@ import styles from '../AppStyles.module.css';
 import Row from "./Row";
 import {MdDeleteForever} from 'react-icons/md'
 import {CgCloseR} from 'react-icons/cg'
+import { action } from "mobx";
 
 
 interface ColorPickerProps {
@@ -117,7 +118,7 @@ extends React.Component<
                         className={styles.configButton} 
                         onClick={()=>{
                             context.deleteMe();
-                            context.state_configuring = false;
+                            action(()=>context.state_configuring = false)()                           
                         }}>
                         <div ><MdDeleteForever/></div>  
                         <div style={{marginLeft: "3px"}}>Delete</div>                  
