@@ -7,7 +7,12 @@ import { WidgetModelData } from "models/WidgetModel";
 import React from "react";
 import { registerWidget, WidgetType } from "widgetLibrary";
 import { BsPlusSquare } from "react-icons/bs"
+import { TiDelete } from "react-icons/ti"
 import Combobox from "Components/ComboBox";
+import { RestHelper } from "helpers/RestHelper";
+import Row from "Components/Row";
+import appStyles from '../AppStyles.module.css';
+
 
 
 export class WidgetServerActionData extends WidgetModelData
@@ -32,8 +37,27 @@ export class WidgetServerActionData extends WidgetModelData
     addAction(item: string) {
         this.updateMe(()=> this.pickedActions.push(item))
     }
+
+    // --------------------------------------------------------------------------------------------------------------------------------------
+    // removeAction
+    // --------------------------------------------------------------------------------------------------------------------------------------
+    removeAction(name: string) {
+        const index = this.pickedActions.indexOf(name);
+        if(index === -1)
+        {
+            console.log(`WEIRD: Action was not present in pickedActions: ${name}`)
+            return;
+        }
+        this.updateMe(()=> this.pickedActions.splice(index,1)) 
+    }
 }
 
+interface ActionListResponse{
+    errorMessage?: string
+    data?: {
+        actions: {name: string}[]
+    }
+}
 export class ServerActionTransientState
 {
     myState:    ObservableState<string>;
@@ -45,6 +69,9 @@ export class ServerActionTransientState
 
     @observable pickableItems: string[] = ["foo", "bar"]
 
+    private api = new RestHelper("/api/actions/");
+   
+
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
@@ -53,6 +80,17 @@ export class ServerActionTransientState
         makeObservable(this);
         this.myState = new ObservableState<string>("myState", stateMaker)
         this.myState.value = "defaultValue"
+
+        setTimeout(async ()=>{
+            const serverResponse = await this.api.restGet<ActionListResponse>("list");
+            if(!serverResponse || serverResponse.errorMessage) 
+            {
+                console.log(`OH NO: Nothing from the server.  (${serverResponse?.errorMessage})`)
+            }
+            else {
+                action(()=>this.pickableItems = serverResponse.data.actions.map(a => a.name))()
+            }
+        },0)
     } 
 }
 
@@ -105,11 +143,20 @@ extends React.Component<{context: WidgetContainer}>
             .filter(i => data.pickedActions.indexOf(i) === -1)
             .map(i => ({value: i, label: i}))
 
+        const renderAction = (action: string) => (
+                <div key={action} className={appStyles.ServerActionItem}>
+                    <Row>
+                        <div className={appStyles.Name}>{action}</div>
+                        <div onClick={()=> data.removeAction(action)}><TiDelete /></div>
+                    </Row>
+                </div>
+            )
+
         return (
             <div style={style}>
                 <div>
                     {
-                        data.pickedActions.map(a => <div>{a}</div>)
+                        data.pickedActions.map(a => renderAction(a))
                     }                    
                 </div>
 

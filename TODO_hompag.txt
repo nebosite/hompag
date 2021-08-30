@@ -22,6 +22,7 @@ NEW
     [ ] Weather watcher
         [ ] Weather server:  https://openweathermap.org/api  (API key is a secret)
         - include space weather http://sws-data.sws.bom.gov.au/
+        - Nasa APIs: https://api.nasa.gov/
     [ ] Perfect Pencil
     [ ] Sometimes text does not save after typing and there is no newline
         - Maybe launch a throttle event on each keystroke
