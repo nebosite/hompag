@@ -30,6 +30,16 @@ export class Widget_TEMPLATE_Data extends WidgetModelData
     }
 }
 
+// TODO: if you have special observable properties on your data class, 
+//       such as an observable array, the
+//       deserializer needs to be taught about how to deserialize them.
+// registerProperty(
+//      "Widget_TEMPLATE_Data", // Name of the data class
+//      "someCollection",       // Name of the property
+//      (type,propertyName,objectFromJson) => {
+//          return observable(objectFromJson as MyCollectionType[])
+//      })
+
 // TODO: Use this class to store data that should not be persisted, but should be shared
 // with widgets of the same instance on other pages.  
 export class _TEMPLATE_TransientState

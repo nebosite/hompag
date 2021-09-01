@@ -14,7 +14,7 @@ import { PageCache } from './models/PageCache';
 import { handleQueries } from './apis/query';
 import { handleSpotifyCommand } from './apis/spotify';
 import { handleLoginResponse } from './apis/loginResponder';
-import { getActionList } from './apis/actions';
+import { executeAction, getActionList } from './apis/actions';
 
 
 // ---------------------------------------------------------------------------------
@@ -75,6 +75,7 @@ app.get("/api/widgets/:id", getWidget(logger))
 app.get("/api/query", handleQueries(logger))
 
 app.get("/api/actions/list", getActionList(logger))
+app.put("/api/actions/execute/:actionName", executeAction(logger))
 
 app.post("/api/spotify/:command", handleSpotifyCommand(logger))
 

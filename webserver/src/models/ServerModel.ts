@@ -5,6 +5,14 @@ import moment from "moment";
 import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
 import { ServerConfigType, ServerMessageType, StatePacket } from "hompag-common";
+import {exec} from "child_process"
+
+
+interface ActionDetail
+{
+    name: string
+    command: string
+}
 
 export interface ItemReturn
 {
@@ -253,4 +261,32 @@ export class ServerModel {
     async getActionList() {
         return JSON.parse(await this._pageAccess.getConfig(ServerConfigType.Action))
     }
+
+    //------------------------------------------------------------------------------------------
+    // executeAction
+    //------------------------------------------------------------------------------------------
+    async executeAction(actionName: string) {
+        setTimeout(async ()=>{
+            this.logger.logLine(`Executing Server Action: ${actionName}`)
+            const actionConfig = await this._pageAccess.getConfig(ServerConfigType.Action)
+            const actions = JSON.parse(actionConfig).actions as ActionDetail[]
+            const actionDetail = actions.find(d => d.name === actionName)
+            if(!actionDetail) {
+                this.logger.logError(`Cannot find action called '${actionName}'`)
+            }
+            else {
+                this.logger.logLine(`Executing command: ${actionDetail.command}`)
+                const process = exec(actionDetail.command)
+                process.on('error', (error) => {
+                    this.logger.logError(`Spawn failed: ${error.message}`);
+                });
+                
+                process.on("close", code => {
+                    this.logger.logLine(`child process exited with code ${code}`);
+                });
+            }
+        },0)
+        return null;
+    }
 }
+

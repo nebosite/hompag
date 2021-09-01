@@ -7,11 +7,14 @@ TODO
     [ ] Bug: clicking resize while picking turns off picker
     [ ] Why is spotify not working?
     [ ] New Widget: Shell Commander - run shell commands via the server
+        [ ] The observable picked actions is not getting reserialized as observable
     [ ] Spotify: Select playlist
         - Should also be able to handle pseudo-playlists
     [ ] Check out the makeobservable decorator: https://github.com/login/oauth/authorize?client_id=7e0a3cd836d3e544dbd9&redirect_uri=https%3A%2F%2Fgist.github.com%2Fauth%2Fgithub%2Fcallback%3Freturn_to%3Dhttps%253A%252F%252Fgist.github.com%252FMichealPearce%252F56418455bcd3ceb2e666fc097b4e0602&response_type=code&state=3d1204e7f73493dc6ed13bb7ee79ccc54627724c35562e666feece07eeb22e41
 
 NEW
+    [ ] Clean up status in the about page
+    [ ] Bug: sometimes take a while to recognize spotify connection
     [ ] Should actually cache configs
     [ ] Lyrics in Spotify  https://www.lyrics.com/lyrics_api.php
     [ ] Get new secrets for spotify API and weather watcher
@@ -47,6 +50,11 @@ NEW
         
 
 WIDGET IDEAS
+    - Time widget
+        - Custom time zones, inclusing local, UTC
+        - time converter - convert local->UTC and UTC->local at the same time
+        - Quick stopwatch
+        - Quick timer
     - Face widget - help me remember faces
     - Movie widget - in one search: common sense, imbd, rotten tomatoes, youtube trailer
         - Occasionally suggest movies and let you mark them for later

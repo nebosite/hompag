@@ -19,9 +19,6 @@ export class WidgetServerActionData extends WidgetModelData
 { 
     @observable private _pickedActions: string[] = observable([])
     get pickedActions() {return this._pickedActions}
-    set pickedActions(value:string[]) { 
-        if(value !== this._pickedActions) this.updateMe(()=>{this._pickedActions = value})
-    }
 
     // -------------------------------------------------------------------
     // ctor
@@ -92,6 +89,13 @@ export class ServerActionTransientState
             }
         },0)
     } 
+
+    // -------------------------------------------------------------------
+    // executeAction
+    // -------------------------------------------------------------------
+    executeAction(name: string) {
+        this.api.restPut(`execute/${name}`)
+    }
 }
 
 
@@ -146,7 +150,12 @@ extends React.Component<{context: WidgetContainer}>
         const renderAction = (action: string) => (
                 <div key={action} className={appStyles.ServerActionItem}>
                     <Row>
-                        <div className={appStyles.Name}>{action}</div>
+                        <div 
+                            className={appStyles.Name} 
+                            onClick={()=>{this.transientState.executeAction(action)}}
+                        >
+                            {action}
+                        </div>
                         <div onClick={()=> data.removeAction(action)}><TiDelete /></div>
                     </Row>
                 </div>
