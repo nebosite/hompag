@@ -216,7 +216,7 @@ export class SpotifyModel
         const apiHeaders = {'Authorization': `Bearer ${credentials.tokenDetails.access_token}`}
         const endPoint = spotifyApiEndpoint + `/me/player/${command}`;
         const result = await restCall<T>(method, apiHeaders, endPoint)
-        console.log(`Called ${method} ${command} for ${widgetId}`)
+        //console.log(`Called ${method} ${command} for ${widgetId}`)
         return result;
     }
 

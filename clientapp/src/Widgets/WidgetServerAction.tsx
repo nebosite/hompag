@@ -193,7 +193,7 @@ extends WidgetBase<{context: WidgetContainer}>
     // renderConfigUI - this is for special configuration
     // -------------------------------------------------------------------
     renderConfigUI() {
-        return <div></div>
+        return <div>Note: Server Actions are defined in config/Actions.json in the server data folder.</div>
     }
 }
 
