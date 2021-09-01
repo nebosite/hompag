@@ -14,7 +14,7 @@ extends WidgetBase<{context: WidgetContainer}>
     // register
     // -------------------------------------------------------------------
     static register() {
-        registerWidget(WidgetType.Picker, c => <WidgetPicker context={c} />, WidgetPickerData.name, () => new WidgetPickerData())
+        registerWidget(WidgetType.Picker, c => <WidgetPicker context={c} />, "WidgetPickerData", () => new WidgetPickerData())
     }
 
     // -------------------------------------------------------------------

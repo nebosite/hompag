@@ -33,7 +33,7 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
     // register
     // -------------------------------------------------------------------
     static register() {
-        registerWidget(WidgetType.RichText, c => <WidgetRichText context={c} />, WidgetRichTextData.name, () => new WidgetRichTextData())
+        registerWidget(WidgetType.RichText, c => <WidgetRichText context={c} />, "WidgetRichTextData", () => new WidgetRichTextData())
     }
 
     // -------------------------------------------------------------------

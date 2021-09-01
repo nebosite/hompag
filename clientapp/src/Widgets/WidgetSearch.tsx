@@ -76,7 +76,7 @@ extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: bo
     // register
     // -------------------------------------------------------------------
     static register() {
-        registerWidget(WidgetType.Search, c => <WidgetSearch context={c} />, WidgetSearchData.name, () => new WidgetSearchData())
+        registerWidget(WidgetType.Search, c => <WidgetSearch context={c} />, "WidgetSearchData", () => new WidgetSearchData())
     }
 
     // -------------------------------------------------------------------

@@ -71,7 +71,7 @@ extends React.Component<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     static register() {
         // eslint-disable-next-line react/jsx-pascal-case
-        registerWidget(WidgetType._TEMPLATE_, c => <Widget_TEMPLATE_ context={c} />, Widget_TEMPLATE_Data.name, () => new Widget_TEMPLATE_Data())
+        registerWidget(WidgetType._TEMPLATE_, c => <Widget_TEMPLATE_ context={c} />, "Widget_TEMPLATE_", () => new Widget_TEMPLATE_Data())
     }
 
     // -------------------------------------------------------------------

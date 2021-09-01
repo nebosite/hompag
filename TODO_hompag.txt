@@ -12,6 +12,7 @@ TODO
     [ ] Check out the makeobservable decorator: https://github.com/login/oauth/authorize?client_id=7e0a3cd836d3e544dbd9&redirect_uri=https%3A%2F%2Fgist.github.com%2Fauth%2Fgithub%2Fcallback%3Freturn_to%3Dhttps%253A%252F%252Fgist.github.com%252FMichealPearce%252F56418455bcd3ceb2e666fc097b4e0602&response_type=code&state=3d1204e7f73493dc6ed13bb7ee79ccc54627724c35562e666feece07eeb22e41
 
 NEW
+    [ ] the tiny editor has an ugly white border
     [ ] Clean up status in the about page
     [ ] Bug: sometimes take a while to recognize spotify connection
     [ ] Should actually cache configs

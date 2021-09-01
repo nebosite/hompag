@@ -136,7 +136,7 @@ extends WidgetBase<{context: WidgetContainer}>
     // register
     // -------------------------------------------------------------------
     static register() {
-        registerWidget(WidgetType.Spotify, c => <WidgetSpotify context={c} />, SpotifyData.name, () => new SpotifyData())    
+        registerWidget(WidgetType.Spotify, c => <WidgetSpotify context={c} />, "SpotifyData", () => new SpotifyData())    
     }
 
     // -------------------------------------------------------------------

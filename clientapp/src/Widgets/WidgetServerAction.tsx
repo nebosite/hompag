@@ -113,7 +113,7 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     static register() {
         // eslint-disable-next-line react/jsx-pascal-case
-        registerWidget(WidgetType.ServerAction, c => <WidgetServerAction context={c} />, WidgetServerActionData.name, () => new WidgetServerActionData())
+        registerWidget(WidgetType.ServerAction, c => <WidgetServerAction context={c} />, "WidgetServerActionData", () => new WidgetServerActionData())
     }
 
     // -------------------------------------------------------------------
