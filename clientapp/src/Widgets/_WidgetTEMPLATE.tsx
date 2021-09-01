@@ -84,9 +84,9 @@ extends React.Component<{context: WidgetContainer}>
     }
 
     // -------------------------------------------------------------------
-    // render
+    // renderContent - This is for normal widget content
     // -------------------------------------------------------------------
-    render() {
+    renderContent() {
         const {context} = this.props;
         const data = this.props.context.ref_widget.data as Widget_TEMPLATE_Data; 
         const style = {
@@ -98,6 +98,13 @@ extends React.Component<{context: WidgetContainer}>
                 TODO: Put your content here. ({data.myThing}, {this.transientState.myState.value})
             </div> 
         );
-    };
+    }
+
+    // -------------------------------------------------------------------
+    // renderConfigUI - this is for special configuration
+    // -------------------------------------------------------------------
+    renderConfigUI() {
+        return <div>TODO: Put custom configuration UI here</div>
+    }
 }
 

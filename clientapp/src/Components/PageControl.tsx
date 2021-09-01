@@ -12,10 +12,9 @@ import { BsGear } from 'react-icons/bs';
 import {CgCloseR} from 'react-icons/cg'
 import Combobox from "./ComboBox";
 import Row from "./Row";
-import { WidgetConfigurator } from "./WidgetConfigurator";
 import WidgetDefault from "Widgets/WidgetDefault";
-import { WidgetFrame } from "Widgets/WidgetFrame";
 import { renderWidget } from "widgetLibrary";
+import WidgetBlank from "Widgets/WidgetBlank";
 
 
 interface PageSettingsControlProps 
@@ -265,8 +264,8 @@ extends React.Component<PageControlProps, PageControlState>
 
         const resizeHandle = <div className={styles.widgetFrameResizeHandle}>╝</div>
 
-        const renderPageItem = (container: WidgetContainer) => {
-            if(!draggingOK) return <div>...</div>
+        const renderPageItem = (container: WidgetContainer) => { 
+            if(!draggingOK) return <WidgetBlank context={container}/>
             const widgetControl = renderWidget(container.ref_widget?.widgetType, container)
             return widgetControl ?? <WidgetDefault context={container} />
         } 
@@ -332,13 +331,7 @@ extends React.Component<PageControlProps, PageControlState>
                     >
                         {pageModel.widgetContainers.map(c => (
                             <div key={c.getKey()} data-grid={c}>
-                                {c.state_configuring
-                                    ?   <WidgetConfigurator context={c} />
-                                    : null}
-                                
-                                <WidgetFrame context={c} >
-                                    {renderPageItem(c)}
-                                </WidgetFrame>
+                                {renderPageItem(c)}
                             </div>))}  
 
                     </ReactGridLayout> 

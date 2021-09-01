@@ -1,14 +1,14 @@
 import { observer } from "mobx-react";
 import { WidgetContainer } from "models/WidgetContainer";
-import React from "react";
 import { registerWidget, WidgetType } from "widgetLibrary";
 import Combobox from "../Components/ComboBox";
+import WidgetBase from "./WidgetBase";
 
 export class WidgetPickerData { }
 
 @observer
 export default class WidgetPicker 
-extends React.Component<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer}>  
 {    
     // -------------------------------------------------------------------
     // register
@@ -20,7 +20,7 @@ extends React.Component<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
-    render() {
+    renderContent() {
         const widget = this.props.context.ref_widget;
         const hideTypes = [WidgetType._TEMPLATE_, WidgetType.Picker, WidgetType.Editor]
 
@@ -46,5 +46,7 @@ extends React.Component<{context: WidgetContainer}>
             </div> 
         );
     };
+
+    renderConfigUI = () => <div></div>
 }
 

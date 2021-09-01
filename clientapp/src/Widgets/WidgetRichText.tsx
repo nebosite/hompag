@@ -1,5 +1,4 @@
 import { observer } from "mobx-react";
-import React from "react";
 import 'draft-js/dist/Draft.css';
 import { WidgetContainer } from "models/WidgetContainer";
 import './WidgetRichText.module.css';
@@ -7,6 +6,7 @@ import styles from './WidgetRichText.module.css';
 import { Editor } from '@tinymce/tinymce-react';
 import { WidgetModelData } from "models/WidgetModel"; 
 import { registerWidget, WidgetType } from "widgetLibrary";
+import WidgetBase from "./WidgetBase";
 
 export class WidgetRichTextData extends WidgetModelData
 {
@@ -25,7 +25,7 @@ export class WidgetRichTextData extends WidgetModelData
 
 @observer
 export default class WidgetRichText 
-extends React.Component<{context: WidgetContainer},{editor: any}> 
+extends WidgetBase<{context: WidgetContainer},{editor: any}> 
 {    
     resizeOberver: ResizeObserver
 
@@ -70,7 +70,7 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
     //      https://www.tiny.cloud/docs/advanced/available-toolbar-buttons/
     //      
     // -------------------------------------------------------------------
-    render() {
+    renderContent() {
         const {context} = this.props;
         const widget = context.ref_widget;
         const data = widget.data as WidgetRichTextData
@@ -190,4 +190,6 @@ extends React.Component<{context: WidgetContainer},{editor: any}>
             </div> 
         );
     };
+
+    renderConfigUI = () => <div></div>
 }

@@ -3,12 +3,12 @@ import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { WidgetContainer } from "models/WidgetContainer";
 import { WidgetModelData } from "models/WidgetModel";
-import React from "react";
 import appStyles from '../AppStyles.module.css';
 import { CgCloseR } from "react-icons/cg";
 import Row from "Components/Row";
 import Combobox from "Components/ComboBox";
 import { registerWidget, WidgetType } from "widgetLibrary";
+import WidgetBase from "./WidgetBase";
 
 
 interface SearchConfig
@@ -68,7 +68,7 @@ export class WidgetSearchData extends WidgetModelData
 
 @observer
 export default class WidgetSearch
-extends React.Component<{context: WidgetContainer}, {searchText: string, choosing: boolean, editingTemplate: boolean}> 
+extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: boolean, editingTemplate: boolean}> 
 {    
     state = {searchText: "", choosing: false, editingTemplate: false} 
 
@@ -82,7 +82,7 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
     // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
-    render() {
+    renderContent() {
         const {context} = this.props;
         const data = this.props.context.ref_widget.data as WidgetSearchData; 
         const searchConfig = searches.find(s => s.name === data.searchType) ?? searches[0]
@@ -204,5 +204,7 @@ extends React.Component<{context: WidgetContainer}, {searchText: string, choosin
             
         );
     }; 
+
+    renderConfigUI = () => <div></div>
 }
 

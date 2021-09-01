@@ -1,17 +1,19 @@
 import { WidgetContainer } from "models/WidgetContainer";
-import React from "react";
+import WidgetBase from "./WidgetBase";
 
 export default class WidgetDefault 
-extends React.Component<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer}> 
 {    
     // -------------------------------------------------------------------
-    // render
+    // renderContent
     // -------------------------------------------------------------------
-    render = () => <div> 
+    renderContent = () => <div> 
                     {
                         this.props.context.ref_widget?.widgetType
                             ? "I am a {this.props.context.ref_widget.widgetType}"
                             : ""
                     }
              </div> 
+
+    renderConfigUI = () => <div></div>
 }

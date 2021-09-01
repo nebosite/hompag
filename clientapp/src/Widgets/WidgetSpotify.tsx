@@ -1,7 +1,6 @@
 import { observer } from "mobx-react";
 import { WidgetContainer } from "models/WidgetContainer";
 import { WidgetModelData } from "models/WidgetModel";
-import React from "react";
 import { IoPlaySkipBackOutline, IoPlayBackOutline, IoPlayOutline, IoPlayForwardOutline, IoPlaySkipForwardOutline, IoPauseOutline } from "react-icons/io5"
 import { ObservableState, TransientStateHandler } from "models/TransientState";
 import { RestHelper } from "helpers/RestHelper";
@@ -11,6 +10,7 @@ import Row from "../Components/Row";
 import { SpotifyPlayerState, SpotifyServerResponse} from "hompag-common";
 import { registerWidget, WidgetType } from "widgetLibrary";
 import { action, makeObservable, observable } from "mobx";
+import WidgetBase from "./WidgetBase";
 
 
 export class SpotifyData extends WidgetModelData
@@ -128,7 +128,7 @@ export class SpotifyTransientState
 
 @observer
 export default class WidgetSpotify 
-extends React.Component<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer}>  
 {   
     private _transientState: SpotifyTransientState
 
@@ -192,7 +192,7 @@ extends React.Component<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     // render
     // -------------------------------------------------------------------
-    render() {
+    renderContent() {
 
         const handleMouseEnter = () => {
             this._transientState.refresh();
@@ -209,5 +209,7 @@ extends React.Component<{context: WidgetContainer}>
             </div>
         )
     }; 
+
+    renderConfigUI = () => <div></div>
 }
 

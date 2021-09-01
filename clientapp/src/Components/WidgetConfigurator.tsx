@@ -45,17 +45,27 @@ extends React.Component<ColorPickerProps> {
     }
 }
 
+interface WidgetConfiguratorProps {
+    context: WidgetContainer
+    customUI?: JSX.Element
+}
+
+interface WidgetConfiguratorState     
+{
+    hoverForeground?: {i: ColorIndex, v: ColorValue}, 
+    hoverBackground?: {i: ColorIndex, v: ColorValue} 
+}
+
+
 @inject("appModel")
 @observer
 export class WidgetConfigurator
-extends React.Component<
-    {context: WidgetContainer}, 
-    {hoverForeground?: {i: ColorIndex, v: ColorValue}, hoverBackground?: {i: ColorIndex, v: ColorValue} }> 
+extends React.Component<WidgetConfiguratorProps, WidgetConfiguratorState>
 {    
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(props: {context: WidgetContainer})
+    constructor(props: WidgetConfiguratorProps)
     {
         super(props);
         this.state = {}
@@ -112,6 +122,7 @@ extends React.Component<
                             context={context} />
                     </Row>
                 </div>
+                <div>{this.props.customUI}</div>
  
                 <div>
                     <Row

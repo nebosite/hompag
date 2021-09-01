@@ -4,7 +4,6 @@ import { observer } from "mobx-react";
 import { ObservableState, TransientStateHandler } from "models/TransientState";
 import { WidgetContainer } from "models/WidgetContainer";
 import { WidgetModelData } from "models/WidgetModel";
-import React from "react";
 import { registerWidget, WidgetType } from "widgetLibrary";
 import { BsPlusSquare } from "react-icons/bs"
 import { TiDelete } from "react-icons/ti"
@@ -12,6 +11,7 @@ import Combobox from "Components/ComboBox";
 import { RestHelper } from "helpers/RestHelper";
 import Row from "Components/Row";
 import appStyles from '../AppStyles.module.css';
+import WidgetBase from "./WidgetBase";
 
 
 
@@ -104,7 +104,7 @@ export class ServerActionTransientState
 // --------------------------------------------------------------------------------------------------------------------------------------
 @observer
 export default class WidgetServerAction 
-extends React.Component<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer}> 
 {    
     transientState: ServerActionTransientState;
 
@@ -126,9 +126,9 @@ extends React.Component<{context: WidgetContainer}>
     }
 
     // -------------------------------------------------------------------
-    // render
+    // renderContent
     // -------------------------------------------------------------------
-    render() {
+    renderContent() {
         const {context} = this.props;
         const tState = this.transientState;
         const data = this.props.context.ref_widget.data as WidgetServerActionData; 
@@ -187,6 +187,13 @@ extends React.Component<{context: WidgetContainer}>
                  
             </div> 
         );
-    };
+    }
+
+    // -------------------------------------------------------------------
+    // renderConfigUI - this is for special configuration
+    // -------------------------------------------------------------------
+    renderConfigUI() {
+        return <div></div>
+    }
 }
 
