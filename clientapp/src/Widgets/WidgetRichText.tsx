@@ -1,5 +1,4 @@
 import { observer } from "mobx-react";
-import 'draft-js/dist/Draft.css';
 import { WidgetContainer } from "models/WidgetContainer";
 import './WidgetRichText.module.css';
 import styles from './WidgetRichText.module.css';
@@ -94,22 +93,33 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
         return (
             <div className={`${styles.widgetEditor}`} id={`container_${context.widgetId}`}>
                 {
+                    // Cover the widget until the editor is fully loaded so that we don't
+                    // see ugly loading turds
                     this.state?.editor 
                         ? null
-                        : <div className={styles.editorCover} 
-                        style={{
-                            background: editorBackground,
-                            width: context.w * context.parentPage.columnWidth - 5,
-                            height: context.h * context.parentPage.rowHeight - 5
-                        }}></div> 
+                        : <div  className={styles.editorCover} 
+                                style={{
+                                    background: editorBackground,
+                                    width: context.w * context.parentPage.columnWidth - 5,
+                                    height: context.h * context.parentPage.rowHeight - 5
+                                }} /> 
                 }
                  
                 <Editor
+                    
                     onInit={(evt, editor) => {
                         this.setState({editor}) 
                         editor.getBody().style.backgroundColor = editorBackground;
                         editor.getBody().style.color = editorColor;
                         editor.getBody().style.border = undefined;
+                        
+                        // remove tiny white border
+                        const myNode = document.getElementById(`container_${context.widgetId}`);
+                        const editorBlocks = myNode.getElementsByClassName("tox-tinymce")
+                        Array.from(editorBlocks).forEach(b => {
+                            const element  = b as HTMLElement;
+                            element.style.border = "0px";
+                        })
                         
 
                         // On click, navigate to links
@@ -173,7 +183,6 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                     init={{
                         height: height + 18,
                         menubar: false,
-                        skin: 'borderless',
                         icons: 'small',
                         indentation: "10px",
                         toolbar: false,//'bold italic color | outdent indent | bullist numlist | code',

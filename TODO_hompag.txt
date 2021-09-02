@@ -1,54 +1,3 @@
-
-
-
-
-
-TODO
-    [x] New Widget: Shell Commander - run shell commands via the server
-        [x] The observable picked actions is not getting reserialized as observable
-    [ ] Bug: clicking resize while picking turns off picker
-    [ ] Spotify: Select playlist
-        - Should also be able to handle pseudo-playlists
-    [ ] Check out the makeobservable decorator: https://github.com/login/oauth/authorize?client_id=7e0a3cd836d3e544dbd9&redirect_uri=https%3A%2F%2Fgist.github.com%2Fauth%2Fgithub%2Fcallback%3Freturn_to%3Dhttps%253A%252F%252Fgist.github.com%252FMichealPearce%252F56418455bcd3ceb2e666fc097b4e0602&response_type=code&state=3d1204e7f73493dc6ed13bb7ee79ccc54627724c35562e666feece07eeb22e41
-
-NEW
-    [ ] the tiny editor has an ugly white border
-    [ ] Clean up status in the about page
-    [ ] Bug: sometimes take a while to recognize spotify connection
-    [ ] Should actually cache configs
-    [ ] Lyrics in Spotify  https://www.lyrics.com/lyrics_api.php
-    [ ] Get new secrets for spotify API and weather watcher
-    [ ] put secrets in a config file called secrets.env
-        - Weather API
-        [ ] Make a template file for secrets
-
-    [ ] Weather watcher
-        [ ] Weather server:  https://openweathermap.org/api  (API key is a secret)
-        - include space weather http://sws-data.sws.bom.gov.au/
-        - Nasa APIs: https://api.nasa.gov/
-    [ ] Perfect Pencil
-    [ ] Sometimes text does not save after typing and there is no newline
-        - Maybe launch a throttle event on each keystroke
-    [ ] In the settings page, report recent errors - switch console.log in error locations to report errors
-    [ ] On the server, periodically purge empty folders and 0-length files
-    [ ] google-like ajax functionality  in the search tool
-        - Remember user searches on the widget
-        - Do a background search 
-    [ ] Add a scalable option to put the side inside a page scaler
-    [ ] Perf: components that are expensive to evaluate:
-        PageControl - 27ms
-            Combobox 5.6
-            widgetConfigurator 4 ms
-        loadWidgetContent - 15 ms serial!
-        Web sockets seem to load multiple times
-        AppStyles.module.css - 3ms
-        TinyMCE is just super expesive
-            - Keeps loading .css files
-            - keeps loading a bunch of plugins
-            - Theme loading was 100ms!!!
-        
-        
-
 WIDGET IDEAS
     - Time widget
         - Custom time zones, inclusing local, UTC
@@ -63,14 +12,11 @@ WIDGET IDEAS
             https://developer.imdb.com/
             https://developer.fandango.com/rotten_tomatoes
             https://developers.google.com/youtube/v3
-            
-            
-            
     - frequent links
     - Archive
     - See recent bookmarks
     - Weather watcher
-    - Scribble notes (perfect pencil)
+    - Perfect Pencil
     - Stacked TODO
     - Alfred TODO
         - Right-click->Add to TODO   puts link straight to todo widtget
@@ -91,9 +37,47 @@ WIDGET IDEAS
     - Pictaurus - File access through server
     - You know, the server can open links for you in the shell
 
-IMPORTANT
+
+==============================================================================================
+=========== TODO                                                                   ===========
+==============================================================================================
+
+
+    [x] New Widget: Shell Commander - run shell commands via the server
+        [x] The observable picked actions is not getting reserialized as observable
+        
+    [x] Check out the makeobservable decorator: https://github.com/login/oauth/authorize?client_id=7e0a3cd836d3e544dbd9&redirect_uri=https%3A%2F%2Fgist.github.com%2Fauth%2Fgithub%2Fcallback%3Freturn_to%3Dhttps%253A%252F%252Fgist.github.com%252FMichealPearce%252F56418455bcd3ceb2e666fc097b4e0602&response_type=code&state=3d1204e7f73493dc6ed13bb7ee79ccc54627724c35562e666feece07eeb22e41
+    [ ] Fix white border in hompag
+    [ ] Perf: 100 ms    TinyMCE Theme loading  
+    [ ] Perf:   ? ms    TinyMCE repeat loading of .css files
+
+NEW ==============================
+
+
+        
+        
+BUGS ====================================
+    [ ] Bug: clicking resize while picking turns off picker
+    [ ] Bug: Sometimes text does not save after typing and there is no newline
+        - Maybe launch a throttle event on each keystroke
+    [ ] Bug: sometimes take a while to recognize spotify connection
+
+IMPORTANT ==============================
+    [ ] Get new secrets for spotify API and weather watcher
+    [ ] put secrets in a config file called secrets.env
+        - Weather API
+        [ ] Make a template file for secrets
    
-BACKLOG
+BACKLOG ==============================
+    [ ] Perf:  15 ms    loadWidgetContent - operation is serial
+    [ ] Perf:  27 ms    PageControl- Combobox(5.6), widgetConfigurator(4) 
+    [ ] Weather watcher
+        [ ] Weather server:  https://openweathermap.org/api  (API key is a secret)
+        - include space weather http://sws-data.sws.bom.gov.au/
+        - Nasa APIs: https://api.nasa.gov/
+    [ ] Lyrics in Spotify  https://www.lyrics.com/lyrics_api.php
+    [ ] Spotify: Select playlist
+        - Should also be able to handle pseudo-playlists
     [ ] Spotify Quiz mode
             [ ] Need a way to store personal data on the server
                 - For now, just store the data on the appmodel cache
@@ -111,7 +95,15 @@ BACKLOG
     [ ] should not try to save any content with null data
     [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
 
-MAYBE NEVER
+MAYBE NEVER ==============================
+    [ ] Perf:   ?       web sockets seem to load multiple times 
+    [ ] Perf:   3 ms    AppStyles.module.css 
+    [ ] Add a scalable option to put the site inside a page scaler
+    [ ] google-like ajax functionality  in the search tool
+        - Remember user searches on the widget
+        - Do a background search 
+    [ ] On the server, periodically purge empty folders and 0-length files
+    [ ] In the settings page, report recent errors - switch console.log in error locations to report errors
     [ ] Perf Mobx is expensive (~100ms to render from widget updates)
         https://medium.com/workday-engineering/react-performance-and-mobx-b038085ecb72
         [ ] For batching:
