@@ -47,9 +47,11 @@ WIDGET IDEAS
         [x] The observable picked actions is not getting reserialized as observable
         
     [x] Check out the makeobservable decorator: https://github.com/login/oauth/authorize?client_id=7e0a3cd836d3e544dbd9&redirect_uri=https%3A%2F%2Fgist.github.com%2Fauth%2Fgithub%2Fcallback%3Freturn_to%3Dhttps%253A%252F%252Fgist.github.com%252FMichealPearce%252F56418455bcd3ceb2e666fc097b4e0602&response_type=code&state=3d1204e7f73493dc6ed13bb7ee79ccc54627724c35562e666feece07eeb22e41
-    [ ] Fix white border in hompag
-    [ ] Perf: 100 ms    TinyMCE Theme loading  
-    [ ] Perf:   ? ms    TinyMCE repeat loading of .css files
+    [x] Fix white border in hompag
+
+    [ ] Bug: Saving the page from prod uses shortened names and prevents reloading
+        - https://stackoverflow.com/questions/50903065/how-to-disable-webpack-minification-for-classes-names
+        
 
 NEW ==============================
 
@@ -69,6 +71,9 @@ IMPORTANT ==============================
         [ ] Make a template file for secrets
    
 BACKLOG ==============================
+    [ ] Perf: consider memoizing components
+    [ ] Perf: Consider compressing server traffic
+    [ ] Perf: try removing all inline function devs (they always defeat the stale check)
     [ ] Perf:  15 ms    loadWidgetContent - operation is serial
     [ ] Perf:  27 ms    PageControl- Combobox(5.6), widgetConfigurator(4) 
     [ ] Weather watcher
@@ -96,6 +101,8 @@ BACKLOG ==============================
     [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
 
 MAYBE NEVER ==============================
+    [ ] Perf:   ? ms    TinyMCE repeat loading of .css files
+    [ ] Perf: 100 ms    Replace Tinymce with your own editor 
     [ ] Perf:   ?       web sockets seem to load multiple times 
     [ ] Perf:   3 ms    AppStyles.module.css 
     [ ] Add a scalable option to put the site inside a page scaler
