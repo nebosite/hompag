@@ -29,7 +29,7 @@ function promisifySingleStep(command, cwd) {
 
 // Run npm install and npm run build in the given directory
 async function installAndBuild(cwd) {
-    await promisifySingleStep("yarn install", cwd);
+    await promisifySingleStep("npm install", cwd);
     await promisifySingleStep("npm run build", cwd);
 }
 
