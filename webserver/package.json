@@ -2,7 +2,7 @@
   "name": "hompag-server",
   "version": "0.3.0",
   "description": "hompag client",
-  "main": "dist/index_testing.js",
+  "main": "dist/index.js",
   "scripts": {
     "startdev": "genversion src/version.js && env-cmd -f .env.dev nodemon src/index.ts",
     "start": "genversion src/version.js && node dist/index.js",
