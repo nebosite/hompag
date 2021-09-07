@@ -40,6 +40,7 @@ const searches:SearchConfig[] = [
 
 export class WidgetSearchData extends WidgetModelData
 {
+    __t = "WidgetSearchData" // Help the serializer know the type when code is minimized
     @observable private _searchType: string = searches[0].name
     get searchType() {return this._searchType}
     set searchType(value:string) { 

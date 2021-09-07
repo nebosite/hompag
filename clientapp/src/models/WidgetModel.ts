@@ -17,6 +17,7 @@ export class WidgetModelData {
 }
 
 export class WidgetModel {
+    __t = "WidgetModel" // Help the serializer know the type when code is minimized
     id: string 
     version: number = -999;
     alias: string = null

@@ -9,6 +9,7 @@ import WidgetBase from "./WidgetBase";
 
 export class WidgetRichTextData extends WidgetModelData
 {
+    __t = "WidgetRichTextData" // Help the serializer know the type when code is minimized
     // Body should not be observable because it is only used for writing.  
     // THe body state is kept by the editor itself
     private _body: string;

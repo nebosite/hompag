@@ -27,6 +27,7 @@ export function handleQueries(logger:ILogger) {
     return async (req: Request, res: Response) => {  
         await safeSend(res, logger, req.url, async () => {          
             const type = req.query.type
+            logger.logLine(`Running query: ${type}`)
             switch(type) {
                 case "widgetversions":  return runItemQuery(req.query.ids as string, hompagItemType.widget)
                 case "pageversions":    return runItemQuery(req.query.ids as string, hompagItemType.page)

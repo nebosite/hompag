@@ -14,6 +14,7 @@ import { registerWidget, WidgetType } from "widgetLibrary";
 // session to session.  ie: permanent changes
 export class Widget_TEMPLATE_Data extends WidgetModelData
 { 
+    __t = "Widget_TEMPLATE_Data" // Help the serializer know the type when code is minimized
     @observable private _myThing: string = "defaultValue"
     get myThing() {return this._myThing}
     set myThing(value:string) { 

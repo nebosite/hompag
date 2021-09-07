@@ -36,6 +36,7 @@ export const colorThemes = [
 // -------------------------------------------------------------------
 export class PageModel
 {
+    __t = "PageModel" // Help the serializer know the type when code is minimized
     name: string;
     version: number = -999;
     @observable widgetContainers: WidgetContainer[] = observable<WidgetContainer>([])

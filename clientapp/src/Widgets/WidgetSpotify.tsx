@@ -15,6 +15,7 @@ import WidgetBase from "./WidgetBase";
 
 export class SpotifyData extends WidgetModelData
 {
+    __t = "SpotifyData" // Help the serializer know the type when code is minimized
 
     // @observable _state_playdata: SpotifyPlayerResponse = null
     // get state_playdata() {return this._state_playdata}

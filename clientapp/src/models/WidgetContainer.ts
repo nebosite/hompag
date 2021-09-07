@@ -9,6 +9,7 @@ registerType("WidgetContainer", bag => new WidgetContainer())
 // Generic class for holding widget data
 // -------------------------------------------------------------------
 export class WidgetContainer {
+    __t = "WidgetContainer" // Help the serializer know the type when code is minimized
     @observable widgetId: string = undefined; 
     @observable x: number;
     @observable y: number;

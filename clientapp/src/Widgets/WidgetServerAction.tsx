@@ -17,6 +17,7 @@ import WidgetBase from "./WidgetBase";
 
 export class WidgetServerActionData extends WidgetModelData
 { 
+    __t = "WidgetServerActionData" // Help the serializer know the type when code is minimized
     @observable private _pickedActions: string[] = observable([])
     get pickedActions() {return this._pickedActions}
 

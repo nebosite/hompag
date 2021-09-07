@@ -32,6 +32,7 @@ export interface ColorTheme {name: string, colors: string[]}
 // -------------------------------------------------------------------
 export class ColorTool
 {
+    __t = "ColorTool" // Help the serializer know the type when code is minimized
     colorTheme: ColorTheme
     _colors: {r:number, g:number, b:number}[]
 

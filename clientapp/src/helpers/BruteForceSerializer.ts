@@ -86,10 +86,13 @@ export default class BruteForceSerializer
         if(lookup.has(object)) return `~~${lookup.get(object)}`
 
         // Each new object has an id and a type name
+        // Obects can define __t as the typename if they want to avoid problems with minification
         const output:any = {
             __i: this._objectCount++,
-            __t: object.constructor?.name ?? "__unk__"
+            __t: object.__t ?? object.constructor?.name ?? "__unk__"
         };
+
+        console.log(`SERIALIZE: ${object.__t}, ${object.constructor?.name}, ${output.__t}`)
 
         // Remember that we have seen this object
         lookup.set(object,output.__i);
