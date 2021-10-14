@@ -6,6 +6,7 @@ import WidgetSearch from "Widgets/WidgetSearch";
 import WidgetSpotify from "Widgets/WidgetSpotify"
 import WidgetServerAction from "Widgets/WidgetServerAction";
 import Widget_TEMPLATE_ from "Widgets/_WidgetTEMPLATE";
+import WidgetPinger from "Widgets/WidgetPinger";
 
 // -------------------------------------------------------------------
 // registerWidgets - This is where we expose widget types to the framework
@@ -18,6 +19,7 @@ export function registerWidgets()
     WidgetRichText.register();
     WidgetSearch.register();
     WidgetServerAction.register();
+    WidgetPinger.register();
 }
 
 export enum WidgetType
@@ -29,6 +31,7 @@ export enum WidgetType
     Search = "Search",
     Spotify = "Spotify",
     ServerAction = "ServerAction",
+    Pinger = "Pinger",
 }
 
 
@@ -54,6 +57,6 @@ export function renderWidget(type: WidgetType, context: WidgetContainer)
 {
     const render = knownComponents.get(type);
     if(!render) return null;
-    return render(context);
+    return render(context); 
 }
 

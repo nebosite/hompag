@@ -1,4 +1,5 @@
 WIDGET IDEAS
+    - Ambient Sound
     - Time widget
         - Custom time zones, inclusing local, UTC
         - time converter - convert local->UTC and UTC->local at the same time
@@ -49,11 +50,12 @@ WIDGET IDEAS
     [x] Check out the makeobservable decorator: https://github.com/login/oauth/authorize?client_id=7e0a3cd836d3e544dbd9&redirect_uri=https%3A%2F%2Fgist.github.com%2Fauth%2Fgithub%2Fcallback%3Freturn_to%3Dhttps%253A%252F%252Fgist.github.com%252FMichealPearce%252F56418455bcd3ceb2e666fc097b4e0602&response_type=code&state=3d1204e7f73493dc6ed13bb7ee79ccc54627724c35562e666feece07eeb22e41
     [x] Fix white border in hompag
 
-    [ ] Bug: Saving the page from prod uses shortened names and prevents reloading
+    [x] Bug: Saving the page from prod uses shortened names and prevents reloading
         - https://stackoverflow.com/questions/50903065/how-to-disable-webpack-minification-for-classes-names
         
 
 NEW ==============================
+    [ ] hompag - tooltip the links
 
 
         

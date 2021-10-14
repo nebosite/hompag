@@ -20,6 +20,7 @@ export const registerGlobalItem = (key: string, value: any) =>
 export class hompagTypeHelper implements ITypeHelper
 {
     constructType(typeName: string): object {
+        if(!typeName) throw Error("Missing type name.  Did you remember to call the register() function from the widgetLibrary?")
         if(knownTypes.has(typeName)) {
             const output = knownTypes.get(typeName)(globalItems);
             if(!(output as any).__t) {
@@ -27,7 +28,9 @@ export class hompagTypeHelper implements ITypeHelper
             }
             return output;
         }
-        else throw Error(`Tried to construct unknown type: ${typeName}`)
+        else {
+            throw Error(`Tried to construct unknown type: ${typeName}.  Probably an incorrect call to register Widget`)
+        }
     }
 
     shouldStringify(typeName: string, propertyName: string, object: any): boolean {

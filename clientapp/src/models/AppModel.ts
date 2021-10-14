@@ -249,7 +249,7 @@ export class AppModel {
     }
 
     // -------------------------------------------------------------------
-    // loadWidget - restore widget contents from server 
+    // loadWidgetContent - restore widget contents from server 
     // -------------------------------------------------------------------
     async loadWidgetContent(widget: WidgetModel, useCache: boolean = true)
     {
@@ -264,11 +264,17 @@ export class AppModel {
             if(!loadedWidget) throw Error(`Data was not a Widget: ${response.data}`) 
             let loadedData = loadedWidget.data
 
-            loadedWidget.data = this._typeHelper.constructType(dataTypeForWidgetType(loadedWidget._myType)) as any;
-            Object.assign(loadedWidget.data, loadedData);
-            widget.loadFrom(loadedWidget); 
-            widget.version = response.data.version;
-            //console.log(`Widget loaded: ${widget.id}.${widget.version}`)
+            const dataType = dataTypeForWidgetType(loadedWidget._myType)
+            if(dataType) {
+                loadedWidget.data = this._typeHelper.constructType(dataType) as any;
+                Object.assign(loadedWidget.data, loadedData);
+                widget.loadFrom(loadedWidget); 
+                widget.version = response.data.version;
+                //console.log(`Widget loaded: ${widget.id}.${widget.version}`)
+            }
+            else {
+                console.error(`Could not find datatype for ${loadedWidget._myType}`)
+            }
         }
         else if(response.errorMessage) {
             console.log(`No data for ${widget.id}:  ${response.errorMessage}`)

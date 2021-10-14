@@ -8,19 +8,11 @@ import { registerWidget, WidgetType } from "widgetLibrary";
 import WidgetBase from "./WidgetBase";
 
 
-// TODO: replace _TEMPLATE_ with the widget name
-
-// TODO: in widgetLibrary:
-//      1. Add the widget name to the WidgetType Enumb
-//      2. Call your widet's static register function in registerWidgets()
-//      3. At this point, you should be able to add this new widget to your page
-//      4. Check in your code then do the rest of the TODOs
-
 // TODO: Use this class to store data that should be persisted from
 // session to session.  ie: permanent changes
-export class Widget_TEMPLATE_Data extends WidgetModelData
+export class WidgetPingerData extends WidgetModelData
 { 
-    __t = "Widget_TEMPLATE_Data" // Help the serializer know the type when code is minimized
+    __t = "WidgetPingerData" // Help the serializer know the type when code is minimized
     @observable private _myThing: string = "defaultValue"
     get myThing() {return this._myThing}
     set myThing(value) { 
@@ -41,7 +33,7 @@ export class Widget_TEMPLATE_Data extends WidgetModelData
 //       such as an observable array, the
 //       deserializer needs to be taught about how to deserialize them.
 // registerProperty(
-//      "Widget_TEMPLATE_Data", // Name of the data class
+//      "WidgetPingerData", // Name of the data class
 //      "someCollection",       // Name of the property
 //      (type,propertyName,objectFromJson) => {
 //          return observable(objectFromJson as MyCollectionType[])
@@ -49,7 +41,7 @@ export class Widget_TEMPLATE_Data extends WidgetModelData
 
 // TODO: Use this class to store data that should not be persisted, but should be shared
 // with widgets of the same instance on other pages.  
-export class _TEMPLATE_TransientState
+export class PingerTransientState
 {
     myState:    ObservableState<string>;
 
@@ -68,17 +60,17 @@ export class _TEMPLATE_TransientState
 // Component
 // --------------------------------------------------------------------------------------------------------------------------------------
 @observer
-export default class Widget_TEMPLATE_ 
+export default class WidgetPinger 
 extends WidgetBase<{context: WidgetContainer}> 
 {    
-    transientState: _TEMPLATE_TransientState;
+    transientState: PingerTransientState;
 
     // -------------------------------------------------------------------
     // register
     // -------------------------------------------------------------------
     static register() {
         // eslint-disable-next-line react/jsx-pascal-case
-        registerWidget(WidgetType._TEMPLATE_, c => <Widget_TEMPLATE_ context={c} />, "Widget_TEMPLATE_Data", () => new Widget_TEMPLATE_Data())
+        registerWidget(WidgetType.Pinger, c => <WidgetPinger context={c} />, "WidgetPingerData", () => new WidgetPingerData())
     }
 
     // -------------------------------------------------------------------
@@ -87,7 +79,7 @@ extends WidgetBase<{context: WidgetContainer}>
     constructor(props: {context: WidgetContainer})
     {
         super(props);
-        this.transientState = new _TEMPLATE_TransientState(props.context.widgetId, props.context.getStateMaker())
+        this.transientState = new PingerTransientState(props.context.widgetId, props.context.getStateMaker())
     }
 
     // -------------------------------------------------------------------
@@ -95,7 +87,7 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     renderContent() {
         const {context} = this.props;
-        const data = this.props.context.ref_widget.data as Widget_TEMPLATE_Data; 
+        const data = this.props.context.ref_widget.data as WidgetPingerData; 
         const style = {
             background: context.colorTheme.color(ColorIndex.Special,ColorValue.V7_ExtraBright),
             color: context.colorTheme.color(ColorIndex.Highlight,ColorValue.V2_Dark),
