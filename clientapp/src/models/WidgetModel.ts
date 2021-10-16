@@ -2,6 +2,7 @@ import { ThrottledAction } from "helpers/ThrottledAction";
 import { action, makeObservable, observable } from "mobx";
 import { WidgetType } from "widgetLibrary";
 import { AppModel } from "./AppModel";
+import { registerType } from "./hompagTypeHelper";
 
 
 export class WidgetModelData {
@@ -47,6 +48,11 @@ export class WidgetModel {
     private ref_App: AppModel
     private ref_saveThrottler = new ThrottledAction(500);
     private state_isLoading = false;
+
+    static register() {
+        registerType("WidgetModelData", ()=> new WidgetModelData())
+        registerType("WidgetModel", (bag)=> new WidgetModel(bag.get("theApp"),""))
+    }
 
     // -------------------------------------------------------------------
     // ctor 

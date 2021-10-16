@@ -7,12 +7,14 @@ import WidgetSpotify from "Widgets/WidgetSpotify"
 import WidgetServerAction from "Widgets/WidgetServerAction";
 import Widget_TEMPLATE_ from "Widgets/_WidgetTEMPLATE";
 import WidgetPinger from "Widgets/WidgetPinger";
+import { WidgetModel } from "models/WidgetModel";
 
 // -------------------------------------------------------------------
 // registerWidgets - This is where we expose widget types to the framework
 // -------------------------------------------------------------------
 export function registerWidgets()
 {
+    WidgetModel.register();
     Widget_TEMPLATE_.register();
     WidgetPicker.register();
     WidgetSpotify.register();
