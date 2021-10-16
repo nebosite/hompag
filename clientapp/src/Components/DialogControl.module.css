@@ -1,0 +1,10 @@
+.dialogControl {
+    font-size: 80%;
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    z-index: 2;
+    border: 2px solid black;
+    box-shadow: 5px 5px 10px #00000090;
+    padding: 10px;
+}
