@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import { ServerConfigType } from "hompag-common";
 import { doNothing } from "../helpers/asyncHelper";
 import { PageCache } from "../models/PageCache";
 import { hompagItemType, IItemStore, ItemReturn } from "../models/ServerModel";
@@ -29,6 +30,12 @@ export class MockStore implements IItemStore
         this.calls.push(`storeItem(${itemType},${id},${version},${data})`)
         await doNothing(5);
     }
+    getConfig(configType: ServerConfigType): Promise<string> {
+        throw new Error("Method not implemented.");
+    }
+
+    
+
 }
 
 const createItems = () => {
