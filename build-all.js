@@ -35,6 +35,7 @@ async function installAndBuild(cwd) {
 
 // Main work
 (async function() {
+    await installAndBuild('./common');
     await installAndBuild('./clientapp');
     await installAndBuild('./webserver');
 })();
