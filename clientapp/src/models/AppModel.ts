@@ -42,6 +42,11 @@ export interface ItemChange
     version: number;
 }
 
+interface PostResponse
+{
+    data: any;
+    errorMessage: string;
+}
 
 
 // -------------------------------------------------------------------
@@ -82,6 +87,23 @@ export class AppModel {
         },1)
 
         setTimeout(this.validateLocalPageVersion,500)
+    }
+
+    // -------------------------------------------------------------------
+    // addMessageListener
+    // -------------------------------------------------------------------
+    addMessageListener(type: string, listener: (data: any)=>void) {
+        this._dataChangeListener.addListener(type, listener);
+    }
+
+    // -------------------------------------------------------------------
+    // post - post a message to the server
+    // -------------------------------------------------------------------
+    post = async (api: string, body: any) => {
+        const response = await this._api.restPost<PostResponse>(api, JSON.stringify(body))
+        if(response.errorMessage) {
+            console.error(response.errorMessage)
+        }
     }
 
     // -------------------------------------------------------------------

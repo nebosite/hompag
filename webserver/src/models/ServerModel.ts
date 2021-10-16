@@ -6,6 +6,7 @@ import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
 import { ServerConfigType, ServerMessageType, StatePacket } from "hompag-common";
 import {exec} from "child_process"
+import { PingModel } from "./PingModel";
 
 
 interface ActionDetail
@@ -62,6 +63,7 @@ export class ServerModel {
     private _listeners = new Map<string, IListener>();
 
     spotify: SpotifyModel
+    pinger: PingModel
 
     //------------------------------------------------------------------------------------------
     // ctor
@@ -76,6 +78,7 @@ export class ServerModel {
             this.sendAlert({type: ServerMessageType.transient_change, data: data} )
         }
         this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret, spotifyAlerter);
+        this.pinger = new PingModel(logger, this.sendAlert);
     }
 
     //------------------------------------------------------------------------------------------
@@ -165,7 +168,7 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // sendAlert
     //------------------------------------------------------------------------------------------
-    sendAlert(message: { type: string; data: any; }) {
+    sendAlert = (message: { type: string; data: any; })  => {
         this._listeners.forEach(l => l.send(message))
     }
 

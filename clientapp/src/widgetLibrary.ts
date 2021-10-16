@@ -46,7 +46,7 @@ export function registerWidget(
     type: WidgetType, 
     render:(context: WidgetContainer) => JSX.Element,
     dataTypeName: string | undefined,  
-    dataTypeFactory: () => any | undefined)
+    dataTypeFactory:  (itemBag: Map<string,any>) => any | undefined)
 {
     knownComponents.set(type, render);
     if(dataTypeName){

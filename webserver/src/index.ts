@@ -15,6 +15,7 @@ import { handleQueries } from './apis/query';
 import { handleSpotifyCommand } from './apis/spotify';
 import { handleLoginResponse } from './apis/loginResponder';
 import { executeAction, getActionList } from './apis/actions';
+import { handlePingCommand } from './apis/ping';
 
 
 // ---------------------------------------------------------------------------------
@@ -78,8 +79,10 @@ app.get("/api/actions/list", getActionList(logger))
 app.put("/api/actions/execute/:actionName", executeAction(logger))
 
 app.post("/api/spotify/:command", handleSpotifyCommand(logger))
-
 app.get("/api/loginresponder/:app", handleLoginResponse(logger))
+
+app.post("/api/ping", handlePingCommand(logger))
+
 
 app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger)); 
 

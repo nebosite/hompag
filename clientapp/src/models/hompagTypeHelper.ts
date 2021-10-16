@@ -24,7 +24,7 @@ export class hompagTypeHelper implements ITypeHelper
         if(knownTypes.has(typeName)) {
             const output = knownTypes.get(typeName)(globalItems);
             if(!(output as any).__t) {
-                console.error(`Contructed type '${typeName}' does not have a __t property.  For the serializer to work correctly, the __t property should be set to the typename.`)
+                console.error(`Type is not serializable without __t property.  Add __t="${typeName}" property to type '${typeName}' `)
                 return output as any
             }
             return output;
