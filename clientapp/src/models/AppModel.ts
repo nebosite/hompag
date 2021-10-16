@@ -260,21 +260,9 @@ export class AppModel {
         let response =  await this._api.restGet<ItemRequestResponse>(`widgets/${widget.id}`, useCache);
         if(response.data)
         {
-            const loadedWidget = JSON.parse(response.data.data);
-            if(!loadedWidget) throw Error(`Data was not a Widget: ${response.data}`) 
-            let loadedData = loadedWidget.data
-
-            const dataType = dataTypeForWidgetType(loadedWidget._myType)
-            if(dataType) {
-                loadedWidget.data = this._typeHelper.constructType(dataType) as any;
-                Object.assign(loadedWidget.data, loadedData);
-                widget.loadFrom(loadedWidget); 
-                widget.version = response.data.version;
-                //console.log(`Widget loaded: ${widget.id}.${widget.version}`)
-            }
-            else {
-                console.error(`Could not find datatype for ${loadedWidget._myType}`)
-            }
+            const loadedWidget = this._serializer.parse<WidgetModel>(response.data.data);
+            widget.loadFrom(loadedWidget); 
+            widget.version = response.data.version;
         }
         else if(response.errorMessage) {
             console.log(`No data for ${widget.id}:  ${response.errorMessage}`)
