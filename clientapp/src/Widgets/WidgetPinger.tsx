@@ -35,6 +35,14 @@ class PingThing {
     get span() {return this.state_span}
     set span(value) {action(()=>{this.state_span = value})()}
 
+    @observable private state_latency = 0;
+    get latency() {return this.state_latency}
+    set latency(value) {action(()=>{this.state_latency = value})()}
+
+    @observable private state_error: any;
+    get error() {return this.state_error}
+    set error(value) {action(()=>{this.state_error = value})()}
+
     get spanText() {
         let t = this.span;
         const days = Math.floor(t / (24 * 3600 * 1000))
@@ -52,6 +60,14 @@ class PingThing {
     constructor() {
         makeObservable(this);
     }
+}
+
+interface ServerPingInfo {
+    id: number, 
+    status: string, 
+    span: number,
+    latency?: number,
+    error?: any
 }
 
 export class WidgetPingerData extends WidgetModelData
@@ -77,11 +93,17 @@ export class WidgetPingerData extends WidgetModelData
     constructor(appModel: AppModel) {
         super();
         this.ref_appModel = appModel
-        appModel.addMessageListener("Ping", (data: {id: number, status: string, span: number}) => {
+        appModel.addMessageListener("Ping", (data: ServerPingInfo) => {
             const target = this.pingTargets.find(t => t._id === data.id);
             if(target) {
                 target.pingStatus = data.status;
-                target.span = data.span
+                target.span = data.span;
+                target.latency = data.latency ?? 0
+                target.error = data.error
+
+                if(data.error) {
+                    console.log(`Ping error on ${target.url}: ${JSON.stringify(data.error)} `)
+                }
             }
         })
         makeObservable(this);
@@ -102,6 +124,9 @@ export class WidgetPingerData extends WidgetModelData
         if(!this.pingTargets.find(p => p._id === this.editPing._id))
         {
             this.updateMe(()=>{this.pingTargets.push(this.editPing)})
+        }
+        else {
+            this.updateMe(()=>{})
         }
         this.editPing = undefined 
     } 
@@ -216,6 +241,7 @@ extends WidgetBase<{context: WidgetContainer}>
                         }
                         return <Row key={p._id} style={itemStyle} onClick={()=>addPing(p)}>
                             <div style={{width: "150px"}}>{p.name}</div>
+                            <div style={{width: "50px"}}>{p.latency}ms</div>
                             <div style={{width: "50px"}}>{p.spanText}</div>
                         </Row>
                     })

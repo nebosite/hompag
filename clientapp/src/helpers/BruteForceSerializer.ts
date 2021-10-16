@@ -92,7 +92,7 @@ export default class BruteForceSerializer
             __t: object.__t ?? object.constructor?.name ?? "__unk__"
         };
 
-        console.log(`SERIALIZE: ${object.__t}, ${object.constructor?.name}, ${output.__t}`)
+        //console.log(`SERIALIZE: ${object.__t}, ${object.constructor?.name}, ${output.__t}`)
 
         // Remember that we have seen this object
         lookup.set(object,output.__i);

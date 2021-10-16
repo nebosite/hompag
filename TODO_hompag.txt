@@ -54,7 +54,7 @@ WIDGET IDEAS
         - https://stackoverflow.com/questions/50903065/how-to-disable-webpack-minification-for-classes-names
         
 
-    [ ] Ping Widget
+    [x] Ping Widget
         [x] Click to add a new ping
             Name, URL, optional regexp, option auth header
         [x] Send ping requests to server on startup
@@ -64,8 +64,8 @@ WIDGET IDEAS
             - THis is tricky because pings can come in at any time and we want to share them
             - pinger could have a way to just generally listen for pings and do an update 
               when the id is of one we care about
-        [ ] Click x to delete a ping with confirmation dialog
-        [ ] Click pencil on ping to edit it
+        [x] Click x to delete a ping with confirmation dialog
+        [x] Click pencil on ping to edit it
         
 
 NEW ==============================
