@@ -1,4 +1,3 @@
-import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { ObservableState, TransientStateHandler } from "models/TransientState";
@@ -95,10 +94,10 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     renderContent() {
         const {context} = this.props;
-        const data = this.props.context.ref_widget.data as Widget_TEMPLATE_Data; 
+        const data = this.props.context.ref_widget.data as Widget_TEMPLATE_Data;  
         const style = {
-            background: context.colorTheme.color(ColorIndex.Special,ColorValue.V7_ExtraBright),
-            color: context.colorTheme.color(ColorIndex.Highlight,ColorValue.V2_Dark),
+            background: context.colorTheme.color(context.backGroundColorIndex, context.backGroundColorValue),
+            color: context.colorTheme.color(context.foregroundColorIndex, context.foregroundColorValue),
         }
         return (
             <div style={style}>

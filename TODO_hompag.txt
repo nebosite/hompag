@@ -44,31 +44,10 @@ WIDGET IDEAS
 ==============================================================================================
 
 
-    [x] New Widget: Shell Commander - run shell commands via the server
-        [x] The observable picked actions is not getting reserialized as observable
-        
-    [x] Check out the makeobservable decorator: https://github.com/login/oauth/authorize?client_id=7e0a3cd836d3e544dbd9&redirect_uri=https%3A%2F%2Fgist.github.com%2Fauth%2Fgithub%2Fcallback%3Freturn_to%3Dhttps%253A%252F%252Fgist.github.com%252FMichealPearce%252F56418455bcd3ceb2e666fc097b4e0602&response_type=code&state=3d1204e7f73493dc6ed13bb7ee79ccc54627724c35562e666feece07eeb22e41
-    [x] Fix white border in hompag
-
-    [x] Bug: Saving the page from prod uses shortened names and prevents reloading
-        - https://stackoverflow.com/questions/50903065/how-to-disable-webpack-minification-for-classes-names
-        
-
-    [x] Ping Widget
-        [x] Click to add a new ping
-            Name, URL, optional regexp, option auth header
-        [x] Send ping requests to server on startup
-        [x] Server pings every minute with jitter
-        [x] Server only pings for 8 hours - pings should naturally recur as the page is loaded
-        [x] pings reported through sockets
-            - THis is tricky because pings can come in at any time and we want to share them
-            - pinger could have a way to just generally listen for pings and do an update 
-              when the id is of one we care about
-        [x] Click x to delete a ping with confirmation dialog
-        [x] Click pencil on ping to edit it
         
 
 NEW ==============================
+    [ ] The dialogcontrol should cover the parent window so overdrags to create new controls
     [ ] hompag - tooltip the links
 
 
@@ -159,6 +138,29 @@ MAYBE NEVER ==============================
 
 
 -- DONE ---------------------------------------------------------------------
+
+    [x] New Widget: Shell Commander - run shell commands via the server
+        [x] The observable picked actions is not getting reserialized as observable
+        
+    [x] Check out the makeobservable decorator: https://github.com/login/oauth/authorize?client_id=7e0a3cd836d3e544dbd9&redirect_uri=https%3A%2F%2Fgist.github.com%2Fauth%2Fgithub%2Fcallback%3Freturn_to%3Dhttps%253A%252F%252Fgist.github.com%252FMichealPearce%252F56418455bcd3ceb2e666fc097b4e0602&response_type=code&state=3d1204e7f73493dc6ed13bb7ee79ccc54627724c35562e666feece07eeb22e41
+    [x] Fix white border in hompag
+
+    [x] Bug: Saving the page from prod uses shortened names and prevents reloading
+        - https://stackoverflow.com/questions/50903065/how-to-disable-webpack-minification-for-classes-names
+        
+
+    [x] Ping Widget
+        [x] Click to add a new ping
+            Name, URL, optional regexp, option auth header
+        [x] Send ping requests to server on startup
+        [x] Server pings every minute with jitter
+        [x] Server only pings for 8 hours - pings should naturally recur as the page is loaded
+        [x] pings reported through sockets
+            - THis is tricky because pings can come in at any time and we want to share them
+            - pinger could have a way to just generally listen for pings and do an update 
+              when the id is of one we care about
+        [x] Click x to delete a ping with confirmation dialog
+        [x] Click pencil on ping to edit it
 
     [x] Generic method for registering a widget       
     [x] Bug: Cached items are overwriting newer data on the server
