@@ -5,7 +5,7 @@ export const hompag_config = {
     // Ideally, this folder should be a cloud-backed folder so it replicates
     // to your other machines.  Personally, I use a dropbox folder like this:  
     // /path_to_my/dropbox/settingstuff/hompag
-    localStoreLocation: "_path_to_folder_"
+    localStoreLocation: "_full_path_to_folder_"
     spotify: {
         // To get spotify id and secret, go to https://developer.spotify.com/dashboard
         // Register your application with the following URLs whitelisted:

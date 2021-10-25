@@ -1,4 +1,26 @@
 
 .pingerControl {
-    background: "red"
+    background: "red";
+    font-size:  80%;
+    height: 100%;
 }
+
+.pingColumn {
+    flex-grow: 1;  
+    white-space: nowrap;
+    min-width: 40px;
+}
+
+.pingNameColumn {
+    width: 120px;
+
+}
+
+.latencyColumn {
+    width: 40px;
+
+}
+
+.uptimeColumn {
+
+}   

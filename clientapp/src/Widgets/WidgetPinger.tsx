@@ -239,11 +239,13 @@ extends WidgetBase<{context: WidgetContainer}>
                             case "down": itemStyle = {background: "red", color: "yellow"}; break;
                             case "delayed": itemStyle = {background: "yellow", color: "black"}; break;
                         }
-                        return <Row key={p._id} style={itemStyle} onClick={()=>addPing(p)}>
-                            <div style={{width: "150px"}}>{p.name}</div>
-                            <div style={{width: "50px"}}>{p.latency}ms</div>
-                            <div style={{width: "50px"}}>{p.spanText}</div>
-                        </Row>
+                        return <div key={p._id} onClick={()=>addPing(p)}>
+                                    <Row style={{...itemStyle}} > 
+                                    <div className={`${styles.pingColumn} ${styles.pingNameColumn}`} >{p.name}</div>
+                                    <div className={`${styles.pingColumn} ${styles.latencyColumn}`} >{p.latency}ms</div>
+                                    <div className={`${styles.pingColumn} ${styles.uptimeColumn}`} >{p.spanText}</div>
+                                </Row>
+                            </div> 
                     })
                 }
                 <BsPlusSquare onClick={()=>addPing()} />

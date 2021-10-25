@@ -124,13 +124,11 @@ extends React.Component<WidgetConfiguratorProps, WidgetConfiguratorState>
                 </div>
                 <div>{this.props.customUI}</div>
  
-                <div>
-                    <Row
-                        className={styles.configButton} 
-                        onClick={()=>{
+                <div onClick={()=>{
                             context.deleteMe();
                             action(()=>context.state_configuring = false)()                           
                         }}>
+                    <Row className={styles.configButton} >
                         <div ><MdDeleteForever/></div>  
                         <div style={{marginLeft: "3px"}}>Delete</div>                  
                     </Row>

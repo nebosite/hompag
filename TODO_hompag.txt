@@ -43,27 +43,40 @@ WIDGET IDEAS
 =========== TODO                                                                   ===========
 ==============================================================================================
 
-
+    [ ] Make it work across machines
+        [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
+        [ ] A connected client has a visible page + widgets
+        [ ] Push an update to the client any page or widgets change
+    [ ] Documentation update
+        [ ] Linux: need to run under sudo
+        [ ] If you don't run localhost, then the server runner is not as powerful
+    [ ] The dialogcontrol should cover the parent window so overdrags don't create new controls
+    [ ] Request:  Page chooser
+    [ ] Bug: clicking resize while picking turns off picker
+    [ ] Bug: Sometimes text does not save after typing and there is no newline
+        - Maybe launch a throttle event on each keystroke
+    [ ] Get new secrets for spotify API and weather watcher
+    [ ] put secrets in a config file called secrets.env
+        - Weather API
+        [ ] Make a template file for secrets
+        [ ] Auto-create secrets file
+    [ ] Auto-create config file for actions
+    [ ] Perf: use webworkers to load content
+    [ ] Weather watcher
+        [ ] Weather server:  https://openweathermap.org/api  (API key is a secret)
+        - include space weather http://sws-data.sws.bom.gov.au/
+        - Nasa APIs: https://api.nasa.gov/
+    
         
 
 NEW ==============================
-    [ ] The dialogcontrol should cover the parent window so overdrags to create new controls
-    [ ] hompag - tooltip the links
 
 
         
         
 BUGS ====================================
-    [ ] Bug: clicking resize while picking turns off picker
-    [ ] Bug: Sometimes text does not save after typing and there is no newline
-        - Maybe launch a throttle event on each keystroke
-    [ ] Bug: sometimes take a while to recognize spotify connection
 
 IMPORTANT ==============================
-    [ ] Get new secrets for spotify API and weather watcher
-    [ ] put secrets in a config file called secrets.env
-        - Weather API
-        [ ] Make a template file for secrets
    
 BACKLOG ==============================
     [ ] Perf: consider memoizing components
@@ -71,11 +84,8 @@ BACKLOG ==============================
     [ ] Perf: try removing all inline function devs (they always defeat the stale check)
     [ ] Perf:  15 ms    loadWidgetContent - operation is serial
     [ ] Perf:  27 ms    PageControl- Combobox(5.6), widgetConfigurator(4) 
-    [ ] Weather watcher
-        [ ] Weather server:  https://openweathermap.org/api  (API key is a secret)
-        - include space weather http://sws-data.sws.bom.gov.au/
-        - Nasa APIs: https://api.nasa.gov/
     [ ] Lyrics in Spotify  https://www.lyrics.com/lyrics_api.php
+        [ ] Show as a hovering window off to the side
     [ ] Spotify: Select playlist
         - Should also be able to handle pseudo-playlists
     [ ] Spotify Quiz mode
@@ -88,10 +98,6 @@ BACKLOG ==============================
             [ ] Show % correct for last 10 guesses
             [ ] Once 100%, then just show the artist with a little button to put them back in quiz mode
     [ ] Hovering over links should show url
-    [ ] Make it work across machines
-        [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
-        [ ] A connected client has a visible page + widgets
-        [ ] Push an update to the client any page or widgets change
     [ ] should not try to save any content with null data
     [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
 

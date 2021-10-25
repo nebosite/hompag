@@ -1,19 +1,26 @@
 import React from "react"
 
-export default class Row extends React.Component<{className?: string, style?: any, onClick?: (e: any) => void}>
+export interface RowProps {
+    className?: string
+    style?: React.CSSProperties  
+    wrap?: boolean
+}
+
+export default class Row extends React.Component<RowProps>
 {
     render()
     {
+        const style: React.CSSProperties = {
+            display: "flex",
+            alignItems: "center",
 
-        return <div 
-                className={this.props.className} 
-                style={this.props.style} 
-                onClick={this.props.onClick}> 
-            {
-                React.Children.map(this.props.children, c => {
-                    return <div style={{display:"inline-block"}}>{c}</div>
-                })
-            }
-            </div>
+            ...this.props.style
+        }
+
+        if(this.props.wrap) style.flexWrap = "wrap";
+
+        return <div className={this.props.className} style={style}> 
+            {this.props.children}
+        </div>
     }
-} 
+}  
