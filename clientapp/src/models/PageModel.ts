@@ -48,7 +48,7 @@ export class PageModel
 
     get widgetIds() {return this.widgetContainers.map(c => c.widgetId)}
 
-    private ref_App: AppModel; 
+    ref_App: AppModel; 
 
     // -------------------------------------------------------------------
     // ctor 

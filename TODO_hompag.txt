@@ -43,6 +43,11 @@ WIDGET IDEAS
 =========== TODO                                                                   ===========
 ==============================================================================================
 
+    [x] Add debug widget that shows stats such as:
+            render frequency
+            message frequency/bandwidth
+            memory size
+            
     [ ] Make it work across machines
         [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
         [ ] A connected client has a visible page + widgets

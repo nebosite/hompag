@@ -5,6 +5,7 @@ import styles from '../AppStyles.module.css';
 import { AppModel } from "models/AppModel";
 import { PageControl } from "../Components/PageControl";
 import Row from "../Components/Row";
+import { GLOBALS } from "index";
 
 
 @inject("appModel")
@@ -18,7 +19,7 @@ extends React.Component<{appModel?: AppModel}>
   // -------------------------------------------------------------------
   render() {
     const {appModel} = this.props;
-
+    GLOBALS.renderCount++;
     return ( 
         <div className={styles.mainPage}>
             {appModel.recentError

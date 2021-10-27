@@ -8,6 +8,11 @@ export interface IDataChangeListener {
     readonly closeCode: number;
     send(sendMe: any): void;
     addListener(type: string, listener: (data: any)=>void):void
+    receivedCount: number;
+    receivedBytes: number;
+    sentCount: number;
+    sentBytes: number;
+
 }
 
 // -------------------------------------------------------------------
@@ -20,6 +25,10 @@ export class WebSocketListener implements IDataChangeListener {
     private _websocket: WebSocket;
     private _listeners = new Map<string, ((data: any)=>void)[]>()
 
+    receivedCount = 0
+    receivedBytes = 0;
+    sentCount = 0
+    sentBytes = 0;
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
@@ -42,6 +51,8 @@ export class WebSocketListener implements IDataChangeListener {
 
         this._websocket.addEventListener("message", (ev: { data: string }) => {
             try{
+                this.receivedCount++;
+                this.receivedBytes += ev.data.length;
                 const data = JSON.parse(ev.data) as {type: string, data: any}
                 const type = data.type;
                 if(!type) throw Error("Missing socket data type")
@@ -78,6 +89,8 @@ export class WebSocketListener implements IDataChangeListener {
         let payload = JSON.stringify(sendMe);
         let retries = 8;
         let backoffTime = 50;
+        this.sentCount++;
+        this.sentBytes += payload.length;
 
         const delayedSend = () => {
             if(this._websocket.readyState === 1)

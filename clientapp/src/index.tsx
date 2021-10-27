@@ -10,8 +10,9 @@ import { makeLocalStorage } from "models/LocalStorage";
 import { registerWidgets } from "widgetLibrary";
 const packageInfo = require("../package.json");
 export class GLOBALS {
-     static Version = packageInfo.version;
-     static Title = `hompag ${(process.env.NODE_ENV === "development") ? "DEV": "" } ${GLOBALS.Version} `;
+    static Version = packageInfo.version;
+    static Title = `hompag ${(process.env.NODE_ENV === "development") ? "DEV": "" } ${GLOBALS.Version} `;
+    static renderCount = 0
 }
 
 const autoRedirect = window.sessionStorage.getItem("autoredirect");

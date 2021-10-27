@@ -8,6 +8,7 @@ import WidgetServerAction from "Widgets/WidgetServerAction";
 import Widget_TEMPLATE_ from "Widgets/_WidgetTEMPLATE";
 import WidgetPinger from "Widgets/WidgetPinger";
 import { WidgetModel } from "models/WidgetModel";
+import WidgetDebug from "Widgets/Widget_DEBUG";
 
 // -------------------------------------------------------------------
 // registerWidgets - This is where we expose widget types to the framework
@@ -22,11 +23,13 @@ export function registerWidgets()
     WidgetSearch.register();
     WidgetServerAction.register();
     WidgetPinger.register();
+    WidgetDebug.register();
 }
 
 export enum WidgetType
 {
     _TEMPLATE_ = "_TEMPLATE_",
+    Debug = "Debug",
     Picker = "Picker",
     Editor = "Editor",
     RichText = "RichText",

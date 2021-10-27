@@ -1,0 +1,18 @@
+
+.debugControl {
+    background: "red";
+    font-size:  80%;
+    height: 100%;
+}
+
+.nameColumn {
+    width: 150px;
+
+}
+
+.valueColumn {
+    flex-grow: 1;  
+    white-space: nowrap;
+    min-width: 40px;
+}
+

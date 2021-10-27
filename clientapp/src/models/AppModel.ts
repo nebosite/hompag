@@ -66,6 +66,15 @@ export class AppModel {
     private _savePageThrottler = new ThrottledAction(500)
     private _transientHandlers = new Map<string, Map<string, TransientStateHandler<unknown>[]>>()
 
+    get trafficCounts() {
+        return {
+            sentCount: this._dataChangeListener.sentCount,
+            sentBytes: this._dataChangeListener.sentBytes,
+            receivedCount: this._dataChangeListener.receivedCount,
+            receivedBytes: this._dataChangeListener.receivedBytes,
+        }
+    }
+
     // -------------------------------------------------------------------
     // ctor 
     // -------------------------------------------------------------------
