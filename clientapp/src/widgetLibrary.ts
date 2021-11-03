@@ -5,10 +5,10 @@ import WidgetRichText from "Widgets/WidgetRichText";
 import WidgetSearch from "Widgets/WidgetSearch";
 import WidgetSpotify from "Widgets/WidgetSpotify"
 import WidgetServerAction from "Widgets/WidgetServerAction";
-import Widget_TEMPLATE_ from "Widgets/_WidgetTEMPLATE";
 import WidgetPinger from "Widgets/WidgetPinger";
 import { WidgetModel } from "models/WidgetModel";
 import WidgetDebug from "Widgets/Widget_DEBUG";
+import WidgetStockTicker from "Widgets/WidgetStockTicker";
 
 // -------------------------------------------------------------------
 // registerWidgets - This is where we expose widget types to the framework
@@ -16,7 +16,6 @@ import WidgetDebug from "Widgets/Widget_DEBUG";
 export function registerWidgets()
 {
     WidgetModel.register();
-    Widget_TEMPLATE_.register();
     WidgetPicker.register();
     WidgetSpotify.register();
     WidgetRichText.register();
@@ -24,6 +23,7 @@ export function registerWidgets()
     WidgetServerAction.register();
     WidgetPinger.register();
     WidgetDebug.register();
+    WidgetStockTicker.register();
 }
 
 export enum WidgetType
@@ -37,6 +37,7 @@ export enum WidgetType
     Spotify = "Spotify",
     ServerAction = "ServerAction",
     Pinger = "Pinger",
+    StockTicker = "StockTicker",
 }
 
 

@@ -110,7 +110,7 @@ export class AppModel {
     // -------------------------------------------------------------------
     post = async (api: string, body: any) => {
         const response = await this._api.restPost<PostResponse>(api, JSON.stringify(body))
-        if(response.errorMessage) {
+        if(response?.errorMessage) {
             console.error(response.errorMessage)
         }
     }
