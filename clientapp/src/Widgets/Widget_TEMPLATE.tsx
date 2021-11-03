@@ -1,26 +1,30 @@
 import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
+import { AppModel } from "models/AppModel";
 import { ObservableState, TransientStateHandler } from "models/TransientState";
 import { WidgetContainer } from "models/WidgetContainer";
 import { WidgetModelData } from "models/WidgetModel";
 import { registerWidget, WidgetType } from "widgetLibrary";
 import WidgetBase from "./WidgetBase";
+import styles from './Widget_TEMPLATE_.module.css';
+
 
 
 // TODO: replace _TEMPLATE_ with the widget name
 
 // TODO: in widgetLibrary:
-//      1. Add the widget name to the WidgetType Enumb
+//      1. Add the widget name to the WidgetType Enum
 //      2. Call your widet's static register function in registerWidgets()
-//      3. At this point, you should be able to add this new widget to your page
-//      4. Check in your code then do the rest of the TODOs
+// At this point, you should be able to add this 
+// new widget to your page.  Check in your code then 
+// do the rest of the TODOs
 
 // TODO: Use this class to store data that should be persisted from
 // session to session.  ie: permanent changes
 export class Widget_TEMPLATE_Data extends WidgetModelData
 { 
     __t = "Widget_TEMPLATE_Data" // Help the serializer know the type when code is minimized
-    @observable private _myThing: string = "defaultValue"
+    @observable private _myThing: string = "thing value"
     get myThing() {return this._myThing}
     set myThing(value) { 
         if(value !== this._myThing) this.updateMe(()=>{this._myThing = value})
@@ -30,8 +34,19 @@ export class Widget_TEMPLATE_Data extends WidgetModelData
     // ref_someThing: ComplexReferenceType
     // state_someOtherThing:  AnotherTypeWeDontWantToSerialize
 
-    constructor() {
+    ref_appModel:AppModel;
+
+    constructor(appModel: AppModel) {
         super();
+        this.ref_appModel = appModel
+
+        // TODO: Interact with the appmodel here.  e.g.: listen for server messages
+        // because polling the server from a widget is not efficient.  
+        // 
+        // appModel.addMessageListener("Fooooo", (data: ServerFooInfo) => {
+        //     // Do something with this update from the server
+        // })
+
         makeObservable(this);
     }
 }
@@ -58,7 +73,7 @@ export class _TEMPLATE_TransientState
     constructor(widgetId: string, stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
     {
         this.myState = new ObservableState<string>("myState", stateMaker)
-        this.myState.value = "defaultValue"
+        this.myState.value = "test"
     } 
 }
 
@@ -77,7 +92,12 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     static register() {
         // eslint-disable-next-line react/jsx-pascal-case
-        registerWidget(WidgetType._TEMPLATE_, c => <Widget_TEMPLATE_ context={c} />, "Widget_TEMPLATE_Data", () => new Widget_TEMPLATE_Data())
+        registerWidget(
+            WidgetType._TEMPLATE_, 
+            c => <Widget_TEMPLATE_ context={c} />,
+            "Widget_TEMPLATE_Data", 
+            (bag) => new Widget_TEMPLATE_Data(bag.get("theApp"))
+        )
     }
 
     // -------------------------------------------------------------------
@@ -100,7 +120,7 @@ extends WidgetBase<{context: WidgetContainer}>
             color: context.colorTheme.color(context.foregroundColorIndex, context.foregroundColorValue),
         }
         return (
-            <div style={style}>
+            <div className={styles.myCoolStyle} style={style}>
                 TODO: Put your content here. ({data.myThing}, {this.transientState.myState.value})
             </div> 
         );
