@@ -16,6 +16,7 @@ import { handleSpotifyCommand } from './apis/spotify';
 import { handleLoginResponse } from './apis/loginResponder';
 import { executeAction, getActionList } from './apis/actions';
 import { handlePingCommand } from './apis/ping';
+import { getStockData } from './apis/stock';
 
 
 // ---------------------------------------------------------------------------------
@@ -83,6 +84,7 @@ app.get("/api/loginresponder/:app", handleLoginResponse(logger))
 
 app.post("/api/ping", handlePingCommand(logger))
 
+app.get("/api/stock/:symbol", getStockData(logger))
 
 app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger)); 
 

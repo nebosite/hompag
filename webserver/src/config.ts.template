@@ -14,6 +14,11 @@ export const hompag_config = {
         // http://localhost:3200/api/loginresponder/spotify 
         clientId: "_spotify_clientid_",
         clientSecret: "_spotify_client_secret_"
+    },
+    axios: {
+        // To get axios api key, got to https://rapidapi.com/alphavantage/api/alpha-vantage/pricing
+        //      click subscribe on the basic plan
+        apiKey: '_axios_api_key'
     }
 }
 

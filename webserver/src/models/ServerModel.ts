@@ -7,6 +7,7 @@ import { SpotifyModel } from "./SpotifyModel";
 import { ServerConfigType, ServerMessageType, StatePacket } from "hompag-common";
 import {exec} from "child_process"
 import { PingModel } from "./PingModel";
+import { AxiosStockProvder, StockModel } from "./StockModel";
 
 
 interface ActionDetail
@@ -49,6 +50,9 @@ export interface ServerConfig {
         clientId: string
         clientSecret: string
     }
+    axios: { 
+        apiKey: string
+    }
 }
 
 //------------------------------------------------------------------------------------------
@@ -64,6 +68,7 @@ export class ServerModel {
 
     spotify: SpotifyModel
     pinger: PingModel
+    stock: StockModel
 
     //------------------------------------------------------------------------------------------
     // ctor
@@ -79,6 +84,7 @@ export class ServerModel {
         }
         this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret, spotifyAlerter);
         this.pinger = new PingModel(logger, this.sendAlert);
+        this.stock = new StockModel(new AxiosStockProvder(config.axios, logger))
     }
 
     //------------------------------------------------------------------------------------------
@@ -290,6 +296,13 @@ export class ServerModel {
             }
         },0)
         return null;
+    }
+
+    //------------------------------------------------------------------------------------------
+    // getStockData
+    //------------------------------------------------------------------------------------------
+    getStockData(symbol: string) {
+        return this.stock.getData(symbol)
     }
 }
 

@@ -48,10 +48,30 @@ WIDGET IDEAS
             message frequency/bandwidth
             memory size
             
+    [ ] Stock API setup
+        [x] Get query working
+            https://rapidapi.com/alphavantage/api/alpha-vantage/pricing
+                Click Subscribe
+                    headers: {
+                        'x-rapidapi-host': 'alpha-vantage.p.rapidapi.com',
+                        'x-rapidapi-key': '1d735638abmsh1282630c0d75210p158ba6jsnec110e3e2c54'
+                      }  
+        [ ] Cache and throttle requests
+            - start by getting intraday, daily, and monthly - start with daily and schedule the other ones 
+                to spread out the query times
+            - track last request time
+            - only get daily if last time was more than 24 hours ago
+            - Spread out queries to be < 5/min
+            - don't issue requests outside of trading hours
+            - shrink data size by reporting a single item like this:  [ 22.32,1.33,-3.11,.04] [close,+,-,Mshares]
+        [ ] How to handle splits?
+    [ ] remove the api functions and generalize how we call the server model
+        
     [ ] Make it work across machines
         [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
         [ ] A connected client has a visible page + widgets
         [ ] Push an update to the client any page or widgets change
+        
     [ ] Documentation update
         [ ] Linux: need to run under sudo
         [ ] If you don't run localhost, then the server runner is not as powerful
