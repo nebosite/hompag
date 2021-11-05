@@ -52,10 +52,6 @@ WIDGET IDEAS
         [x] Get query working
             https://rapidapi.com/alphavantage/api/alpha-vantage/pricing
                 Click Subscribe
-                    headers: {
-                        'x-rapidapi-host': 'alpha-vantage.p.rapidapi.com',
-                        'x-rapidapi-key': '1d735638abmsh1282630c0d75210p158ba6jsnec110e3e2c54'
-                      }  
         [ ] Cache and throttle requests
             - start by getting intraday, daily, and monthly - start with daily and schedule the other ones 
                 to spread out the query times
@@ -95,7 +91,7 @@ WIDGET IDEAS
         
 
 NEW ==============================
-
+    [ ] Document how to start hompag from task scheduler
 
         
         

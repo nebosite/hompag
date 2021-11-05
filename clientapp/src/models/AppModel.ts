@@ -48,6 +48,18 @@ interface PostResponse
     errorMessage: string;
 }
 
+export interface StockItem {
+    date: number,
+    result: number[]
+}
+export interface StockResponse {
+    data?: {
+        symbol: string
+        data:StockItem[]
+    }
+    errorMessage?: string;
+}
+
 
 // -------------------------------------------------------------------
 // The AppModel

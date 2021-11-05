@@ -28,6 +28,7 @@ export enum hompagItemType
 {
     page= "page",
     widget = "widget",
+    cache = "cache",
 }
 
 
@@ -53,6 +54,11 @@ export interface ServerConfig {
     axios: { 
         apiKey: string
     }
+}
+
+export interface ICache {
+    getItem(id:string): Promise<ItemReturn | null>
+    storeItem(id: string, data: string): Promise<void>
 }
 
 //------------------------------------------------------------------------------------------
@@ -84,7 +90,13 @@ export class ServerModel {
         }
         this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret, spotifyAlerter);
         this.pinger = new PingModel(logger, this.sendAlert);
-        this.stock = new StockModel(new AxiosStockProvder(config.axios, logger))
+        this.stock = new StockModel(new AxiosStockProvder(config.axios, logger),
+            {
+                getItem: (id) => this._pageAccess.getItem(hompagItemType.cache, `stock_${id}`, 0),
+                storeItem: (id, data) => this._pageAccess.storeItem( hompagItemType.cache, `stock_${id}`, 0, data)
+        
+            }
+        )
     }
 
     //------------------------------------------------------------------------------------------
@@ -302,7 +314,8 @@ export class ServerModel {
     // getStockData
     //------------------------------------------------------------------------------------------
     getStockData(symbol: string) {
-        return this.stock.getData(symbol)
+        this.stock.getData(symbol)
+        return "OK"
     }
 }
 

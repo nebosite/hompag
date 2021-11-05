@@ -33,6 +33,7 @@ export class PageAccessLocalDisk implements IItemStore
         addFolder("page");
         addFolder("widget");
         addFolder("config");
+        addFolder("cache");
     }
 
     // ---------------------------------------------------------------------------------
