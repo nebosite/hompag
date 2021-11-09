@@ -68,7 +68,7 @@ export class WidgetStockTickerData extends WidgetModelData
             //console.log(`Got data: ${JSON.stringify(data)}`)
             const target = this.subscriptions.find(t => t.name.toUpperCase() === data.symbol);
             if(target) {
-                target.history = `${data.data[0].values[0]} (${(new Date(data.data[0].date * 1000)).toString()})` 
+                target.history = `${data.data[0].values[0]}` 
             }
         })
 

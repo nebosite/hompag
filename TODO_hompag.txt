@@ -67,6 +67,7 @@ WIDGET IDEAS
         [x] Always trying to get monthly data - should only happen once
         [x] A full await on stock data causes a timeout error on the client
         [x] track recent requests so we can be accurate about our request rate
+        [ ] Don't query outside of trading hours
         [ ] How to handle splits?
     [ ] remove the api functions and generalize how we call the server model
         
