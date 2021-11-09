@@ -322,7 +322,7 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     async getStockData(symbol: string) {
         this.logger.logLine(`Stock post: ${symbol}`)
-        await this.stock.getData(symbol)
+        this.stock.getData(symbol)
         return "OK" 
     }
 }

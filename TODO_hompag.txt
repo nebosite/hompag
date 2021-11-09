@@ -60,9 +60,13 @@ WIDGET IDEAS
             - Spread out queries to be < 5/min
             - don't issue requests outside of trading hours
             - shrink data size by reporting a single item like this:  [ 22.32,1.33,-3.11,.04] [close,+,-,Mshares]
-        [ ] This is wrong:
+        [x] This is wrong:
             appModel.addMessageListener("StockUpdate", (data: any) => {
             The message is a transient_update, so I need to hook into that
+        [x] For some reason, not seeing current day data
+        [x] Always trying to get monthly data - should only happen once
+        [x] A full await on stock data causes a timeout error on the client
+        [x] track recent requests so we can be accurate about our request rate
         [ ] How to handle splits?
     [ ] remove the api functions and generalize how we call the server model
         
