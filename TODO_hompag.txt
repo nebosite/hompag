@@ -52,7 +52,7 @@ WIDGET IDEAS
         [x] Get query working
             https://rapidapi.com/alphavantage/api/alpha-vantage/pricing
                 Click Subscribe
-        [ ] Cache and throttle requests
+        [x] Cache and throttle requests
             - start by getting intraday, daily, and monthly - start with daily and schedule the other ones 
                 to spread out the query times
             - track last request time
@@ -60,6 +60,9 @@ WIDGET IDEAS
             - Spread out queries to be < 5/min
             - don't issue requests outside of trading hours
             - shrink data size by reporting a single item like this:  [ 22.32,1.33,-3.11,.04] [close,+,-,Mshares]
+        [ ] This is wrong:
+            appModel.addMessageListener("StockUpdate", (data: any) => {
+            The message is a transient_update, so I need to hook into that
         [ ] How to handle splits?
     [ ] remove the api functions and generalize how we call the server model
         

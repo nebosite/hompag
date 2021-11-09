@@ -4,7 +4,7 @@ import { ILogger } from "../helpers/logger";
 import moment from "moment";
 import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
-import { ServerConfigType, ServerMessageType, StatePacket } from "hompag-common";
+import { ServerConfigType, ServerMessageType, StatePacket, StockData } from "hompag-common";
 import {exec} from "child_process"
 import { PingModel } from "./PingModel";
 import { AxiosStockProvder, StockModel } from "./StockModel";
@@ -89,13 +89,20 @@ export class ServerModel {
             this.sendAlert({type: ServerMessageType.transient_change, data: data} )
         }
         this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret, spotifyAlerter);
+
         this.pinger = new PingModel(logger, this.sendAlert);
-        this.stock = new StockModel(new AxiosStockProvder(config.axios, logger),
+        
+        const stockAlerter = (data: StockData) => {
+            logger.logLine(`Push StockUpdate for: ${data.symbol}`)
+            this.sendAlert({type: "StockUpdate", data: data} )
+        }
+
+        this.stock = new StockModel(logger, new AxiosStockProvder(config.axios, logger),
             {
                 getItem: (id) => this._pageAccess.getItem(hompagItemType.cache, `stock_${id}`, 0),
-                storeItem: (id, data) => this._pageAccess.storeItem( hompagItemType.cache, `stock_${id}`, 0, data)
-        
+                storeItem: (id, data) => this._pageAccess.storeItem( hompagItemType.cache, `stock_${id}`, 0, data)      
             }
+            ,stockAlerter
         )
     }
 
@@ -313,9 +320,10 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // getStockData
     //------------------------------------------------------------------------------------------
-    getStockData(symbol: string) {
-        this.stock.getData(symbol)
-        return "OK"
+    async getStockData(symbol: string) {
+        this.logger.logLine(`Stock post: ${symbol}`)
+        await this.stock.getData(symbol)
+        return "OK" 
     }
 }
 

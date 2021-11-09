@@ -84,7 +84,7 @@ app.get("/api/loginresponder/:app", handleLoginResponse(logger))
 
 app.post("/api/ping", handlePingCommand(logger))
 
-app.get("/api/stock/:symbol", getStockData(logger))
+app.post("/api/stock/:symbol", getStockData(logger))
 
 app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger)); 
 

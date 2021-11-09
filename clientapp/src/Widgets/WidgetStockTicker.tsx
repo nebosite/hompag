@@ -12,6 +12,7 @@ import { DialogControl } from "Components/DialogControl";
 import Row from "Components/Row";
 import { AppModel } from "models/AppModel";
 import { CSSProperties } from "react";
+import { StockData } from "hompag-common";
 
 
 export function poll(interval_ms: number, runMe: ()=>void) {
@@ -23,25 +24,17 @@ export function poll(interval_ms: number, runMe: ()=>void) {
 }
 
 export class TickerSubscription {
-    @observable name: string = "TSLA"
+    __t="TickerSubscription"
+    @observable name: string = ""
 
-    @observable  private state_history = 0
+    @observable  private state_history = ""
     get history() {return this.state_history}
     set history(value) {action(()=>{this.state_history = value})()}
     
 
     constructor() {
         makeObservable(this)
-
-        poll(1000, ()=> {
-            this.history++;
-        })
     }
-}
-
-interface ServerStockUpdate {
-    name: string,
-    error?: any,
 }
 
 
@@ -71,16 +64,19 @@ export class WidgetStockTickerData extends WidgetModelData
         super();
         this.ref_appModel = appModel
         makeObservable(this);
-        appModel.addMessageListener("StockUpdate", (data: ServerStockUpdate) => {
-            const target = this.subscriptions.find(t => t.name === data.name);
+        appModel.addMessageListener("StockUpdate", (data: StockData) => {
+            //console.log(`Got data: ${JSON.stringify(data)}`)
+            const target = this.subscriptions.find(t => t.name.toUpperCase() === data.symbol);
             if(target) {
-                if(data.error) {
-                    console.log(`Ping error on ${target.name}: ${JSON.stringify(data.error)} `)
-                }
+                target.history = `${data.data[0].values[0]} (${(new Date(data.data[0].date * 1000)).toString()})` 
             }
         })
 
-        this.subscriptions.push(new TickerSubscription())
+        console.log("setting timout")
+        setTimeout(() => {
+            console.log(`inside timeout: ${this.subscriptions.length}`)
+            this.subscriptions.forEach(s => this.startServerPing(s.name))
+        },1000)
     }
 
     cancelNewTicker(deleteIfPresent: boolean = false) { 
@@ -94,7 +90,8 @@ export class WidgetStockTickerData extends WidgetModelData
     }
 
     acceptNewTicker() { 
-        this.ref_appModel.post("stock", {name:this.editTicker.name})
+        this.editTicker.name = this.editTicker.name.toUpperCase();
+        this.startServerPing(this.editTicker.name)
         if(!this.subscriptions.find(p => p.name === this.editTicker.name))
         {
             this.updateMe(()=>{this.subscriptions.push(this.editTicker)})
@@ -104,6 +101,11 @@ export class WidgetStockTickerData extends WidgetModelData
         }
         this.editTicker = undefined 
     } 
+
+    startServerPing(symbol: string)
+    {
+        this.ref_appModel.post(`stock/${symbol}`, {})
+    }
 
 }
 
@@ -163,6 +165,9 @@ extends WidgetBase<{context: WidgetContainer}>
     {
         super(props);
         this.transientState = new StockTickerTransientState(props.context.widgetId, props.context.getStateMaker())
+
+        const data = props.context.ref_widget.data as WidgetStockTickerData; 
+        data.subscriptions.forEach(s => data.startServerPing(s.name))
     }
 
     // -------------------------------------------------------------------
@@ -211,7 +216,7 @@ extends WidgetBase<{context: WidgetContainer}>
                 }
 
                 {
-                    data.subscriptions.map(s => renderTicker(s))
+                    data.subscriptions.map(s => <div key={s.name}>{renderTicker(s)}</div>)
                 }
                 <BsPlusSquare onClick={()=>addTicker()} />
 
