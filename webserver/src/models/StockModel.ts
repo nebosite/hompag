@@ -109,7 +109,6 @@ export class AxiosStockProvder implements IStockProvider {
             this.logger.logLine(`Collecting axios data for ${symbol}:${options.params.interval} `)
             while(true) {
                 await this.throttle(8);
-                console.log(`Calling ${symbol}:${options.params.interval}`)
                 const stockResponse = await axios.request(options)
                     .catch((err: any) => {
                         if(`${err}`.indexOf("code 429") === -1)
@@ -202,7 +201,16 @@ export class StockModel
         // Just report what's in the cache if it has been less than 5 min
         if(cachedData) {
             const timeSinceLastCheck = (Date.now() - cachedData.data[0].date * 1000)
-            if(timeSinceLastCheck < 300000) {
+            const date = new Date()
+            const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+            const est = new Date(utc + (3600000* -5 ));
+            const outsideTradingHours = 
+                   est.getDay() === 0 
+                || est.getDay() === 6
+                || est.getHours() < 9
+                || est.getHours() > 17
+
+            if(timeSinceLastCheck < 300000 || outsideTradingHours) {
                 this.logger.logLine(`Reporting cached data for ${symbol}`)
                 if(!reported) 
                 {
