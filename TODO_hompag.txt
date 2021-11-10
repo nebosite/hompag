@@ -48,7 +48,7 @@ WIDGET IDEAS
             message frequency/bandwidth
             memory size
             
-    [ ] Stock API setup
+    [x] Stock API setup
         [x] Get query working
             https://rapidapi.com/alphavantage/api/alpha-vantage/pricing
                 Click Subscribe
@@ -68,9 +68,9 @@ WIDGET IDEAS
         [x] A full await on stock data causes a timeout error on the client
         [x] track recent requests so we can be accurate about our request rate
         [x] Don't query outside of trading hours
-        [ ] Have the query auto-space itself so that we don't pull down everything at once
-        [ ] Shoot for every 15 minutes
-        [ ] How to handle splits?
+        [x] Have the query auto-space itself so that we don't pull down everything at once
+        [x] Shoot for every 10 minutes
+    [ ] Stock ticker widget
     [ ] remove the api functions and generalize how we call the server model
         
     [ ] Make it work across machines

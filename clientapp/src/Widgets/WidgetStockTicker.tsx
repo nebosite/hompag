@@ -13,6 +13,7 @@ import Row from "Components/Row";
 import { AppModel } from "models/AppModel";
 import { CSSProperties } from "react";
 import { StockData } from "hompag-common";
+import React from "react";
 
 
 export function poll(interval_ms: number, runMe: ()=>void) {
@@ -135,6 +136,28 @@ export class StockTickerTransientState
     } 
 }
 
+@observer
+export class StockComponent 
+extends React.Component<{context: TickerSubscription}> 
+{    
+    render() {
+        const {context}= this.props;
+
+        return <div className={styles.stockRowFrame}>
+            <Row className={styles.stockRowContents}>
+                <div className={styles.stockNameBox}>
+                    <div className={styles.stockName}>{context.name}</div>
+                </div>
+                <div className={styles.stockValueBox}>
+                    <div className={styles.stockPrice}>{context.history}</div>
+                </div>
+                <div className={styles.stockGraphBox}>
+                    <canvas className={styles.stockGraph}></canvas>
+                </div>
+            </Row>
+        </div>
+    }
+}
 
 // --------------------------------------------------------------------------------------------------------------------------------------
 // Component
@@ -183,10 +206,6 @@ extends WidgetBase<{context: WidgetContainer}>
         const labelStyle:CSSProperties = { width: "80px", textAlign: "right"}
 
 
-        const renderTicker = (ticker: TickerSubscription) => {
-            return <div>{ticker.name}:{ticker.history}</div>
-        }
-
         const addTicker =(ticker: TickerSubscription = undefined) => {
             data.editTicker = ticker ?? new TickerSubscription();
         }
@@ -216,7 +235,7 @@ extends WidgetBase<{context: WidgetContainer}>
                 }
 
                 {
-                    data.subscriptions.map(s => <div key={s.name}>{renderTicker(s)}</div>)
+                    data.subscriptions.map(s => <div key={s.name}><StockComponent context={s}/></div>)
                 }
                 <BsPlusSquare onClick={()=>addTicker()} />
 
