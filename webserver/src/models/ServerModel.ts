@@ -93,7 +93,7 @@ export class ServerModel {
         this.pinger = new PingModel(logger, this.sendAlert);
         
         const stockAlerter = (data: StockData) => {
-            logger.logLine(`Push StockUpdate for: ${data.symbol}`)
+            logger.logLine(`Alerting StockUpdate for: ${data.symbol}`)
             this.sendAlert({type: "StockUpdate", data: data} )
         }
 

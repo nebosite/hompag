@@ -45,7 +45,7 @@ export class AxiosStockProvder implements IStockProvider {
         }
 
         if(timeToWait) {
-            console.log(`Throttling stock api: ${timeToWait} ms`)
+            this.logger.logLine(`Throttling stock api: ${timeToWait} ms`)
             await doNothing(timeToWait);
         }
     }
@@ -78,12 +78,12 @@ export class AxiosStockProvder implements IStockProvider {
 
         const pushSamples = (seriesData: any[], earliest: number) => {
             for(const item of seriesData ) {
-                const date = Date.parse(item.datetime)
+                const date = Date.parse(item.datetime + " EST")
                 if(date > earliest) continue;
                 const close = Number.parseFloat(item.close);
                 const low = Number.parseFloat(item.low);
                 const high = Number.parseFloat(item.high);
-                const volume = Number.parseFloat(item.volume);
+                const volume = Number.parseFloat(item.volume); 
                 const pushMe = {
                         date:   date/1000,
                         values: [
@@ -117,7 +117,7 @@ export class AxiosStockProvder implements IStockProvider {
                         }
                         else
                         {
-                            console.log(`Timeout on ${symbol}`)
+                            logger.logError(`Timeout on ${symbol}`)
                         }
                         return undefined;
                     })
@@ -149,13 +149,18 @@ export class AxiosStockProvder implements IStockProvider {
 
 }
 
+interface StockPing {
+    symbol: string
+    nextPingTime: number
+}
 
 export class StockModel
 {
     stockProvider: IStockProvider
     cache: ICache;
     private _reportStateChange: (state: StockData) => void = ()=>{}
-    private _pingList: string[] = []
+    private _pingList: StockPing[] = []
+    private _pingInterval_ms = 60 * 1000 * 10 // 10 minutes
     logger: ILogger
 
     //------------------------------------------------------------------------------------------
@@ -168,10 +173,15 @@ export class StockModel
         this._reportStateChange = reportStateChange;
 
         const handlePings = async() => {
-            for(let symbol of this._pingList) {
-                await this.getData(symbol, false);
+            for(let item of this._pingList) {
+                if(Date.now() > item.nextPingTime) {
+                    await this.getData(item.symbol, false);
+                    // set the ping time in the future plus some jitter
+                    item.nextPingTime = Date.now() + this._pingInterval_ms + Math.floor( Math.random() * 60000);
+                    break;
+                }
             }
-            setTimeout(handlePings, 5 * 60000)
+            setTimeout(handlePings, 10000)
         }
 
         handlePings();
@@ -182,9 +192,9 @@ export class StockModel
     //------------------------------------------------------------------------------------------
     async getData(symbol: string, reportIfCached: boolean = true) {
         symbol = symbol.toUpperCase();
-        if(!this._pingList.find(i => i === symbol)) {
+        if(!this._pingList.find(i => i.symbol === symbol)) {
             this.logger.logLine(`New Stock: ${symbol}`)
-            this._pingList.push(symbol);
+            this._pingList.push({symbol, nextPingTime: Date.now() + this._pingInterval_ms});
         }
         const cachedDataJson = (await this.cache.getItem(symbol))?.data;
         let cachedData = cachedDataJson 
@@ -200,17 +210,15 @@ export class StockModel
 
         // Just report what's in the cache if it has been less than 5 min
         if(cachedData) {
-            const timeSinceLastCheck = (Date.now() - cachedData.data[0].date * 1000)
-            const date = new Date()
-            const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
-            const est = new Date(utc + (3600000* -5 ));
+            const now = new Date();
+            const timeSinceLastCheck = (now.valueOf() - cachedData.data[0].date * 1000)
             const outsideTradingHours = 
-                   est.getDay() === 0 
-                || est.getDay() === 6
-                || est.getHours() < 9
-                || est.getHours() > 17
+                   now.getDay() === 0 
+                || now.getDay() === 6
+                || now.getHours() < 9
+                || now.getHours() > 17
 
-            if(timeSinceLastCheck < 300000 || outsideTradingHours) {
+            if(timeSinceLastCheck < this._pingInterval_ms || outsideTradingHours) {
                 this.logger.logLine(`Reporting cached data for ${symbol}`)
                 if(!reported) 
                 {
