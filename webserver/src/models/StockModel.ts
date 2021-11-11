@@ -6,6 +6,18 @@ import { ICache } from "./ServerModel";
 var axios = require("axios").default;
 
 
+function estNow() {
+    const dateString = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});   
+    const hourMatch = dateString.match(/, (\d\d):/)
+    if(!hourMatch) {
+        console.log(`BAD TIME: ${dateString}`)
+        return {hour: 0}
+    }
+    const hourText = hourMatch[1]
+    const hour = Number.parseInt(hourText)
+    return {hour}
+}
+
 
 export interface IStockProvider{
     getData(symbol: string, cachedData: StockDetail[]): Promise<StockData>
@@ -28,7 +40,6 @@ export class AxiosStockProvder implements IStockProvider {
 
     async throttle(requestsPerMinute: number)
     {
-        this.requestTimes.push(Date.now());
         let count = 0;
         const oneMinuteAgo = Date.now() - 60000;
         let timeToWait = 0;
@@ -36,7 +47,7 @@ export class AxiosStockProvder implements IStockProvider {
         {
             count++;
             if(this.requestTimes[i] < oneMinuteAgo) break;
-            if(count > requestsPerMinute) {
+            if(count >= requestsPerMinute) {
                 timeToWait = Date.now() - this.requestTimes[i]
                 break;
             }
@@ -48,6 +59,7 @@ export class AxiosStockProvder implements IStockProvider {
             this.logger.logLine(`Throttling stock api: ${timeToWait} ms`)
             await doNothing(timeToWait);
         }
+        this.requestTimes.push(Date.now());
     }
 
     getData = async (symbol: string, data: StockDetail[]): Promise<StockData> => {
@@ -65,7 +77,7 @@ export class AxiosStockProvder implements IStockProvider {
                 params: {
                     symbol,
                     format: 'json',
-                    outputsize: '100',
+                    outputsize: '500',
                     ...params
                 },
                 headers: {
@@ -113,11 +125,11 @@ export class AxiosStockProvder implements IStockProvider {
                     .catch((err: any) => {
                         if(`${err}`.indexOf("code 429") === -1)
                         {
-                            logger.logError(`Failed on stock query: ${err}`) 
+                            logger.logError(`Exceeded q/min quota on ${symbol}`)
                         }
                         else
                         {
-                            logger.logError(`Timeout on ${symbol}`)
+                            logger.logError(`Failed on stock query: ${err}`) 
                         }
                         return undefined;
                     })
@@ -162,6 +174,9 @@ export class StockModel
     private _pingList: StockPing[] = []
     private _pingInterval_ms = 60 * 1000 * 10 // 10 minutes
     logger: ILogger
+    private _collectingCount = 0;
+
+
 
     //------------------------------------------------------------------------------------------
     // ctor
@@ -203,7 +218,7 @@ export class StockModel
 
         let reported = false;
         // Maybe report immediately if there is something cached
-        if(cachedData && reportIfCached) {
+        if(cachedData && (reportIfCached || this._collectingCount > 3)) {
             this._reportStateChange(cachedData)
             reported = true;
         }
@@ -212,14 +227,15 @@ export class StockModel
         if(cachedData) {
             const now = new Date();
             const timeSinceLastCheck = (now.valueOf() - cachedData.data[0].date * 1000)
+            const est = estNow();
             const outsideTradingHours = 
                    now.getDay() === 0 
                 || now.getDay() === 6
-                || now.getHours() < 9
-                || now.getHours() > 17
+                || est.hour < 9
+                || est.hour > 17
 
             if(timeSinceLastCheck < this._pingInterval_ms || outsideTradingHours) {
-                this.logger.logLine(`Reporting cached data for ${symbol}`)
+                this.logger.logLine(`Reporting cached data for ${symbol} (${timeSinceLastCheck < this._pingInterval_ms} ${outsideTradingHours})`)
                 if(!reported) 
                 {
                     this._reportStateChange(cachedData)
@@ -228,8 +244,26 @@ export class StockModel
             }
         }
 
+        if(this._collectingCount > 5)
+        {
+            console.log("WEIRD: collectingCount was bigger than 5")
+            this._collectingCount = 4;
+        }
+
+        if(this._collectingCount > 3) {
+            this.logger.logLine("WARNING:  Missing a new collection because count was high")
+            return;
+        }
+        this._collectingCount++;
+
         // let's load some fresh data
         const freshData = await this.stockProvider.getData(symbol, cachedData?.data ?? [])
+        this._collectingCount--;
+        if(this._collectingCount < 0)
+        {
+            console.log("WEIRD: collectingCount was below zero")
+            this._collectingCount = 0;
+        }
 
         const stockDataPoints = freshData.data;
         stockDataPoints.sort((a,b) => b.date - a.date)
@@ -239,7 +273,7 @@ export class StockModel
         // chop up the data into exponentially increasing time segments
         const prunedPoints = stockDataPoints.filter(p => {
             if(p.date <= timeSpot) {
-                timeDelta *= 1.08; // get exponentiall longer time segments
+                timeDelta *= 1.05; // get exponentially longer time segments
                 timeSpot = p.date - timeDelta;
                 return true;
             }
