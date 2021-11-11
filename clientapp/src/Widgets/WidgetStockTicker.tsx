@@ -12,7 +12,7 @@ import { DialogControl } from "Components/DialogControl";
 import Row from "Components/Row";
 import { AppModel } from "models/AppModel";
 import { CSSProperties } from "react";
-import { StockData } from "hompag-common";
+import { StockData, StockDetail } from "hompag-common";
 import React from "react";
 import { TiDelete } from "react-icons/ti";
 
@@ -29,7 +29,7 @@ export class TickerSubscription {
     __t="TickerSubscription"
     @observable name: string = ""
 
-    @observable  private state_history = ""
+    @observable  private state_history:StockDetail[]
     get history() {return this.state_history}
     set history(value) {action(()=>{this.state_history = value})()}
     
@@ -70,7 +70,7 @@ export class WidgetStockTickerData extends WidgetModelData
             //console.log(`Got data: ${JSON.stringify(data)}`)
             const target = this.subscriptions.find(t => t.name.toUpperCase() === data.symbol);
             if(target) {
-                target.history = `${data.data[0].values[0]}` 
+                target.history = data.data
             }
         })
 
@@ -148,16 +148,52 @@ extends React.Component<{context: TickerSubscription, onDelete: ()=>void}>
     render() {
         const {context}= this.props;
 
+        let points = ""
+        let price = "na"
+        let lowestValue = 1000000000;
+        let highestValue = 0;
+        if(context.history){
+            price = `${context.history[0].values[0]}`
+            let x = 0;
+
+            const tempPoints:{x:number, y: number}[] = []
+            const endDate = Date.now() - 6 * 24 * 3600 * 1000
+            console.log(`RENDER : ${context.name}`)
+            for(let i = 0; i < context.history.length; i++)
+            {
+                const pointDate = context.history[i].date * 1000
+                console.log(`P ${new Date(pointDate).toString()} ${context.history[i].values[0]}`)
+                if(pointDate < endDate) break;
+                const y = context.history[i].values[0]
+                lowestValue = Math.min(lowestValue, y);
+                highestValue = Math.max(highestValue,y);
+                tempPoints.push({x,y})
+                x++;
+            }   
+            
+            const height = highestValue - lowestValue;
+            const expandFactor = 200/x;
+            tempPoints.forEach(p =>  points += `${200 - p.x * expandFactor},${(20 - (p.y - lowestValue)/height * 20)} `)
+        }
+
+
         return <div className={styles.stockRowFrame}>
             <Row className={styles.stockRowContents}>
                 <div className={styles.stockNameBox}>
                     <div className={styles.stockName}>{context.name}</div>
                 </div>
                 <div className={styles.stockValueBox}>
-                    <div className={styles.stockPrice}>{context.history}</div>
+                    <div className={styles.stockPrice}>{price}</div>
                 </div>
                 <div className={styles.stockGraphBox}>
-                    <canvas className={styles.stockGraph}></canvas>
+                    <svg className={styles.stockGraph}>
+                        <polyline
+                            fill="none"
+                            stroke="green"
+                            strokeWidth="1"
+                            points={points}
+                        />
+                    </svg>
                 </div>
                 <div className={styles.stockButtonBox}>
                     <TiDelete onClick={this.props.onDelete} />

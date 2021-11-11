@@ -10,7 +10,7 @@ extends WidgetBase<{context: WidgetContainer}>
     renderContent = () => <div> 
                     {
                         this.props.context.ref_widget?.widgetType
-                            ? "I am a {this.props.context.ref_widget.widgetType}"
+                            ? `I am a ${this.props.context.ref_widget.widgetType}`
                             : ""
                     }
              </div> 
