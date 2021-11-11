@@ -1,4 +1,5 @@
 WIDGET IDEAS
+    - picture/slideshow
     - Ambient Sound
     - Time widget
         - Custom time zones, inclusing local, UTC
@@ -71,12 +72,21 @@ WIDGET IDEAS
         [x] Have the query auto-space itself so that we don't pull down everything at once
         [x] Shoot for every 10 minutes
     [ ] Stock ticker widget
-    [ ] remove the api functions and generalize how we call the server model
-        
+        [x] Preliminary formatting
+        [ ] Delete button
+        [ ] history graph
+        [ ] news button
+        [ ] Movement arrow
+    [ ] Be able to start a playlist from spotify widget
     [ ] Make it work across machines
         [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
         [ ] A connected client has a visible page + widgets
         [ ] Push an update to the client any page or widgets change
+    [ ] Make sure deployment instructions are correct
+        - a build script would be perfect
+        - start checking versions into github
+    [ ] remove the api functions and generalize how we call the server model
+        
         
     [ ] Documentation update
         [ ] Linux: need to run under sudo

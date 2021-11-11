@@ -14,6 +14,7 @@ import { AppModel } from "models/AppModel";
 import { CSSProperties } from "react";
 import { StockData } from "hompag-common";
 import React from "react";
+import { TiDelete } from "react-icons/ti";
 
 
 export function poll(interval_ms: number, runMe: ()=>void) {
@@ -80,6 +81,10 @@ export class WidgetStockTickerData extends WidgetModelData
         },1000)
     }
 
+    removeSubscription(subscription: TickerSubscription) {
+        this.subscriptions.remove(subscription);
+    }
+
     cancelNewTicker(deleteIfPresent: boolean = false) { 
         if(deleteIfPresent) {
             const deleteMeIndex = this.subscriptions.indexOf(this.editTicker)
@@ -138,7 +143,7 @@ export class StockTickerTransientState
 
 @observer
 export class StockComponent 
-extends React.Component<{context: TickerSubscription}> 
+extends React.Component<{context: TickerSubscription, onDelete: ()=>void}> 
 {    
     render() {
         const {context}= this.props;
@@ -153,6 +158,9 @@ extends React.Component<{context: TickerSubscription}>
                 </div>
                 <div className={styles.stockGraphBox}>
                     <canvas className={styles.stockGraph}></canvas>
+                </div>
+                <div className={styles.stockButtonBox}>
+                    <TiDelete onClick={this.props.onDelete} />
                 </div>
             </Row>
         </div>
@@ -235,7 +243,12 @@ extends WidgetBase<{context: WidgetContainer}>
                 }
 
                 {
-                    data.subscriptions.map(s => <div key={s.name}><StockComponent context={s}/></div>)
+                    data.subscriptions.map(s => <div key={s.name}>
+                            <StockComponent 
+                                context={s}
+                                onDelete={()=>data.removeSubscription(s)}
+                            />
+                        </div>)
                 }
                 <BsPlusSquare onClick={()=>addTicker()} />
 

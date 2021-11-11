@@ -28,7 +28,7 @@
     text-align: center;
 }   
 .stockGraphBox {
-    width: 80%;
+    width: 75%;
     height: 100%;
     border: 1px solid gray;
 }
@@ -37,4 +37,9 @@
     height: 100%;  
     background:#ffffff80;
 }
-
+.stockButtonBox {
+    width: 5%
+}
+.stockButtonBox:hover {
+    cursor: pointer;
+}
