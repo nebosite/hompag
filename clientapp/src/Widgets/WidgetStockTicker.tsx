@@ -141,10 +141,44 @@ export class StockTickerTransientState
     } 
 }
 
+let stockComponentID = 0;
+
+interface StockComponentProps {
+    context: TickerSubscription
+    onDelete: ()=>void
+}
+
+class StockComponentState {
+    @observable  private _graphWidth = 100
+    get graphWidth() {return this._graphWidth}
+    set graphWidth(value) {action(()=>{this._graphWidth = value})()}
+    
+    constructor() { makeObservable(this)}
+}
 @observer
 export class StockComponent 
-extends React.Component<{context: TickerSubscription, onDelete: ()=>void}> 
+extends React.Component<StockComponentProps> 
 {    
+    id:string;
+    st = new StockComponentState()
+
+    constructor(props: StockComponentProps) {
+        super(props);
+
+        this.id = `stockticker_${stockComponentID++}_${props.context.name}`;
+    }
+
+    // -------------------------------------------------------------------
+    // componentDidUpdate
+    // -------------------------------------------------------------------
+    componentDidUpdate(): void {
+        const canvas = document.getElementById(this.id) as HTMLElement;
+        this.st.graphWidth = canvas.clientWidth 
+    }
+
+    // -------------------------------------------------------------------
+    // render
+    // -------------------------------------------------------------------
     render() {
         const {context}= this.props;
 
@@ -158,11 +192,9 @@ extends React.Component<{context: TickerSubscription, onDelete: ()=>void}>
 
             const tempPoints:{x:number, y: number}[] = []
             const endDate = Date.now() - 6 * 24 * 3600 * 1000
-            console.log(`RENDER : ${context.name}`)
             for(let i = 0; i < context.history.length; i++)
             {
                 const pointDate = context.history[i].date * 1000
-                console.log(`P ${new Date(pointDate).toString()} ${context.history[i].values[0]}`)
                 if(pointDate < endDate) break;
                 const y = context.history[i].values[0]
                 lowestValue = Math.min(lowestValue, y);
@@ -172,8 +204,8 @@ extends React.Component<{context: TickerSubscription, onDelete: ()=>void}>
             }   
             
             const height = highestValue - lowestValue;
-            const expandFactor = 200/x;
-            tempPoints.forEach(p =>  points += `${200 - p.x * expandFactor},${(20 - (p.y - lowestValue)/height * 20)} `)
+            const expandFactor = this.st.graphWidth/x;
+            tempPoints.forEach(p =>  points += `${this.st.graphWidth - p.x * expandFactor},${(20 - (p.y - lowestValue)/height * 20)} `)
         }
 
 
@@ -186,7 +218,7 @@ extends React.Component<{context: TickerSubscription, onDelete: ()=>void}>
                     <div className={styles.stockPrice}>{price}</div>
                 </div>
                 <div className={styles.stockGraphBox}>
-                    <svg className={styles.stockGraph}>
+                    <svg className={styles.stockGraph} id={this.id}>
                         <polyline
                             fill="none"
                             stroke="green"
