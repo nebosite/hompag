@@ -159,6 +159,15 @@ class StockComponentState {
     
     constructor() { makeObservable(this)}
 }
+
+const ONE_HOUR = 3600 * 1000
+const ONE_DAY = ONE_HOUR * 24
+const ONE_WEEK = ONE_DAY * 7
+const ONE_MONTH = ONE_DAY * 30
+const ONE_YEAR = ONE_DAY * 365
+
+const timeProgression = [ONE_HOUR, ONE_DAY, ONE_WEEK, ONE_MONTH, ONE_YEAR, ONE_YEAR * 10000]
+
 @observer
 export class StockComponent 
 extends React.Component<StockComponentProps> 
@@ -187,20 +196,47 @@ extends React.Component<StockComponentProps>
     render() {
         const {context}= this.props;
 
+        const endDate = Date.now() - 31 * ONE_DAY
+
+        let majorMarkers:number[] = []
+        let tickMarkers:number[] = []
+        let progressionIndex = 0;
+        let tickSpacer = timeProgression[progressionIndex]
+        let majorSpacer = timeProgression[progressionIndex + 1]
+
         let points = ""
         let price = "na"
-        let lowestValue = context.history ? context.history[0].values[0] : 0;
-        let highestValue = lowestValue;
+        let lowestValue = 0;
+        let highestValue = 0;
+        let ticks:any;
+        let markers: any;
+        let volumeShade: any;
+
         if(context.history){
+            lowestValue = highestValue = context.history[0].values[0];
+            let tickTime = context.history[0].date * 1000 - tickSpacer;
+            let majorTickTime = context.history[0].date * 1000 - majorSpacer;
+    
             price = context.history[0].values[0].toFixed(2)
             let x = 0;
 
             const tempPoints:{x:number, y: number}[] = []
-            const endDate = Date.now() - 6 * 24 * 3600 * 1000
             for(let i = 0; i < context.history.length; i++)
             {
                 const pointDate = context.history[i].date * 1000
                 if(pointDate < endDate) break;
+                if(pointDate < majorTickTime) {
+                    majorMarkers.push(x);
+                    progressionIndex++;
+                    tickSpacer = timeProgression[progressionIndex]
+                    majorSpacer = timeProgression[progressionIndex + 1]
+                    tickTime = pointDate - tickSpacer;
+                    majorTickTime = pointDate - majorSpacer;
+                }
+                else if(pointDate < tickTime) {
+                    tickMarkers.push(x);
+                    tickTime -= tickSpacer;
+                }
                 const y = context.history[i].values[0]
                 lowestValue = Math.min(lowestValue, y);
                 highestValue = Math.max(highestValue,y);
@@ -211,7 +247,27 @@ extends React.Component<StockComponentProps>
             const height = highestValue - lowestValue;
             const expandFactor = this.st.graphWidth/x;
             tempPoints.forEach(p =>  points += `${this.st.graphWidth - p.x * expandFactor},${(this.st.graphHeight - (p.y - lowestValue)/height * this.st.graphHeight)} `)
+            ticks = tickMarkers.map(mx => {
+                const x = this.st.graphWidth - mx * expandFactor
+                return <polyline 
+                                fill="none"
+                                stroke="#00000040"
+                                strokeWidth="1"
+                                points={`${x},0 ${x},${this.st.graphHeight}`}
+                            />
+            })
+            markers = majorMarkers.map(mx => {
+                const x = this.st.graphWidth - mx * expandFactor
+                return <polyline 
+                                fill="none"
+                                stroke="#00000090"
+                                strokeWidth="2"
+                                points={`${x},0 ${x},${this.st.graphHeight}`}
+                            />
+            })
         }
+
+
 
 
         return <div className={styles.stockRowFrame}>
@@ -226,10 +282,13 @@ extends React.Component<StockComponentProps>
                 </div>
                 <div className={styles.stockGraphBox}>
                     <svg className={styles.stockGraph} id={this.id}>
+                        {volumeShade}
+                        {ticks}
+                        {markers}
                         <polyline
                             fill="none"
-                            stroke="green"
-                            strokeWidth="1"
+                            stroke="#00dd00"
+                            strokeWidth="2"
                             points={points}
                         />
                     </svg>

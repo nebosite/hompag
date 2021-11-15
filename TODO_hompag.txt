@@ -78,8 +78,8 @@ WIDGET IDEAS
         [x] history graph
         [ ] Better graph
             [x] Adjust width
-            [ ] Label vertical scale
-            [ ] Vertical lines for hours, days, weeks, months
+            [x] Label vertical scale
+            [x] Vertical lines for hours, days, weeks, months
             [ ] Click for detailed quotes  
             [ ] Normalize volumes to 5min volumes and show as a shade on the graph
             [ ] Match color scheme
