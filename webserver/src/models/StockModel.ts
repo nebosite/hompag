@@ -164,8 +164,10 @@ export class AxiosStockProvder implements IStockProvider {
 interface StockPing {
     symbol: string
     nextPingTime: number
+    lastPostTime: number
 }
 
+const ONE_HOUR = 3600000
 export class StockModel
 {
     stockProvider: IStockProvider
@@ -188,11 +190,22 @@ export class StockModel
         this._reportStateChange = reportStateChange;
 
         const handlePings = async() => {
-            for(let item of this._pingList) {
+            for(let item of [...this._pingList]) {
+
+                const ageInHours = (Date.now() - item.lastPostTime)/ONE_HOUR;
+                // Stop pinging really old stuff
+                if(ageInHours > 12) {
+                    const index = this._pingList.indexOf(item);
+                    this._pingList.slice(index,1)
+                    continue;
+                }
                 if(Date.now() > item.nextPingTime) {
                     await this.getData(item.symbol, false);
                     // set the ping time in the future plus some jitter
                     item.nextPingTime = Date.now() + this._pingInterval_ms + Math.floor( Math.random() * 60000);
+
+                    // slow the ping rate if the request is stale
+                    if(ageInHours > 1) item.nextPingTime += (ageInHours-1) * this._pingInterval_ms
                     break;
                 }
             }
@@ -209,7 +222,7 @@ export class StockModel
         symbol = symbol.toUpperCase();
         if(!this._pingList.find(i => i.symbol === symbol)) {
             this.logger.logLine(`New Stock: ${symbol}`)
-            this._pingList.push({symbol, nextPingTime: Date.now() + this._pingInterval_ms});
+            this._pingList.push({symbol, nextPingTime: Date.now() + this._pingInterval_ms, lastPostTime: Date.now()});
         }
         const cachedDataJson = (await this.cache.getItem(symbol))?.data;
         let cachedData = cachedDataJson 
@@ -247,7 +260,6 @@ export class StockModel
         if(this._collectingCount > 5)
         {
             console.log("WEIRD: collectingCount was bigger than 5")
-            this._collectingCount = 4;
         }
 
         if(this._collectingCount > 3) {
@@ -262,7 +274,6 @@ export class StockModel
         if(this._collectingCount < 0)
         {
             console.log("WEIRD: collectingCount was below zero")
-            this._collectingCount = 0;
         }
 
         const stockDataPoints = freshData.data;
