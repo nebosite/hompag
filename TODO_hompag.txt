@@ -71,13 +71,13 @@ WIDGET IDEAS
         [x] Don't query outside of trading hours
         [x] Have the query auto-space itself so that we don't pull down everything at once
         [x] Shoot for every 10 minutes
-    [ ] Stop ping for stocks that haven't been posted for 2 hours
+    [x] Stop ping for stocks that haven't been posted for 2 hours
     [ ] Stock ticker widget
         [x] Preliminary formatting
         [x] Delete button
         [x] history graph
         [ ] Better graph
-            [ ] Adjust width
+            [x] Adjust width
             [ ] Label vertical scale
             [ ] Vertical lines for hours, days, weeks, months
             [ ] Click for detailed quotes  

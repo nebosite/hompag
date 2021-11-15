@@ -5,7 +5,7 @@
 
 .stockRowFrame {
     font-size: 80%;
-    height: 20px;
+    height: 28px;
     padding: 2px;
 }
 .stockRowContents {
@@ -25,7 +25,13 @@
 
 }
 .stockPrice {
+    font-size: 90%;
+    font-weight: 700;
     text-align: center;
+}   
+.highLowValue {
+    font-size: 60%;
+    text-align: right;
 }   
 .stockGraphBox {
     width: 75%;

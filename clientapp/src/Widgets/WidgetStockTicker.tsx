@@ -153,6 +153,10 @@ class StockComponentState {
     get graphWidth() {return this._graphWidth}
     set graphWidth(value) {action(()=>{this._graphWidth = value})()}
     
+    @observable  private _graphHeight = 30
+    get graphHeight() {return this._graphHeight}
+    set graphHeight(value) {action(()=>{this._graphHeight = value})()}
+    
     constructor() { makeObservable(this)}
 }
 @observer
@@ -174,6 +178,7 @@ extends React.Component<StockComponentProps>
     componentDidUpdate(): void {
         const canvas = document.getElementById(this.id) as HTMLElement;
         this.st.graphWidth = canvas.clientWidth 
+        this.st.graphHeight = canvas.clientHeight
     }
 
     // -------------------------------------------------------------------
@@ -184,10 +189,10 @@ extends React.Component<StockComponentProps>
 
         let points = ""
         let price = "na"
-        let lowestValue = 1000000000;
-        let highestValue = 0;
+        let lowestValue = context.history ? context.history[0].values[0] : 0;
+        let highestValue = lowestValue;
         if(context.history){
-            price = `${context.history[0].values[0]}`
+            price = context.history[0].values[0].toFixed(2)
             let x = 0;
 
             const tempPoints:{x:number, y: number}[] = []
@@ -205,7 +210,7 @@ extends React.Component<StockComponentProps>
             
             const height = highestValue - lowestValue;
             const expandFactor = this.st.graphWidth/x;
-            tempPoints.forEach(p =>  points += `${this.st.graphWidth - p.x * expandFactor},${(20 - (p.y - lowestValue)/height * 20)} `)
+            tempPoints.forEach(p =>  points += `${this.st.graphWidth - p.x * expandFactor},${(this.st.graphHeight - (p.y - lowestValue)/height * this.st.graphHeight)} `)
         }
 
 
@@ -215,7 +220,9 @@ extends React.Component<StockComponentProps>
                     <div className={styles.stockName}>{context.name}</div>
                 </div>
                 <div className={styles.stockValueBox}>
+                    <div className={styles.highLowValue}>{highestValue.toFixed(2)}</div>
                     <div className={styles.stockPrice}>{price}</div>
+                    <div className={styles.highLowValue}>{lowestValue.toFixed(2)}</div>
                 </div>
                 <div className={styles.stockGraphBox}>
                     <svg className={styles.stockGraph} id={this.id}>
