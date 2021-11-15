@@ -141,11 +141,6 @@
         "signature": "91509b16027fd592850d017a90f69d2b4bfc7c23295ef0e855704728ba4d7a87",
         "affectsGlobalScope": false
       },
-      "./src/config.ts": {
-        "version": "6168791564ab33ba17073ea3b67f3668d0078b25e6f2a2f01c429417520c7503",
-        "signature": "960312d162e141857f599ca1faa1ce619028318ac3a079b2b12013a15eb561c0",
-        "affectsGlobalScope": false
-      },
       "./node_modules/@types/node/assert/strict.d.ts": {
         "version": "c7bdc99177a2a94d25fb13722adaaf5b3291bf70b4d1b27584ba189dd3889ba3",
         "signature": "c7bdc99177a2a94d25fb13722adaaf5b3291bf70b4d1b27584ba189dd3889ba3",
@@ -486,14 +481,19 @@
         "signature": "02a2b9730847a690c7d5d6104392539ee70dc0131085bcc97288eb14954e0477",
         "affectsGlobalScope": false
       },
+      "../common/dist/main/stockticker.d.ts": {
+        "version": "5657ae5fb43eac1dca831afc4cabe8d9888f5b28269dde55d83c2b9914a5bf1e",
+        "signature": "5657ae5fb43eac1dca831afc4cabe8d9888f5b28269dde55d83c2b9914a5bf1e",
+        "affectsGlobalScope": false
+      },
       "../common/dist/main/config.d.ts": {
         "version": "55c67a4fbddc7ea23d5f6f935f123f715b9e35968524642b383d8f9379eb201d",
         "signature": "55c67a4fbddc7ea23d5f6f935f123f715b9e35968524642b383d8f9379eb201d",
         "affectsGlobalScope": false
       },
       "../common/dist/main/index.d.ts": {
-        "version": "4934e1dafbbc058da977279a436ea53154c06e493b43698c1296c0a1560930b2",
-        "signature": "4934e1dafbbc058da977279a436ea53154c06e493b43698c1296c0a1560930b2",
+        "version": "f04d5fc7011ed4d8dbe0051148aca474967d611a96b219b737722d0d4e8d5545",
+        "signature": "f04d5fc7011ed4d8dbe0051148aca474967d611a96b219b737722d0d4e8d5545",
         "affectsGlobalScope": false
       },
       "./node_modules/moment/ts3.1-typings/moment.d.ts": {
@@ -512,8 +512,8 @@
         "affectsGlobalScope": false
       },
       "./src/models/spotifymodel.ts": {
-        "version": "3f75140ff1bed73961ab262a6cb44008b36a841be819403a9333ba22fcef1fb0",
-        "signature": "8f42cca9bd4989121a7d7b84b3c74f7cef75e90cc06d45726a7be6e9b4d6dd90",
+        "version": "aedec3a9a641b52efd933e833bd4439225871ac00025f3b0d0f676acbd417e20",
+        "signature": "736ef7ec05bf12536708dc6058c2af4b9484074d6b97f342317b264375fa0cb4",
         "affectsGlobalScope": false
       },
       "./src/models/pingmodel.ts": {
@@ -521,13 +521,23 @@
         "signature": "7b94f966c9eb32eb8c2950b8da8f9f62ad8e727a64152a5a8eba5929294ba0ce",
         "affectsGlobalScope": false
       },
+      "./src/helpers/asynchelper.ts": {
+        "version": "158fc80db480ef9a73ffa82577a7d0378e9c6885ef8e2f44c895eb1512d2b2b3",
+        "signature": "f33cf01c7b31be55b439d28b1b056a6a244acbbab0c3b438483d71a6d4d66502",
+        "affectsGlobalScope": false
+      },
+      "./src/models/stockmodel.ts": {
+        "version": "aec1a4988fc1fcda08ab988f3af309be98a504f0fc9b53d4b9c0138e36727439",
+        "signature": "44452ee2ee3ab23976c234e57d39f2bff7a7bb07a6a1f560465bf8610ee2fba0",
+        "affectsGlobalScope": false
+      },
       "./src/models/servermodel.ts": {
-        "version": "ddc7ac07f5d3fabf3e7f32d9d376dd131d76abe5461ccaec9dd56b2b5b40c261",
-        "signature": "681bb523508c4231d92b3be26965f657c91a48032e1d022aa1c388519800b44c",
+        "version": "502247dc6576b1c6457fef1b9528cd0969cb5684930abf18036697701faaed48",
+        "signature": "b2abec5e046fc31972e40f079c1838092e66ffc2b4f39aa8e4f4da31c53d55bd",
         "affectsGlobalScope": false
       },
       "./src/models/pageaccesslocaldisk.ts": {
-        "version": "5b40c8cf897575e9bd650cecf9a453212b75a90c4565a6f973a6c21c6d7e3654",
+        "version": "11b2804b73087588c52fef6cd6806ef94ae148bcaa63fab4e0e9b9ee5f3f294e",
         "signature": "95bc7855c30bd1f8aeeaa874df73185588ac542fd0878ffc3198c5842698c61e",
         "affectsGlobalScope": false
       },
@@ -541,13 +551,8 @@
         "signature": "c5294a2334fc0ff162af73c24d09d7b07a95cbe173f64ad6c3bd4d92ab971924",
         "affectsGlobalScope": false
       },
-      "./src/helpers/asynchelper.ts": {
-        "version": "158fc80db480ef9a73ffa82577a7d0378e9c6885ef8e2f44c895eb1512d2b2b3",
-        "signature": "f33cf01c7b31be55b439d28b1b056a6a244acbbab0c3b438483d71a6d4d66502",
-        "affectsGlobalScope": false
-      },
       "./src/models/pagecache.ts": {
-        "version": "1ba99fb069729c40e1f1238bca4a168d2f40a81e3cd746ae894a90c380bdb1ef",
+        "version": "7c12f91b6ad5c44b81a636abf756e9383f14a213fb8a423824336c6755feba4f",
         "signature": "4fe714145d70c07ed4e47f8a230b66700538846cdfa0386fc63e5c523a2edcfa",
         "affectsGlobalScope": false
       },
@@ -576,8 +581,13 @@
         "signature": "1b3b35623c8a30b59ef7f28d898c7d2695e251ac2581836cc4569ce6d3ed86be",
         "affectsGlobalScope": false
       },
+      "./src/apis/stock.ts": {
+        "version": "189c5209037fbdf9b0ef0e68111b6f2d632219019bac71677c0c9494ac2fbf3e",
+        "signature": "ebe3f4450396f2081f4f5b530ea12dc20b2b184026f84272637313c92f47b030",
+        "affectsGlobalScope": false
+      },
       "./src/index.ts": {
-        "version": "3f6cc842729b67ee5711dd9411f3bf6fed21079efb2149488b07079dee168af7",
+        "version": "c01abac2b046c00a72bd4e1580bd9aeeb1914aa7ebebc19d7e0392310d74b402",
         "signature": "d9e88ef7a28dd3119296e69a3b53cafe9ca34fc90afe89eddd383d106d3f5ead",
         "affectsGlobalScope": false
       },
@@ -676,7 +686,8 @@
         "../common/dist/main/servermessagetype.d.ts",
         "../common/dist/main/spotify.d.ts",
         "../common/dist/main/spotifyserverresponse.d.ts",
-        "../common/dist/main/statepacket.d.ts"
+        "../common/dist/main/statepacket.d.ts",
+        "../common/dist/main/stockticker.d.ts"
       ],
       "./node_modules/@types/body-parser/index.d.ts": [
         "./node_modules/@types/connect/index.d.ts",
@@ -1045,6 +1056,12 @@
         "./src/helpers/safesend.ts",
         "./src/index.ts"
       ],
+      "./src/apis/stock.ts": [
+        "./node_modules/@types/express/index.d.ts",
+        "./src/helpers/logger.ts",
+        "./src/helpers/safesend.ts",
+        "./src/index.ts"
+      ],
       "./src/apis/widgets.ts": [
         "./node_modules/@types/express/index.d.ts",
         "./src/helpers/logger.ts",
@@ -1066,8 +1083,8 @@
         "./src/apis/query.ts",
         "./src/apis/showhealth.ts",
         "./src/apis/spotify.ts",
+        "./src/apis/stock.ts",
         "./src/apis/widgets.ts",
-        "./src/config.ts",
         "./src/globals.ts",
         "./src/helpers/logger.ts",
         "./src/models/pageaccesslocaldisk.ts",
@@ -1095,7 +1112,8 @@
         "./src/globals.ts",
         "./src/helpers/logger.ts",
         "./src/models/pingmodel.ts",
-        "./src/models/spotifymodel.ts"
+        "./src/models/spotifymodel.ts",
+        "./src/models/stockmodel.ts"
       ],
       "./src/models/spotifymodel.ts": [
         "../common/dist/main/index.d.ts",
@@ -1103,6 +1121,12 @@
         "./src/helpers/logger.ts",
         "./src/helpers/rest.ts",
         "./src/helpers/safesend.ts"
+      ],
+      "./src/models/stockmodel.ts": [
+        "../common/dist/main/index.d.ts",
+        "./src/helpers/asynchelper.ts",
+        "./src/helpers/logger.ts",
+        "./src/models/servermodel.ts"
       ],
       "./src/tests/general.test.ts": [
         "./node_modules/@types/chai/index.d.ts"
@@ -1128,7 +1152,8 @@
         "../common/dist/main/servermessagetype.d.ts",
         "../common/dist/main/spotify.d.ts",
         "../common/dist/main/spotifyserverresponse.d.ts",
-        "../common/dist/main/statepacket.d.ts"
+        "../common/dist/main/statepacket.d.ts",
+        "../common/dist/main/stockticker.d.ts"
       ],
       "./node_modules/@types/body-parser/index.d.ts": [
         "./node_modules/@types/connect/index.d.ts",
@@ -1479,6 +1504,10 @@
         "./node_modules/@types/express/index.d.ts",
         "./src/helpers/logger.ts"
       ],
+      "./src/apis/stock.ts": [
+        "./node_modules/@types/express/index.d.ts",
+        "./src/helpers/logger.ts"
+      ],
       "./src/apis/widgets.ts": [
         "./node_modules/@types/express/index.d.ts",
         "./src/helpers/logger.ts"
@@ -1507,12 +1536,17 @@
         "../common/dist/main/index.d.ts",
         "./src/helpers/logger.ts",
         "./src/models/pingmodel.ts",
-        "./src/models/spotifymodel.ts"
+        "./src/models/spotifymodel.ts",
+        "./src/models/stockmodel.ts"
       ],
       "./src/models/spotifymodel.ts": [
         "../common/dist/main/index.d.ts",
         "./src/helpers/logger.ts",
         "./src/helpers/safesend.ts"
+      ],
+      "./src/models/stockmodel.ts": [
+        "./src/helpers/logger.ts",
+        "./src/models/servermodel.ts"
       ],
       "./src/tests/pagecache.test.ts": [
         "../common/dist/main/index.d.ts",
@@ -1529,6 +1563,7 @@
       "../common/dist/main/spotify.d.ts",
       "../common/dist/main/spotifyserverresponse.d.ts",
       "../common/dist/main/statepacket.d.ts",
+      "../common/dist/main/stockticker.d.ts",
       "./node_modules/@types/body-parser/index.d.ts",
       "./node_modules/@types/caseless/index.d.ts",
       "./node_modules/@types/chai/index.d.ts",
@@ -1634,20 +1669,33 @@
       "./src/apis/query.ts",
       "./src/apis/showhealth.ts",
       "./src/apis/spotify.ts",
+      "./src/apis/stock.ts",
       "./src/apis/widgets.ts",
-      "./src/config.ts",
       "./src/globals.ts",
       "./src/helpers/asynchelper.ts",
       "./src/helpers/httpstuff.ts",
       "./src/helpers/logger.ts",
       "./src/helpers/rest.ts",
       "./src/helpers/safesend.ts",
-      "./src/index.ts",
+      [
+        "./src/index.ts",
+        [
+          {
+            "file": "./src/index.ts",
+            "start": 406,
+            "length": 10,
+            "messageText": "Cannot find module './config' or its corresponding type declarations.",
+            "category": 1,
+            "code": 2307
+          }
+        ]
+      ],
       "./src/models/pageaccesslocaldisk.ts",
       "./src/models/pagecache.ts",
       "./src/models/pingmodel.ts",
       "./src/models/servermodel.ts",
       "./src/models/spotifymodel.ts",
+      "./src/models/stockmodel.ts",
       "./src/tests/general.test.ts",
       "./src/tests/pageaccesslocaldisk.test.ts",
       "./src/tests/pagecache.test.ts",

@@ -49,7 +49,7 @@ for(let arg of args)
 // Set up kill path as first processor.  Invoking the server with the killpath
 // specified allows testing logic to easily start and stop the server during tests
 if(killpath) {
-    logger.logLine("**** Setting kill path to /" + killpath + " ****")
+    logger.logLine("**** Setting kill path to /" + killpath + " **** ")
     app.get("/" + killpath, (req, res) => {
         logger.logLine("Server was killed with killpath")
         res.end("Arrrgh!")
