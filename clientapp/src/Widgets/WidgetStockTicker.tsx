@@ -15,6 +15,7 @@ import { CSSProperties } from "react";
 import { StockData, StockDetail } from "hompag-common";
 import React from "react";
 import { TiDelete } from "react-icons/ti";
+import SafeLink from "Components/SafeLink";
 
 
 export function poll(interval_ms: number, runMe: ()=>void) {
@@ -273,7 +274,9 @@ extends React.Component<StockComponentProps>
         return <div className={styles.stockRowFrame}>
             <Row className={styles.stockRowContents}>
                 <div className={styles.stockNameBox}>
-                    <div className={styles.stockName}>{context.name}</div>
+                    <div className={styles.stockName}>
+                        <SafeLink link={`https://www.google.com/search?q=${context.name}`} text={context.name} />
+                    </div>
                 </div>
                 <div className={styles.stockValueBox}>
                     <div className={styles.highLowValue}>{highestValue.toFixed(2)}</div>

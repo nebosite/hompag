@@ -72,19 +72,15 @@ WIDGET IDEAS
         [x] Have the query auto-space itself so that we don't pull down everything at once
         [x] Shoot for every 10 minutes
     [x] Stop ping for stocks that haven't been posted for 2 hours
-    [ ] Stock ticker widget
+    [x] Stock ticker widget
         [x] Preliminary formatting
         [x] Delete button
         [x] history graph
-        [ ] Better graph
+        [x] Better graph
             [x] Adjust width
             [x] Label vertical scale
             [x] Vertical lines for hours, days, weeks, months
-            [ ] Click for detailed quotes  
-            [ ] Normalize volumes to 5min volumes and show as a shade on the graph
-            [ ] Match color scheme
-        [ ] news button
-        [ ] Movement arrow
+            [x] Click for detailed quotes  
    
     [ ] Be able to start a playlist from spotify widget
     [ ] Make it work across machines

@@ -11,6 +11,7 @@
 .stockRowContents {
     height: 100%;
 }
+
 .stockNameBox {
     height: 100%;
     border: 1px solid gray;
@@ -19,7 +20,12 @@
     font-weight: 800;
     width: 60px;
     text-align: center;
+    margin: 2px;
 }
+.stockName:hover {
+    cursor: pointer;
+}
+
 .stockValueBox {
     width: 20%;
 
@@ -32,7 +38,8 @@
 .highLowValue {
     font-size: 60%;
     text-align: right;
-}   
+}  
+
 .stockGraphBox {
     width: 75%;
     height: 100%;
