@@ -1,6 +1,7 @@
 import { StockDetail, StockData } from "hompag-common";
 import { doNothing } from "../helpers/asyncHelper";
 import { ILogger } from "../helpers/logger";
+import { Throttler } from "../helpers/Throttler";
 import { ICache } from "./ServerModel";
 
 var axios = require("axios").default;
@@ -8,7 +9,7 @@ var axios = require("axios").default;
 
 function estNow() {
     const dateString = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});   
-    const hourMatch = dateString.match(/, (\d\d):/)
+    const hourMatch = dateString.match(/, (\d+):/)
     if(!hourMatch) {
         console.log(`BAD TIME: ${dateString}`)
         return {hour: 0}
@@ -31,35 +32,11 @@ export class AxiosStockProvder implements IStockProvider {
 
     apiKey?: string;
     logger: ILogger
-    requestTimes: number[] = [0]
+    throttler = new Throttler(8)
 
     constructor(config: AxiosConfig, logger: ILogger) {
         this.apiKey = config?.apiKey
         this.logger = logger
-    }
-
-    async throttle(requestsPerMinute: number)
-    {
-        let count = 0;
-        const oneMinuteAgo = Date.now() - 60000;
-        let timeToWait = 0;
-        for(let i = this.requestTimes.length -1; i >= 0; i--)
-        {
-            count++;
-            if(this.requestTimes[i] < oneMinuteAgo) break;
-            if(count >= requestsPerMinute) {
-                timeToWait = Date.now() - this.requestTimes[i]
-                break;
-            }
-
-
-        }
-
-        if(timeToWait) {
-            this.logger.logLine(`Throttling stock api: ${timeToWait} ms`)
-            await doNothing(timeToWait);
-        }
-        this.requestTimes.push(Date.now());
     }
 
     getData = async (symbol: string, data: StockDetail[]): Promise<StockData> => {
@@ -112,34 +89,36 @@ export class AxiosStockProvder implements IStockProvider {
         const logger = this.logger;
 
         const collect = async (params:any, earliest: number) => {
-
             const options:any = makeOptions(params)
             if(!options.params.symbol) {
                 logger.logError(`ERROR: no symbol defined: ${JSON.stringify(options)}`)
                 return;
             }
             this.logger.logLine(`Collecting axios data for ${symbol}:${options.params.interval} `)
-            while(true) {
-                await this.throttle(8);
-                const stockResponse = await axios.request(options)
-                    .catch((err: any) => {
-                        if(`${err}`.indexOf("code 429") === -1)
-                        {
-                            logger.logError(`Exceeded q/min quota on ${symbol}`)
-                        }
-                        else
-                        {
-                            logger.logError(`Failed on stock query: ${err}`) 
-                        }
-                        return undefined;
+                while(true) {
+                    let stockResponse:any;
+                    await this.throttler.runThrottled(async ()=> {
+                        stockResponse = await axios.request(options)
+                            .catch((err: any) => {
+                                if(`${err}`.indexOf("code 429") > -1)
+                                {
+                                    logger.logError(`Exceeded axios quota. ${symbol}`)
+                                }
+                                else
+                                {
+                                    logger.logError(`Failed on stock query: ${err}`) 
+                                }
+                                return undefined;
+                            })
                     })
-                const series = stockResponse?.data?.values
-                if(series) {
-                    pushSamples(series, earliest) 
-                    break;
+
+                    const series = stockResponse?.data?.values
+                    if(series) {
+                        pushSamples(series, earliest) 
+                        break;
+                    }
+                    await doNothing(5000);
                 }
-                await doNothing(5000);
-            }
         }
 
         const oneDay = 24 * 3600 * 1000;
@@ -177,8 +156,6 @@ export class StockModel
     private _pingInterval_ms = 60 * 1000 * 10 // 10 minutes
     logger: ILogger
     private _collectingCount = 0;
-
-
 
     //------------------------------------------------------------------------------------------
     // ctor
@@ -241,14 +218,17 @@ export class StockModel
             const now = new Date();
             const timeSinceLastCheck = (now.valueOf() - cachedData.data[0].date * 1000)
             const est = estNow();
-            const outsideTradingHours = 
+            let outsideTradingHours =  
                    now.getDay() === 0 
-                || now.getDay() === 6
+                || now.getDay() === 6 
                 || est.hour < 9
                 || est.hour > 17
 
             if(timeSinceLastCheck < this._pingInterval_ms || outsideTradingHours) {
-                this.logger.logLine(`Reporting cached data for ${symbol} (${timeSinceLastCheck < this._pingInterval_ms} ${outsideTradingHours})`)
+                const reason = timeSinceLastCheck < this._pingInterval_ms
+                    ? "too soon" 
+                    : 'outside trading hours'
+                this.logger.logLine(`Reporting cached data for ${symbol} (${reason})`)
                 if(!reported) 
                 {
                     this._reportStateChange(cachedData)
@@ -257,9 +237,14 @@ export class StockModel
             }
         }
 
-        if(this._collectingCount > 5)
+        if(Date.now() > 0) {
+            console.log("Skipping stock until throttling is fixed")
+            return;
+        }
+
+        if(this._collectingCount > 4)
         {
-            console.log("WEIRD: collectingCount was bigger than 5")
+            console.log("WEIRD: collectingCount was bigger than 4")
         }
 
         if(this._collectingCount > 3) {

@@ -7,7 +7,7 @@
     "startdev": "genversion src/version.js && env-cmd -f .env.dev nodemon src/index.ts",
     "start": "genversion src/version.js && node dist/index.js",
     "build": "genversion src/version.js && tsc",
-    "test": "mocha -r ts-node/register src/**/*.test.ts",
+    "test": "mocha -exit -r ts-node/register src/**/*.test.ts",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
     "tessa-npm-plugin": "tessa-npm-plugin update"
   },
