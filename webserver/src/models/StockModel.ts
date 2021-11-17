@@ -7,8 +7,8 @@ import { ICache } from "./ServerModel";
 var axios = require("axios").default;
 
 
-function estNow() {
-    const dateString = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});   
+function estHour(date: Date) {
+    const dateString = date.toLocaleString("en-US", {timeZone: "America/New_York", hour12: false});   
     const hourMatch = dateString.match(/, (\d+):/)
     if(!hourMatch) {
         console.log(`BAD TIME: ${dateString}`)
@@ -16,7 +16,7 @@ function estNow() {
     }
     const hourText = hourMatch[1]
     const hour = Number.parseInt(hourText)
-    return {hour}
+    return hour
 }
 
 
@@ -193,9 +193,36 @@ export class StockModel
     }
 
     //------------------------------------------------------------------------------------------
+    // Figure out if it is appropriate to request new data or just serve from the cache
+    //------------------------------------------------------------------------------------------
+    static getCacheResponse(now: Date, timeOfLastDataPoint: number, queueSize: number, interval_ms: number) {
+        const queueIsFull = queueSize > 3;
+        const dataIsFresh = (now.valueOf() - timeOfLastDataPoint) < interval_ms; 
+        const est = estHour(now);
+        const outsideTradingHours =  
+               now.getDay() === 0 
+            || now.getDay() === 6 
+            || est <= 8
+            || est >= 17
+
+        const reportFromCache = queueIsFull || dataIsFresh || outsideTradingHours;
+        return {
+            reportFromCache,
+            reason: reportFromCache
+                ? queueIsFull
+                    ? "Request queue is full"
+                    : dataIsFresh
+                        ? "Data is fresh"
+                        : "Outside of trading hours"
+                : ""
+        }
+    }
+
+    //------------------------------------------------------------------------------------------
     // getData
     //------------------------------------------------------------------------------------------
-    async getData(symbol: string, reportIfCached: boolean = true) {
+    async getData(symbol: string, reportImmediatelyIfCached: boolean = true) {
+        const now = new Date();
         symbol = symbol.toUpperCase();
         if(!this._pingList.find(i => i.symbol === symbol)) {
             this.logger.logLine(`New Stock: ${symbol}`)
@@ -206,51 +233,24 @@ export class StockModel
             ? JSON.parse(cachedDataJson ?? "") as StockData
             : undefined;
 
-        let reported = false;
-        // Maybe report immediately if there is something cached
-        if(cachedData && (reportIfCached || this._collectingCount > 3)) {
-            this._reportStateChange(cachedData)
-            reported = true;
-        }
-
-        // Just report what's in the cache if it has been less than 5 min
-        if(cachedData) {
-            const now = new Date();
-            const timeSinceLastCheck = (now.valueOf() - cachedData.data[0].date * 1000)
-            const est = estNow();
-            let outsideTradingHours =  
-                   now.getDay() === 0 
-                || now.getDay() === 6 
-                || est.hour < 9
-                || est.hour > 17
-
-            if(timeSinceLastCheck < this._pingInterval_ms || outsideTradingHours) {
-                const reason = timeSinceLastCheck < this._pingInterval_ms
-                    ? "too soon" 
-                    : 'outside trading hours'
-                this.logger.logLine(`Reporting cached data for ${symbol} (${reason})`)
-                if(!reported) 
-                {
-                    this._reportStateChange(cachedData)
-                }
-                return;
-            }
-        }
-
-        if(Date.now() > 0) {
-            console.log("Skipping stock until throttling is fixed")
-            return;
-        }
-
+        const lastDataPointTime = (cachedData ? cachedData.data[0].date * 1000 : 0)
+        const cacheResponse = StockModel.getCacheResponse(now, lastDataPointTime, this._collectingCount, this._pingInterval_ms)
         if(this._collectingCount > 4)
         {
             console.log("WEIRD: collectingCount was bigger than 4")
         }
 
-        if(this._collectingCount > 3) {
-            this.logger.logLine("WARNING:  Missing a new collection because count was high")
-            return;
+        // Maybe report immediately if there is something cached
+        if(cachedData) {
+            if(reportImmediatelyIfCached || cacheResponse.reportFromCache) {
+                this._reportStateChange(cachedData)
+            }
+            if(cacheResponse.reportFromCache) {
+                this.logger.logLine(`Reporting cached data for ${symbol} because ${cacheResponse.reason}`)
+                return;
+            }
         }
+
         this._collectingCount++;
 
         // let's load some fresh data

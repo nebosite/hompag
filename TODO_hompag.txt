@@ -49,8 +49,7 @@ WIDGET IDEAS
 =========== TODO                                                                   ===========
 ==============================================================================================
 
-    [ ] Unit test throttling
-    [ ] Fuzz test throttling
+    [x] Unit test throttling
     [ ] Allow ping tool to take http urls and simply try to access them
         - need this for clusterfun
     [ ] Be able to start a playlist from spotify widget
