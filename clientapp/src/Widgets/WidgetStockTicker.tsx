@@ -63,6 +63,9 @@ export class WidgetStockTickerData extends WidgetModelData
     // state_someOtherThing:  AnotherTypeWeDontWantToSerialize
     ref_appModel:AppModel;
 
+    // -------------------------------------------------------------------
+    // ctor
+    // -------------------------------------------------------------------
     constructor(appModel: AppModel) {
         super();
         this.ref_appModel = appModel
@@ -82,10 +85,16 @@ export class WidgetStockTickerData extends WidgetModelData
         },1000)
     }
 
+    // -------------------------------------------------------------------
+    //  
+    // -------------------------------------------------------------------
     removeSubscription(subscription: TickerSubscription) {
         this.subscriptions.remove(subscription);
     }
 
+    // -------------------------------------------------------------------
+    //  
+    // -------------------------------------------------------------------
     cancelNewTicker(deleteIfPresent: boolean = false) { 
         if(deleteIfPresent) {
             const deleteMeIndex = this.subscriptions.indexOf(this.editTicker)
@@ -96,6 +105,9 @@ export class WidgetStockTickerData extends WidgetModelData
         this.editTicker = undefined 
     }
 
+    // -------------------------------------------------------------------
+    //  
+    // -------------------------------------------------------------------
     acceptNewTicker() { 
         this.editTicker.name = this.editTicker.name.toUpperCase();
         this.startServerPing(this.editTicker.name)
@@ -109,6 +121,9 @@ export class WidgetStockTickerData extends WidgetModelData
         this.editTicker = undefined 
     } 
 
+    // -------------------------------------------------------------------
+    //  
+    // -------------------------------------------------------------------
     startServerPing(symbol: string)
     {
         this.ref_appModel.post(`stock/${symbol}`, {})
@@ -133,7 +148,7 @@ export class StockTickerTransientState
     myState:    ObservableState<string>;
 
     // -------------------------------------------------------------------
-    // ctor
+    //  
     // -------------------------------------------------------------------
     constructor(widgetId: string, stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
     {
@@ -163,11 +178,6 @@ class StockComponentState {
 
 const ONE_HOUR = 3600 * 1000
 const ONE_DAY = ONE_HOUR * 24
-const ONE_WEEK = ONE_DAY * 7
-const ONE_MONTH = ONE_DAY * 30
-const ONE_YEAR = ONE_DAY * 365
-
-const timeProgression = [ONE_HOUR, ONE_DAY, ONE_WEEK, ONE_MONTH, ONE_YEAR, ONE_YEAR * 10000]
 
 @observer
 export class StockComponent 
@@ -197,13 +207,11 @@ extends React.Component<StockComponentProps>
     render() {
         const {context}= this.props;
 
-        const endDate = Date.now() - 31 * ONE_DAY
+        const endDate = Date.now() - 90 * ONE_DAY
 
         let majorMarkers:number[] = []
         let tickMarkers:number[] = []
-        let progressionIndex = 0;
-        let tickSpacer = timeProgression[progressionIndex]
-        let majorSpacer = timeProgression[progressionIndex + 1]
+        let tickUnit = 0
 
         let points = ""
         let price = "na"
@@ -214,9 +222,9 @@ extends React.Component<StockComponentProps>
         let volumeShade: any;
 
         if(context.history){
+            let currentTickTimeValue = new Date().getHours();
+            let currentMarkTimeValue = new Date().getDay();
             lowestValue = highestValue = context.history[0].values[0];
-            let tickTime = context.history[0].date * 1000 - tickSpacer;
-            let majorTickTime = context.history[0].date * 1000 - majorSpacer;
     
             price = context.history[0].values[0].toFixed(2)
             let x = 0;
@@ -224,20 +232,41 @@ extends React.Component<StockComponentProps>
             const tempPoints:{x:number, y: number}[] = []
             for(let i = 0; i < context.history.length; i++)
             {
-                const pointDate = context.history[i].date * 1000
-                if(pointDate < endDate) break;
-                if(pointDate < majorTickTime) {
+                const pointTime = context.history[i].date * 1000
+                if(pointTime < endDate) break;
+
+                const age = Date.now() - pointTime;
+                if(i === 0 && age/ ONE_HOUR > 10) tickUnit = 1 // days
+                const pointDate = new Date(pointTime);
+                const calcTimeValue = (type: number) => {
+                    switch(type)
+                    {
+                        case 0: return pointDate.getHours(); 
+                        case 1: return pointDate.getDay(); 
+                        case 2: return pointDate.getMonth(); 
+                        case 3: return pointDate.getFullYear(); 
+                        case 4: return Math.floor(pointDate.getFullYear()/10); 
+                        case 5: return Math.floor(pointDate.getFullYear()/100); 
+                        case 6: return Math.floor(pointDate.getFullYear()/1000); 
+                    }
+                }
+                let tickTimeValue = calcTimeValue(tickUnit);
+                let markTimeValue = calcTimeValue(tickUnit + 1);
+
+                //console.log(`  ${tickTimeValue},${markTimeValue} current: ${currentTickTimeValue},${currentMarkTimeValue}`)
+                if(markTimeValue !== currentMarkTimeValue) {
                     majorMarkers.push(x);
-                    progressionIndex++;
-                    tickSpacer = timeProgression[progressionIndex]
-                    majorSpacer = timeProgression[progressionIndex + 1]
-                    tickTime = pointDate - tickSpacer;
-                    majorTickTime = pointDate - majorSpacer;
+                    tickUnit++;
+                    tickTimeValue = calcTimeValue(tickUnit);
+                    markTimeValue = calcTimeValue(tickUnit + 1);
                 }
-                else if(pointDate < tickTime) {
+                else if(tickTimeValue !== currentTickTimeValue) {
                     tickMarkers.push(x);
-                    tickTime -= tickSpacer;
                 }
+
+                currentTickTimeValue = tickTimeValue;
+                currentMarkTimeValue = markTimeValue;
+
                 const y = context.history[i].values[0]
                 lowestValue = Math.min(lowestValue, y);
                 highestValue = Math.max(highestValue,y);
@@ -278,11 +307,6 @@ extends React.Component<StockComponentProps>
                         <SafeLink link={`https://www.google.com/search?q=${context.name}`} text={context.name} />
                     </div>
                 </div>
-                <div className={styles.stockValueBox}>
-                    <div className={styles.highLowValue}>{highestValue.toFixed(2)}</div>
-                    <div className={styles.stockPrice}>{price}</div>
-                    <div className={styles.highLowValue}>{lowestValue.toFixed(2)}</div>
-                </div>
                 <div className={styles.stockGraphBox}>
                     <svg className={styles.stockGraph} id={this.id}>
                         {volumeShade}
@@ -295,6 +319,11 @@ extends React.Component<StockComponentProps>
                             points={points}
                         />
                     </svg>
+                </div>
+                <div className={styles.stockValueBox}>
+                    <div className={styles.highLowValue}>{highestValue.toFixed(2)}</div>
+                    <div className={styles.stockPrice}>{price}</div>
+                    <div className={styles.highLowValue}>{lowestValue.toFixed(2)}</div>
                 </div>
                 <div className={styles.stockButtonBox}>
                     <TiDelete onClick={this.props.onDelete} />
@@ -387,7 +416,9 @@ extends WidgetBase<{context: WidgetContainer}>
                             />
                         </div>)
                 }
-                <BsPlusSquare onClick={()=>addTicker()} />
+                <div style={{margin: "5px"}}>
+                    <BsPlusSquare onClick={()=>addTicker()} />
+                </div>
 
             </div> 
         );
