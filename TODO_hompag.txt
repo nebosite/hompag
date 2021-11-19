@@ -50,6 +50,8 @@ WIDGET IDEAS
 ==============================================================================================
 
     [x] Unit test throttling
+    [x] Spacers are a little wrong on the stock graph
+        Just use regular time and drop spacers when the hour/day/week/month changes
     [ ] Allow ping tool to take http urls and simply try to access them
         - need this for clusterfun
     [ ] Be able to start a playlist from spotify widget

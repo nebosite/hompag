@@ -42,7 +42,7 @@ export class SpotifyTransientState
 
     private stopped = false;
     // -------------------------------------------------------------------
-    // 
+    // ctor
     // -------------------------------------------------------------------
     constructor(widgetId: string, stateMaker : <T>(name: string, handler: (data: T)=>void)=> TransientStateHandler<T>)
     {
