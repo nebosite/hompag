@@ -52,35 +52,35 @@ export class DebugTransientState
 
     @observable  private _renderFrequency = 0
     get renderFrequency() {return this._renderFrequency}
-    set renderFrequency(value) {action(()=>{this._renderFrequency = value})()}
+    set renderFrequency(value)  {this.addAnimation(new AnimatedValue(this._renderFrequency, value,(nv)=>{this._renderFrequency = nv;}))}
     
     @observable  private _rootRenderFrequency = 0
     get rootRenderFrequency() {return this._rootRenderFrequency}
-    set rootRenderFrequency(value) {action(()=>{this._rootRenderFrequency = value})()}
+    set rootRenderFrequency(value) {this.addAnimation(new AnimatedValue(this._rootRenderFrequency, value,(nv)=>{this._rootRenderFrequency = nv;}))}
     
     @observable  private _sendFrequency = 0
     get sendFrequency() {return this._sendFrequency}
-    set sendFrequency(value) {action(()=>{this._sendFrequency = value})()}
+    set sendFrequency(value) {this.addAnimation(new AnimatedValue(this._sendFrequency, value,(nv)=>{this._sendFrequency = nv;}))}
     
     @observable  private _receiveFrequency = 0
     get receiveFrequency() {return this._receiveFrequency}
-    set receiveFrequency(value) {action(()=>{this._receiveFrequency = value})()}
+    set receiveFrequency(value) {this.addAnimation(new AnimatedValue(this._receiveFrequency, value,(nv)=>{this._receiveFrequency = nv;}))}
     
     @observable  private _sendBandwidth = 0
     get sendBandwidth() {return this._sendBandwidth}
-    set sendBandwidth(value) {action(()=>{this._sendBandwidth = value})()}
+    set sendBandwidth(value) {this.addAnimation(new AnimatedValue(this._sendBandwidth, value,(nv)=>{this._sendBandwidth = nv;}))}
     
     @observable  private _receiveBandwidth = 0
     get receiveBandwidth() {return this._receiveBandwidth}
-    set receiveBandwidth(value) {action(()=>{this._receiveBandwidth = value})()}
+    set receiveBandwidth(value){this.addAnimation(new AnimatedValue(this._receiveBandwidth, value,(nv)=>{this._receiveBandwidth = nv;}))}
     
     @observable  private _messageBandwidth = 0
     get messageBandwidth() {return this._messageBandwidth}
-    set messageBandwidth(value) {action(()=>{this._messageBandwidth = value})()}
+    set messageBandwidth(value) {this.addAnimation(new AnimatedValue(this._messageBandwidth, value,(nv)=>{this._messageBandwidth = nv;}))}
     
     @observable  private _memorySize = 0
     get memorySize() {return this._memorySize}
-    set memorySize(value) {action(()=>{this._memorySize = value})()}
+    set memorySize(value) {this.addAnimation(new AnimatedValue(this._memorySize, value,(nv)=>{this._memorySize = nv;}))}
 
     renderCount = 0;
 
@@ -135,6 +135,73 @@ export class DebugTransientState
     logRender() {
         this.renderCount++;
     }
+
+
+    animations: AnimatedValue[] = []
+    active = false;
+    //--------------------------------------------------------------------------------------
+    // 
+    //--------------------------------------------------------------------------------------
+    addAnimation(animation: AnimatedValue) {
+        this.animations.push(animation)
+
+        if(!this.active) {
+            this.active = true;
+
+            const animator = () => {
+                if(this.animations.length > 0) {
+                    action(()=> {
+                        const keep:AnimatedValue[] = []
+                        for(const item of this.animations) {
+                            item.animate()
+                            if(!item.finished) {
+                                keep.push(item)
+                            }
+                        }
+                        this.animations = keep;
+                    })()
+                    setTimeout(animator, 100)
+                }
+                else {
+                    this.active = false;
+                }
+            }
+            animator();
+        }
+    }
+}
+
+class AnimatedValue {
+    startTime = Date.now()
+    endTime = Date.now() + 1000
+    start: number;
+    delta: number;
+    setValue: (value: number)=>void;
+    finished = false;
+
+    //--------------------------------------------------------------------------------------
+    // 
+    //--------------------------------------------------------------------------------------
+    constructor(oldValue: number, newValue: number, setValue: (value: number)=> void) {
+        this.start = oldValue;
+        this.delta = newValue - oldValue;
+        this.setValue = setValue;
+    } 
+
+    //--------------------------------------------------------------------------------------
+    // 
+    //--------------------------------------------------------------------------------------
+    animate() {
+        const progress = Date.now() - this.startTime;
+        const duration_ms = this.endTime - this.startTime;
+        let fraction = progress / duration_ms;
+        if(fraction >= .999) {
+            fraction = 1;
+            this.finished = true;
+        }
+        const newValue = this.start + this.delta * fraction
+        this.setValue(newValue);
+    }
 }
 
 
@@ -188,13 +255,13 @@ extends WidgetBase<{context: WidgetContainer}>
         return (
             <div className={styles.debugControl} style={style}>
                 <div><b>Debugging info</b></div>   
-                {renderRow("Render Frequency", this.st.renderFrequency.toFixed(2))}
-                {renderRow("Root Render Frequency", this.st.rootRenderFrequency.toFixed(2))}
-                {renderRow("Send Frequency", this.st.sendFrequency.toFixed(2))}
-                {renderRow("Send Bandwidth", this.st.sendBandwidth.toFixed(2))}
-                {renderRow("Receive Frequency", this.st.receiveFrequency.toFixed(2))}
-                {renderRow("Receive Bandwidth", this.st.receiveBandwidth.toFixed(2))}
-                {renderRow("Memory Size", `${(this.st.memorySize / 1000000).toFixed(2)}MB`)}
+                {renderRow("Render Frequency", this.st.renderFrequency.toFixed(1))}
+                {renderRow("Root Render Frequency", this.st.rootRenderFrequency.toFixed(1))}
+                {renderRow("Send Frequency", this.st.sendFrequency.toFixed(1))}
+                {renderRow("Send Bandwidth", this.st.sendBandwidth.toFixed(1))}
+                {renderRow("Receive Frequency", this.st.receiveFrequency.toFixed(1))}
+                {renderRow("Receive Bandwidth", this.st.receiveBandwidth.toFixed(1))}
+                {renderRow("Memory Size", `${(this.st.memorySize / 1000000).toFixed(1)}MB`)}
             </div> 
         );
     }
