@@ -287,18 +287,20 @@ extends React.Component<StockComponentProps>
             const height = highestValue - lowestValue;
             const expandFactor = this.st.graphWidth/x;
             tempPoints.forEach(p =>  points += `${this.st.graphWidth - p.x * expandFactor},${(this.st.graphHeight - (p.y - lowestValue)/height * this.st.graphHeight)} `)
-            ticks = tickMarkers.map(mx => {
+            ticks = tickMarkers.map((mx,i) => {
                 const x = this.st.graphWidth - mx * expandFactor
                 return <polyline 
+                                key={i}
                                 fill="none"
                                 stroke="#00000040"
                                 strokeWidth="1"
                                 points={`${x},0 ${x},${this.st.graphHeight}`}
                             />
             })
-            markers = majorMarkers.map(mx => {
+            markers = majorMarkers.map((mx,i) => {
                 const x = this.st.graphWidth - mx * expandFactor
                 return <polyline 
+                                key={i}
                                 fill="none"
                                 stroke="#00000090"
                                 strokeWidth="2"
