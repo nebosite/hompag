@@ -218,7 +218,6 @@ extends React.Component<StockComponentProps>
         let tickUnit = 0
 
         let points = ""
-        let price = "na"
         let currentPrice = 0;
         let lowestValue = 0;
         let highestValue = 0;
@@ -353,7 +352,7 @@ extends React.Component<StockComponentProps>
                 </div>
                 <div className={styles.stockValueBox}>
                     <div className={styles.highLowValue}>{highestValue.toFixed(2)}</div>
-                    <div className={styles.stockPrice}>{price}</div>
+                    <div className={styles.stockPrice}>{currentPrice.toFixed(2)}</div>
                     <div className={styles.highLowValue}>{lowestValue.toFixed(2)}</div>
                 </div>
                 <div className={styles.stockButtonBox}>
