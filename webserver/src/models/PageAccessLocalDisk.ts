@@ -34,6 +34,10 @@ export class PageAccessLocalDisk implements IItemStore
         addFolder("widget");
         addFolder("config");
         addFolder("cache");
+
+        fs.watch( this._storeLocation, (eventType: any, filename:any) => {
+            console.log(`  >> FILE CHANGE: ${eventType} ${filename}`);
+        })
     }
 
     // ---------------------------------------------------------------------------------

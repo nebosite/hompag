@@ -7,15 +7,18 @@ import { WidgetModelData } from "models/WidgetModel";
 import { registerWidget, WidgetType } from "widgetLibrary";
 import WidgetBase from "./WidgetBase";
 import styles from './WidgetStockTicker.module.css';
-import {BsPlusSquare} from "react-icons/bs"
 import { DialogControl } from "Components/DialogControl";
 import Row from "Components/Row";
 import { AppModel } from "models/AppModel";
 import { CSSProperties } from "react";
 import { StockData, StockDetail } from "hompag-common";
 import React from "react";
-import { TiDelete } from "react-icons/ti";
 import SafeLink from "Components/SafeLink";
+
+// ICONS
+import { TiDelete } from "react-icons/ti";
+import {BsPlusSquare} from "react-icons/bs"
+import {ImArrowUp, ImArrowDown} from "react-icons/im"
 
 
 export function poll(interval_ms: number, runMe: ()=>void) {
@@ -88,8 +91,9 @@ export class WidgetStockTickerData extends WidgetModelData
     // -------------------------------------------------------------------
     //  
     // -------------------------------------------------------------------
-    removeSubscription(subscription: TickerSubscription) {
-        this.subscriptions.remove(subscription);
+    removeSubscription(subscription: TickerSubscription) {  
+        this.updateMe(()=>{this.subscriptions.remove(subscription)});
+        
     }
 
     // -------------------------------------------------------------------
@@ -215,29 +219,36 @@ extends React.Component<StockComponentProps>
 
         let points = ""
         let price = "na"
+        let currentPrice = 0;
         let lowestValue = 0;
         let highestValue = 0;
         let ticks:any;
         let markers: any;
         let volumeShade: any;
+        let previousClosingPrice = 0;
 
         if(context.history){
             let currentTickTimeValue = new Date().getHours();
             let currentMarkTimeValue = new Date().getDay();
+            let startDay = new Date().getDay();
             lowestValue = highestValue = context.history[0].values[0];
     
-            price = context.history[0].values[0].toFixed(2)
+            currentPrice = context.history[0].values[0]
             let x = 0;
 
             const tempPoints:{x:number, y: number}[] = []
             for(let i = 0; i < context.history.length; i++)
             {
                 const pointTime = context.history[i].date * 1000
+                const pointDate = new Date(pointTime);
+                if(previousClosingPrice === 0 && pointDate.getDay() !== startDay)
+                {
+                    previousClosingPrice = context.history[i].values[0]    
+                }
                 if(pointTime < endDate) break;
 
                 const age = Date.now() - pointTime;
                 if(i === 0 && age/ ONE_HOUR > 10) tickUnit = 1 // days
-                const pointDate = new Date(pointTime);
                 const calcTimeValue = (type: number) => {
                     switch(type)
                     {
@@ -253,7 +264,6 @@ extends React.Component<StockComponentProps>
                 let tickTimeValue = calcTimeValue(tickUnit);
                 let markTimeValue = calcTimeValue(tickUnit + 1);
 
-                //console.log(`  ${tickTimeValue},${markTimeValue} current: ${currentTickTimeValue},${currentMarkTimeValue}`)
                 if(markTimeValue !== currentMarkTimeValue) {
                     majorMarkers.push(x);
                     tickUnit++;
@@ -297,15 +307,34 @@ extends React.Component<StockComponentProps>
             })
         }
 
-
-
+        const delta = (currentPrice - previousClosingPrice) * 100/previousClosingPrice;
+        let arrowStyle:CSSProperties = {
+            color: "gray"  
+        }
+        const swing = Math.min(10, Math.abs(delta))/10.0;
+        const colorPart = ((140) + Math.floor(115 * swing)).toString(16).padStart(2,"0")
+        const grayPart = ((140) - Math.floor(100 * swing)).toString(16).padStart(2,"0")
+        if(delta > 0) arrowStyle.color = `#${grayPart}${colorPart}${grayPart}`
+        else arrowStyle.color = `#${colorPart}${grayPart}${grayPart}`
 
         return <div className={styles.stockRowFrame}>
             <Row className={styles.stockRowContents}>
                 <div className={styles.stockNameBox}>
-                    <div className={styles.stockName}>
-                        <SafeLink link={`https://www.google.com/search?q=${context.name}`} text={context.name} />
-                    </div>
+                    <Row>
+                        <SafeLink 
+                            link={`https://www.google.com/search?q=${context.name}`} 
+                            text={<div className={styles.stockName}>{context.name}</div>} />
+                        <div className={styles.arrowContainer} >
+                            {
+                                delta <= 0 
+                                    ?   <ImArrowDown className={styles.arrow}  style={arrowStyle}/>
+                                    :   <ImArrowUp className={styles.arrow} style={arrowStyle}/>
+                            }
+                            
+                            <div className={styles.arrowText}>{delta.toFixed(1)}%</div>
+                        </div>
+
+                    </Row>
                 </div>
                 <div className={styles.stockGraphBox}>
                     <svg className={styles.stockGraph} id={this.id}>

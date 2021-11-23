@@ -6,7 +6,7 @@ import React from "react";
 export interface SafeLinkProperties
 {
     link: string
-    text:string | number
+    text:string | number | JSX.Element
     style?: React.CSSProperties 
     openInNewTab?: boolean
 }

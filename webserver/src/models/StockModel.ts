@@ -70,6 +70,7 @@ export class AxiosStockProvder implements IStockProvider {
                 const date = Date.parse(item.datetime + " EST")
                 if(date > earliest) continue;
                 const close = Number.parseFloat(item.close);
+                const open = Number.parseFloat(item.open);
                 const low = Number.parseFloat(item.low);
                 const high = Number.parseFloat(item.high);
                 const volume = Number.parseFloat(item.volume); 
@@ -79,7 +80,8 @@ export class AxiosStockProvder implements IStockProvider {
                             Math.floor(close * 100)/100,
                             Math.floor(low * 100)/100,
                             Math.floor(high * 100)/100,
-                            Number.parseFloat((volume / 1000000).toFixed(2))
+                            Number.parseFloat((volume / 1000000).toFixed(2)),
+                            Math.floor(open * 100)/100,
                         ]
                     }
                 data.push(pushMe)

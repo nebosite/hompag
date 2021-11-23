@@ -18,7 +18,7 @@
 }
 .stockName {
     font-weight: 800;
-    width: 60px;
+    width: 50px;
     text-align: center;
     margin: 2px;
 }
@@ -55,4 +55,27 @@
 }
 .stockButtonBox:hover {
     cursor: pointer;
+}
+
+.arrowContainer {
+    position: relative;
+}
+
+.arrow {
+    width: 30px;
+    height: 22px;
+    margin-top: 2px;
+}
+
+.arrowText {
+    color: white;
+    font-size: 55%;
+    font-weight: 800;
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    width: 100%;
+    text-align: center;
+    background: #00000000;
+    text-shadow: 1px 1px 2px #000000;
 }
