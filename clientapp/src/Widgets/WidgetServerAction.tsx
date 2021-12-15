@@ -1,4 +1,3 @@
-import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { action, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { ObservableState, TransientStateHandler } from "models/TransientState";
@@ -9,7 +8,6 @@ import { BsPlusSquare } from "react-icons/bs"
 import { TiDelete } from "react-icons/ti"
 import Combobox from "Components/ComboBox";
 import { RestHelper } from "helpers/RestHelper";
-import Row from "Components/Row";
 import appStyles from '../AppStyles.module.css';
 import WidgetBase from "./WidgetBase";
 
@@ -130,13 +128,8 @@ extends WidgetBase<{context: WidgetContainer}>
     // renderContent
     // -------------------------------------------------------------------
     renderContent() {
-        const {context} = this.props;
         const tState = this.transientState;
         const data = this.props.context.ref_widget.data as WidgetServerActionData; 
-        const style = {
-            background: context.colorTheme.color(ColorIndex.Special,ColorValue.V7_ExtraBright),
-            color: context.colorTheme.color(ColorIndex.Highlight,ColorValue.V2_Dark),
-        }
 
         const selectItem = (item: string) => {
             console.log(`Selected ${item}`)
@@ -150,21 +143,21 @@ extends WidgetBase<{context: WidgetContainer}>
 
         const renderAction = (action: string) => (
                 <div key={action} className={appStyles.ServerActionItem}>
-                    <Row>
+                    <div className={appStyles.testRow}>
                         <div 
-                            className={appStyles.Name} 
+                            className={appStyles.name} 
                             onClick={()=>{this.transientState.executeAction(action)}}
                         >
                             {action}
                         </div>
-                        <div onClick={()=> data.removeAction(action)}><TiDelete /></div>
-                    </Row>
+                        <div className={appStyles.deleteButton} onClick={()=> data.removeAction(action)}><TiDelete /></div>
+                    </div>
                 </div>
             )
 
         return (
-            <div style={style}>
-                <div>
+            <div>
+                <div style={{paddingTop:"5px"}}>
                     {
                         data.pickedActions.map(a => renderAction(a))
                     }                    

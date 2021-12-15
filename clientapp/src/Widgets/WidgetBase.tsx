@@ -1,5 +1,4 @@
 import { WidgetConfigurator } from "Components/WidgetConfigurator";
-import { ColorIndex, ColorValue } from "helpers/ColorTool";
 import { WidgetContainer } from "models/WidgetContainer";
 import React from "react";
 import { WidgetFrame } from "../Components/WidgetFrame";
@@ -19,24 +18,16 @@ extends React.Component<T, StateT >
     // -------------------------------------------------------------------
     render() {
         const {context} = this.props;
-        const style = {
-            background: context.colorTheme.color(ColorIndex.Special,ColorValue.V7_ExtraBright),
-            color: context.colorTheme.color(ColorIndex.Highlight,ColorValue.V2_Dark),
-            height: "100%"
-        }
+
         return (
             <div>
-                {context.state_configuring
+                { context.state_configuring
                     ?   <WidgetConfigurator context={context} customUI={this.renderConfigUI()} />
-                    : null}   
+                    :   null }
                 <WidgetFrame context={context}>
-                    <div style={style}>
-                        {this.renderContent()}
-                    </div>                       
-                </WidgetFrame>           
-          
+                    {this.renderContent()}
+                </WidgetFrame>  
             </div>
-
         );    
     };
 }
