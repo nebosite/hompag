@@ -54,6 +54,13 @@ WIDGET IDEAS
         Just use regular time and drop spacers when the hour/day/week/month changes
     [x] Allow ping tool to take http urls and simply try to access them
         - need this for clusterfun
+        
+    [x] Actions:    
+        [x] Open logs
+        [x] Open explorer
+        [x] Open Task manager
+    [ ] Debug page changes
+        [ ] Show source location
     [ ] Make it work across machines
         [ ] Watch for file changes: 
             https://github.com/paulmillr/chokidar
@@ -89,6 +96,9 @@ WIDGET IDEAS
         
 
 NEW ==============================
+    [ ] Convert to full flex layout
+    [ ] An error in the actions file should show up on the page somehow
+    [ ] Changing the actions file should cause a reload of actions config
     [ ] Be able to start a playlist from spotify widget
     [ ] Document how to start hompag from task scheduler
 

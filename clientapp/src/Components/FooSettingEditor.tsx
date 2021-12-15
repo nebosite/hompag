@@ -6,7 +6,7 @@ import {  FooParams } from "./FooSettings";
 import { observer } from "mobx-react";
 
 // -------------------------------------------------------------------
-// Show a heat map using various axes
+// 
 // -------------------------------------------------------------------
 @observer
 export default class SearchEditor 
