@@ -140,12 +140,12 @@ export class SpotifyModel
         logger: ILogger, 
         clientId:string, 
         clientSecret: string, 
-        _reportStateChange: (state: StatePacket) => void )
+        reportStateChange: (state: StatePacket) => void )
     {
         this._logger = new LoggerPrefixer(logger, "Spotify");
         this.clientId = clientId
         this.clientSecret = clientSecret
-        this._reportStateChange = _reportStateChange;
+        this._reportStateChange = reportStateChange;
     }
 
     //------------------------------------------------------------------------------------------

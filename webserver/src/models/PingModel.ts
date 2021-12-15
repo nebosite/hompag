@@ -1,4 +1,5 @@
 import { ILogger, LoggerPrefixer } from "../helpers/logger";
+import { restCallText } from "../helpers/rest";
 var ping = require ("net-ping");
 var dns = require('dns'); 
 
@@ -6,6 +7,7 @@ export interface PingCommand
 {
     id: number;
     url: string;
+    regex?: string;
 }
 
 interface PingTask {
@@ -31,7 +33,7 @@ export class PingModel
     {
         this._logger = new LoggerPrefixer( logger, "Pinger");
         this.sendAlert = sendAlert;
-        this.pingTask();
+        this.pingWorker();
     }
 
     //------------------------------------------------------------------------------------------
@@ -70,9 +72,30 @@ export class PingModel
     }
 
     //------------------------------------------------------------------------------------------
+    // 
+    //------------------------------------------------------------------------------------------
+    async attemptPing (command: PingCommand) {
+
+        if(command.url.toLowerCase().startsWith("http")) {
+            const startTime = Date.now();
+            const response = (await restCallText("GET", undefined, command.url));
+            if(command.regex && command.regex.trim() != "") {
+                if(!response.match(command.regex)) throw("Ping text did not match")
+            }
+            return Date.now() - startTime;
+        }
+        else {
+            let error:any = undefined;
+            return await this.pingServer(command.url).catch(err => error = err)
+            if(error) throw Error(error);
+        }
+    }
+
+
+    //------------------------------------------------------------------------------------------
     // pingTask
     //------------------------------------------------------------------------------------------
-    async pingTask () {
+    async pingWorker () {
         try {
             const work = [...this.pings]
             work.forEach(async(p) => {
@@ -86,10 +109,7 @@ export class PingModel
                     p.nextPingTime = Date.now() + 59000 + (Math.random() * 2000);
                     if(Date.now() > p.idleTime) p.nextPingTime += 10 * 60 * 1000;  // Add 10 minutes if idle
                     try {
-                        let error:any = undefined;
-                        const latency = await this.pingServer(p.command.url).catch(err => error = err)
-                        if(error) throw Error(error);
-
+                        const latency = await this.attemptPing(p.command);
                         p.lastUpTime = Date.now();
                         this.sendAlert({
                             type: "Ping", 
@@ -117,7 +137,7 @@ export class PingModel
         catch(err) {
             this._logger.logError(`Ping error: ${(err as any)}`)
         }
-        setTimeout(()=>this.pingTask(), 1000)
+        setTimeout(()=>this.pingWorker(), 1000)
     }
 
     //------------------------------------------------------------------------------------------

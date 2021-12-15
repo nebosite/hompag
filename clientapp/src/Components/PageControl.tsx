@@ -14,7 +14,6 @@ import Combobox from "./ComboBox";
 import Row from "./Row";
 import WidgetDefault from "Widgets/WidgetDefault";
 import { renderWidget } from "widgetLibrary";
-import WidgetBlank from "Widgets/WidgetBlank";
 
 
 interface PageSettingsControlProps 
@@ -221,9 +220,9 @@ extends React.Component<PageControlProps, PageControlState>
         }
 
         const mouseUp =  (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            if(!dragging) return;
+            this.setState({ dragging: false, draggingOK: true})
+            if(!dragging)   return;
             const pos = mouseCoords(e);
-            this.setState({ dragging: false})
             const totalDistance = Math.abs(pos.x - this.state.x1) + Math.abs(pos.y - this.state.y1);
             if(totalDistance > thresholdDistance)
             {
@@ -265,9 +264,9 @@ extends React.Component<PageControlProps, PageControlState>
         const resizeHandle = <div className={styles.widgetFrameResizeHandle}>╝</div>
 
         const renderPageItem = (container: WidgetContainer) => { 
-            if(!draggingOK) return <WidgetBlank context={container}/>
-            const widgetControl = renderWidget(container.ref_widget?.widgetType, container)
-            return widgetControl ?? <WidgetDefault context={container} />
+            const widgetControl = renderWidget(container.ref_widget?.widgetType, container) ?? <WidgetDefault context={container} />
+            if(!draggingOK) return <div style={{opacity: .5}}>{widgetControl}</div>
+            else return widgetControl
         } 
 
         const widgetDragStop:ItemCallback = (layout: Layout[],
@@ -277,7 +276,7 @@ extends React.Component<PageControlProps, PageControlState>
             event: MouseEvent,
             element: HTMLElement) =>
         {
-            this.setState({draggingOK:true})
+            this.setState({dragging: false, draggingOK:true})
             //console.log(`Drag stop: ${JSON.stringify(newItem)}`)
             pageModel.setContainerLocation(newItem.i, newItem.x, newItem.y)
         }
@@ -289,7 +288,7 @@ extends React.Component<PageControlProps, PageControlState>
             event: MouseEvent,
             element: HTMLElement) =>
         {
-            this.setState({draggingOK:true})
+            this.setState({dragging: false, draggingOK:true})
             //console.log(`Resize stop:  ${JSON.stringify(newItem)}`)
             pageModel.setWidgetSize(newItem.i, newItem.w, newItem.h)
         }

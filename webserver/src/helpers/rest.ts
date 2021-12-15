@@ -32,7 +32,7 @@ export async function restCallText(
     return fetch(endpoint, options)
             .then((response:any) =>  {
                 if(response.status === 204) return null;
-                return response.text()
-            } )
+                return response.text() as string
+            } ) as string
 
 }

@@ -27,6 +27,10 @@ class PingThing {
     get url() {return this._url}
     set url(value) {action(()=>{this._url = value})()}
 
+    @observable  private _regex = ""
+    get regex() {return this._regex ?? ""}
+    set regex(value) {action(()=>{this._regex = value})()}
+
     @observable private state_pingStatus = "";
     get pingStatus() {return this.state_pingStatus}
     set pingStatus(value) {action(()=>{this.state_pingStatus = value})()}
@@ -55,6 +59,14 @@ class PingThing {
 
         return `${(days ? days + "d " : "")} ${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")}`
 
+    }
+
+    get package() {
+        return  {
+            id:this._id, 
+            url: this.url, 
+            regex: this.regex
+        }
     }
 
     constructor() {
@@ -120,10 +132,10 @@ export class WidgetPingerData extends WidgetModelData
     }
 
     acceptNewPinger() { 
-        this.ref_appModel.post("ping", {id:this.editPing._id, url: this.editPing.url})
+        this.pingOne(this.editPing)
         if(!this.pingTargets.find(p => p._id === this.editPing._id))
         {
-            this.updateMe(()=>{this.pingTargets.push(this.editPing)})
+            this.updateMe(()=>{this.pingTargets.push(this.editPing)}) 
         }
         else {
             this.updateMe(()=>{})
@@ -131,11 +143,12 @@ export class WidgetPingerData extends WidgetModelData
         this.editPing = undefined 
     } 
 
+    pingOne(pingMe: PingThing) {
+        this.ref_appModel.post("ping", pingMe.package)  
+    }
+
     pingAll() {
-        this.pingTargets.forEach(p =>
-            {
-                this.ref_appModel.post("ping", {id:p._id, url: p.url})
-            })
+        this.pingTargets.forEach(p =>this.pingOne(p))
     }
 }
 
@@ -197,7 +210,7 @@ extends WidgetBase<{context: WidgetContainer}>
             background: context.colorTheme.color(context.backGroundColorIndex, context.backGroundColorValue),
             color: context.colorTheme.color(context.foregroundColorIndex, context.foregroundColorValue),
         }
-        const labelStyle:CSSProperties = { width: "80px", textAlign: "right"}
+        const labelStyle:CSSProperties = { width: "100px", textAlign: "right"}
 
         const addPing =(pinger: PingThing = undefined) => {
             data.editPing = pinger ?? new PingThing();
@@ -205,10 +218,33 @@ extends WidgetBase<{context: WidgetContainer}>
 
         const editName = (e: React.ChangeEvent<HTMLInputElement>) =>  data.editPing.name = e.target.value; 
         const editUrl = (e: React.ChangeEvent<HTMLInputElement>) =>  data.editPing.url = e.target.value; 
+        const editRegex = (e: React.ChangeEvent<HTMLInputElement>) =>  data.editPing.regex = e.target.value; 
 
         const newPingerOK = () => data.acceptNewPinger();
         const newPingerCancel = () => data.cancelNewPinger();
         const deletePinger = () => data.cancelNewPinger(true);
+
+        let regexError:string;
+        if(data.editPing?.regex?.trim()) 
+        {
+            try {
+                new RegExp(data.editPing.regex)
+            }
+            catch(err) {
+                const errText = `${err}`;
+                let errorSpot = errText.indexOf(data.editPing.regex)
+                if(errorSpot === -1) { 
+                    errorSpot = errText.lastIndexOf(":") + 1;
+                }
+                else errorSpot += data.editPing.regex.length + 2;
+
+                regexError = errText.substring(errorSpot);
+            }
+        }
+        const regexStyle: CSSProperties = {
+            width: "300px",
+            background: regexError ? "red" : undefined
+        }
 
         return (
             <div className={styles.pingerControl} style={style}>
@@ -220,9 +256,14 @@ extends WidgetBase<{context: WidgetContainer}>
                             <input  type="text" style={{width: "300px"}} value={ data.editPing.name} onChange={editName}  /> 
                         </Row>
                         <Row>
-                            <div style={labelStyle}>URL:</div>
+                            <div style={labelStyle}>URL/host:</div>
                             <input  type="text" style={{width: "300px"}} value={ data.editPing.url} onChange={editUrl}  /> 
                         </Row>
+                        <Row>
+                            <div style={labelStyle}>Validation Regexp:</div>
+                            <input  type="text" style={regexStyle} value={ data.editPing.regex} onChange={editRegex}  /> 
+                        </Row>
+                        <div style={{color: "red", marginLeft: "105px"}}>&nbsp;{regexError}</div>
                         <Row style={{margin: "10px"}}>
                             <button style={{marginRight: "30px"}} onClick={newPingerOK}>OK</button>
                             <button style={{marginRight: "30px"}} onClick={newPingerCancel}>Cancel</button>
@@ -248,7 +289,9 @@ extends WidgetBase<{context: WidgetContainer}>
                             </div> 
                     })
                 }
-                <BsPlusSquare onClick={()=>addPing()} />
+                <div style={{margin: "5px"}}>
+                    <BsPlusSquare onClick={()=>addPing()} />
+                </div>
             </div> 
         );
     }

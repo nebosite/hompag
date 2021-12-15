@@ -93,6 +93,7 @@ export class PageModel
         if(x2 < x1) [x2,x1] = [x1,x2]
         if(y2 < y1) [y2,y1] = [y1,y2]
 
+
         
         const column1 = Math.floor(x1/this.columnWidth); 
         const row1 = Math.floor(y1/this.rowHeight);
@@ -100,6 +101,9 @@ export class PageModel
         const row2 = Math.ceil(y2/this.rowHeight);
         const columns = Math.max(1, column2-column1);
         const rows = Math.max(1, row2-row1);
+
+        // Bail out when we think the user accidental clicked while dragging
+        if(columns < 3 && rows < 3) return;
 
         const widgetId = generateStringId(); 
         const newWidget = this.ref_App.getWidget(widgetId);

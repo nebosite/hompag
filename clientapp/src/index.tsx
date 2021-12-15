@@ -1,13 +1,8 @@
-import { Provider } from "mobx-react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router } from "react-router-dom";
-import { MainAppPage } from "views/MainAppPage";
-import { AppModel } from "models/AppModel";
 import { trimChars } from "helpers/textHelpers";
 import { GetStartedModel } from "models/GetStartedModel";
 import { GetStartedPage } from "views/GetStartedPage";
-import { makeLocalStorage } from "models/LocalStorage";
-import { registerWidgets } from "widgetLibrary";
+import { TheApp } from "TheApp";
 const packageInfo = require("../package.json");
 export class GLOBALS {
     static Version = packageInfo.version;
@@ -38,21 +33,14 @@ if(pageName === "")
     const getStartedModel = new GetStartedModel();
     ReactDOM.render(
         <GetStartedPage context={getStartedModel} />
-        ,document.getElementById("root")
+        ,document.getElementById("root") 
     );     
 
 }
 else {
-    registerWidgets();
-    const theAppModel:AppModel = new AppModel(pageName, makeLocalStorage());
-
-    ReactDOM.render(
-        <Provider appModel={theAppModel}> 
-            <Router>
-                <MainAppPage />
-            </Router>
-        </Provider>,
-        document.getElementById("root")
-    );     
+    (async()=>{
+        console.log("========================= REFRESH ======================================")
+        ReactDOM.render(<TheApp />, document.getElementById("root"));
+    })()
 
 }

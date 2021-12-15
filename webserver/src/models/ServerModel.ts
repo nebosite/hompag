@@ -4,7 +4,7 @@ import { ILogger } from "../helpers/logger";
 import moment from "moment";
 import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
-import { ServerConfigType, ServerMessageType, StatePacket } from "hompag-common";
+import { ServerConfigType, ServerMessageType, StatePacket, StockData } from "hompag-common";
 import {exec} from "child_process"
 import { PingModel } from "./PingModel";
 import { AxiosStockProvder, StockModel } from "./StockModel";
@@ -28,6 +28,7 @@ export enum hompagItemType
 {
     page= "page",
     widget = "widget",
+    cache = "cache",
 }
 
 
@@ -53,6 +54,11 @@ export interface ServerConfig {
     axios: { 
         apiKey: string
     }
+}
+
+export interface ICache {
+    getItem(id:string): Promise<ItemReturn | null>
+    storeItem(id: string, data: string): Promise<void>
 }
 
 //------------------------------------------------------------------------------------------
@@ -83,8 +89,21 @@ export class ServerModel {
             this.sendAlert({type: ServerMessageType.transient_change, data: data} )
         }
         this.spotify = new SpotifyModel(logger, config.spotify.clientId, config.spotify.clientSecret, spotifyAlerter);
+
         this.pinger = new PingModel(logger, this.sendAlert);
-        this.stock = new StockModel(new AxiosStockProvder(config.axios, logger))
+        
+        const stockAlerter = (data: StockData) => {
+            logger.logLine(`Alerting StockUpdate for: ${data.symbol}`)
+            this.sendAlert({type: "StockUpdate", data: data} )
+        }
+
+        this.stock = new StockModel(logger, new AxiosStockProvder(config.axios, logger),
+            {
+                getItem: (id) => this._pageAccess.getItem(hompagItemType.cache, `stock_${id}`, 0),
+                storeItem: (id, data) => this._pageAccess.storeItem( hompagItemType.cache, `stock_${id}`, 0, data)      
+            }
+            ,stockAlerter
+        )
     }
 
     //------------------------------------------------------------------------------------------
@@ -301,8 +320,10 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // getStockData
     //------------------------------------------------------------------------------------------
-    getStockData(symbol: string) {
-        return this.stock.getData(symbol)
+    async getStockData(symbol: string) {
+        this.logger.logLine(`Stock post: ${symbol}`)
+        this.stock.getData(symbol)
+        return "OK" 
     }
 }
 

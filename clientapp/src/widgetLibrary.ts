@@ -13,17 +13,31 @@ import WidgetStockTicker from "Widgets/WidgetStockTicker";
 // -------------------------------------------------------------------
 // registerWidgets - This is where we expose widget types to the framework
 // -------------------------------------------------------------------
+let _widgetRegisterTask: Promise<void>
 export function registerWidgets()
 {
-    WidgetModel.register();
-    WidgetPicker.register();
-    WidgetSpotify.register();
-    WidgetRichText.register();
-    WidgetSearch.register();
-    WidgetServerAction.register();
-    WidgetPinger.register();
-    WidgetDebug.register();
-    WidgetStockTicker.register();
+    if(_widgetRegisterTask) {
+        console.log("++ Already registering widgets")
+        return _widgetRegisterTask
+    }
+
+    _widgetRegisterTask = new Promise<void>(resolve => {
+        setTimeout(()=> {
+            WidgetModel.register();
+            WidgetPicker.register();
+            WidgetSpotify.register();
+            WidgetRichText.register();
+            WidgetSearch.register();
+            WidgetServerAction.register();
+            WidgetPinger.register();
+            WidgetDebug.register();
+            WidgetStockTicker.register();
+            console.log("Registered widgets")
+            resolve()
+        },100)
+    })
+
+    return _widgetRegisterTask;
 }
 
 export enum WidgetType

@@ -9,7 +9,7 @@ import { PageModel } from "./PageModel";
 import { WidgetModel } from "./WidgetModel";
 import { TransientStateHandler } from "./TransientState";
 import { ServerMessageType, StatePacket } from "hompag-common";
-import { dataTypeForWidgetType, WidgetType } from "widgetLibrary";
+import { dataTypeForWidgetType, registerWidgets, WidgetType } from "widgetLibrary";
 
 
 const WIDGET_VERSION_ISLOADING = -1;
@@ -46,6 +46,18 @@ interface PostResponse
 {
     data: any;
     errorMessage: string;
+}
+
+export interface StockItem {
+    date: number,
+    result: number[]
+}
+export interface StockResponse {
+    data?: {
+        symbol: string
+        data:StockItem[]
+    }
+    errorMessage?: string;
 }
 
 
@@ -90,11 +102,7 @@ export class AppModel {
         this._dataChangeListener.addListener(ServerMessageType.item_change, this.handleItemChanges)
         this._dataChangeListener.addListener(ServerMessageType.transient_change, this.handleTransientChanges);
 
-        setTimeout( ()=> {
-            console.log("TAG: AppModel.loadpage")
-            this.loadPage(pageName)
-        },1)
-
+        setTimeout( ()=> { this.loadPage(pageName) },1)
         setTimeout(this.validateLocalPageVersion,500)
     }
 
@@ -214,6 +222,7 @@ export class AppModel {
     // -------------------------------------------------------------------
     async loadPage(name: string, useCache: boolean = true)
     {
+        await registerWidgets();
         // Allow any active page saves to complete by adding a new throttler
         // for the newly loaded page
         this._savePageThrottler = new ThrottledAction(500)

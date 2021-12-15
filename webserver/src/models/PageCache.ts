@@ -31,6 +31,7 @@ export class PageCache implements IItemStore{
         this._logger = logger;
         this._cache.set(hompagItemType.page, new Map<string, CacheInfo>())
         this._cache.set(hompagItemType.widget, new Map<string, CacheInfo>())
+        this._cache.set(hompagItemType.cache, new Map<string, CacheInfo>())
 
         this._loadingTask = new Promise<void>(async (resolve, reject) => {
              const pages = await deepStore.getIdList(hompagItemType.page);

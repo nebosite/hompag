@@ -1,4 +1,10 @@
 WIDGET IDEAS
+    - text parser
+        base64
+        language
+        buttons:  "decode", "encode"
+            - dropdown - auto, language, base64
+    - picture/slideshow
     - Ambient Sound
     - Time widget
         - Custom time zones, inclusing local, UTC
@@ -43,34 +49,22 @@ WIDGET IDEAS
 =========== TODO                                                                   ===========
 ==============================================================================================
 
-    [x] Add debug widget that shows stats such as:
-            render frequency
-            message frequency/bandwidth
-            memory size
-            
-    [ ] Stock API setup
-        [x] Get query working
-            https://rapidapi.com/alphavantage/api/alpha-vantage/pricing
-                Click Subscribe
-                    headers: {
-                        'x-rapidapi-host': 'alpha-vantage.p.rapidapi.com',
-                        'x-rapidapi-key': '1d735638abmsh1282630c0d75210p158ba6jsnec110e3e2c54'
-                      }  
-        [ ] Cache and throttle requests
-            - start by getting intraday, daily, and monthly - start with daily and schedule the other ones 
-                to spread out the query times
-            - track last request time
-            - only get daily if last time was more than 24 hours ago
-            - Spread out queries to be < 5/min
-            - don't issue requests outside of trading hours
-            - shrink data size by reporting a single item like this:  [ 22.32,1.33,-3.11,.04] [close,+,-,Mshares]
-        [ ] How to handle splits?
-    [ ] remove the api functions and generalize how we call the server model
-        
+    [x] Unit test throttling
+    [x] Spacers are a little wrong on the stock graph
+        Just use regular time and drop spacers when the hour/day/week/month changes
+    [x] Allow ping tool to take http urls and simply try to access them
+        - need this for clusterfun
     [ ] Make it work across machines
-        [ ] Watch for file changes: https://thisdavej.com/how-to-watch-for-files-changes-in-node-js/
+        [ ] Watch for file changes: 
+            https://github.com/paulmillr/chokidar
         [ ] A connected client has a visible page + widgets
         [ ] Push an update to the client any page or widgets change
+    [ ] Make a no-compile deployment
+    [ ] Make sure deployment instructions are correct
+        - a build script would be perfect
+        - start checking versions into github
+    [ ] remove the api functions and generalize how we call the server model
+        
         
     [ ] Documentation update
         [ ] Linux: need to run under sudo
@@ -95,7 +89,8 @@ WIDGET IDEAS
         
 
 NEW ==============================
-
+    [ ] Be able to start a playlist from spotify widget
+    [ ] Document how to start hompag from task scheduler
 
         
         
@@ -169,6 +164,44 @@ MAYBE NEVER ==============================
 
 
 -- DONE ---------------------------------------------------------------------
+
+    [x] Add debug widget that shows stats such as:
+            render frequency
+            message frequency/bandwidth
+            memory size
+            
+    [x] Stock API setup
+        [x] Get query working
+            https://rapidapi.com/alphavantage/api/alpha-vantage/pricing
+                Click Subscribe
+        [x] Cache and throttle requests
+            - start by getting intraday, daily, and monthly - start with daily and schedule the other ones 
+                to spread out the query times
+            - track last request time
+            - only get daily if last time was more than 24 hours ago
+            - Spread out queries to be < 5/min
+            - don't issue requests outside of trading hours
+            - shrink data size by reporting a single item like this:  [ 22.32,1.33,-3.11,.04] [close,+,-,Mshares]
+        [x] This is wrong:
+            appModel.addMessageListener("StockUpdate", (data: any) => {
+            The message is a transient_update, so I need to hook into that
+        [x] For some reason, not seeing current day data
+        [x] Always trying to get monthly data - should only happen once
+        [x] A full await on stock data causes a timeout error on the client
+        [x] track recent requests so we can be accurate about our request rate
+        [x] Don't query outside of trading hours
+        [x] Have the query auto-space itself so that we don't pull down everything at once
+        [x] Shoot for every 10 minutes
+    [x] Stop ping for stocks that haven't been posted for 2 hours
+    [x] Stock ticker widget
+        [x] Preliminary formatting
+        [x] Delete button
+        [x] history graph
+        [x] Better graph
+            [x] Adjust width
+            [x] Label vertical scale
+            [x] Vertical lines for hours, days, weeks, months
+            [x] Click for detailed quotes  
 
     [x] New Widget: Shell Commander - run shell commands via the server
         [x] The observable picked actions is not getting reserialized as observable
