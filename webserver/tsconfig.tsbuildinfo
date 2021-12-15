@@ -141,6 +141,11 @@
         "signature": "91509b16027fd592850d017a90f69d2b4bfc7c23295ef0e855704728ba4d7a87",
         "affectsGlobalScope": false
       },
+      "./src/config.ts": {
+        "version": "2fe5aa2ec706a4a1914cca1b67660cdb6b7c3236ce25d635ece4088e5d075a53",
+        "signature": "a398bba23a392980505e50aac33b0a1336f2417bc22814de3a3b0b74a7a4caa0",
+        "affectsGlobalScope": false
+      },
       "./node_modules/@types/node/assert/strict.d.ts": {
         "version": "c7bdc99177a2a94d25fb13722adaaf5b3291bf70b4d1b27584ba189dd3889ba3",
         "signature": "c7bdc99177a2a94d25fb13722adaaf5b3291bf70b4d1b27584ba189dd3889ba3",
@@ -507,8 +512,8 @@
         "affectsGlobalScope": false
       },
       "./src/helpers/rest.ts": {
-        "version": "99d52df7b2e6a06d4a6e5801d691fb58c04bf27844dec8fc6b4b1649035ff96f",
-        "signature": "804ac2d670429cb616a25b16b3275c029a46719df52eb596486960720b83d056",
+        "version": "a00dafb9bdce2404df764720014ae99c5663758c3eaf682b427128a7d029b2cc",
+        "signature": "1da0de001732b5938296c0d5a837d206a0de0dd4295294a49d318a54369c306b",
         "affectsGlobalScope": false
       },
       "./src/models/spotifymodel.ts": {
@@ -517,8 +522,8 @@
         "affectsGlobalScope": false
       },
       "./src/models/pingmodel.ts": {
-        "version": "b82d34f54ec7f8bb6a3d381fa76e7206e606fb1269f2bd004f2e4df90d9f83bb",
-        "signature": "7b94f966c9eb32eb8c2950b8da8f9f62ad8e727a64152a5a8eba5929294ba0ce",
+        "version": "2c8546f8b44cf2897d273843c2e85da8b1274ed1b7f44b7e5d6e9003f1100163",
+        "signature": "6b124ac2c51ac5cd6424aa1b10c2244e55d5bffcf8bf7ab649789e1f67b7ff6e",
         "affectsGlobalScope": false
       },
       "./src/helpers/asynchelper.ts": {
@@ -526,9 +531,14 @@
         "signature": "f33cf01c7b31be55b439d28b1b056a6a244acbbab0c3b438483d71a6d4d66502",
         "affectsGlobalScope": false
       },
+      "./src/helpers/throttler.ts": {
+        "version": "321bdb33e07cb4e4dd1f0d6646f73e64398b89cabfee692b7e6e28b8d2e33737",
+        "signature": "c030a4bdc0525ee3d3e922a6526e898764e90a5bb259192261ab101326b6d4ea",
+        "affectsGlobalScope": false
+      },
       "./src/models/stockmodel.ts": {
-        "version": "aec1a4988fc1fcda08ab988f3af309be98a504f0fc9b53d4b9c0138e36727439",
-        "signature": "44452ee2ee3ab23976c234e57d39f2bff7a7bb07a6a1f560465bf8610ee2fba0",
+        "version": "c20716653bf31270e6055354403d3e389961a7f8e3c491404c7bf784995d5da2",
+        "signature": "1bbbabcae353bc61fc03691c25c252cd939b8474c072d2d8020d3ea08c71d05a",
         "affectsGlobalScope": false
       },
       "./src/models/servermodel.ts": {
@@ -537,7 +547,7 @@
         "affectsGlobalScope": false
       },
       "./src/models/pageaccesslocaldisk.ts": {
-        "version": "11b2804b73087588c52fef6cd6806ef94ae148bcaa63fab4e0e9b9ee5f3f294e",
+        "version": "2d00e4301b9a161947b364dcadc0866ba4c0d2e466636deb36f7d17fab4fd6ef",
         "signature": "95bc7855c30bd1f8aeeaa874df73185588ac542fd0878ffc3198c5842698c61e",
         "affectsGlobalScope": false
       },
@@ -577,7 +587,7 @@
         "affectsGlobalScope": false
       },
       "./src/apis/ping.ts": {
-        "version": "b8e28999b1ebb777cbf8d9b047f6cd569ae206f820d07b7cb4bb9a599d5b2eb0",
+        "version": "972e7f4f0bdca0c095edb40b208ee384fe23532c3e36501169c32fe58388d6fe",
         "signature": "1b3b35623c8a30b59ef7f28d898c7d2695e251ac2581836cc4569ce6d3ed86be",
         "affectsGlobalScope": false
       },
@@ -587,7 +597,7 @@
         "affectsGlobalScope": false
       },
       "./src/index.ts": {
-        "version": "c01abac2b046c00a72bd4e1580bd9aeeb1914aa7ebebc19d7e0392310d74b402",
+        "version": "69e4aae0b261aec6a0b51e9da65236a6399953fee47f4ddd901ed3510d7564c6",
         "signature": "d9e88ef7a28dd3119296e69a3b53cafe9ca34fc90afe89eddd383d106d3f5ead",
         "affectsGlobalScope": false
       },
@@ -614,6 +624,16 @@
       "./src/tests/pagecache.test.ts": {
         "version": "021ab03873cc70ec2c23a9d3037847a0e06d217de977a54f857bf8a56c746762",
         "signature": "2886c02fc9447ec88aad8bc280e0d5c24134bff22be39d17292f8788448fdcfa",
+        "affectsGlobalScope": false
+      },
+      "./src/tests/stockmodel.test.ts": {
+        "version": "58e668f5217af4b51b40ecbb1401010bef00b31f3ebc42d1b6594dc822ce4986",
+        "signature": "f761c91419d0a89422a0004ef1a92929dd4d2d5e5c16758654d8b0467d1998c6",
+        "affectsGlobalScope": false
+      },
+      "./src/tests/throttler.test.ts": {
+        "version": "b5d225a2eb85ab5a1709e90226ac3806b1569197606f61312af16fb7a1c22507",
+        "signature": "f761c91419d0a89422a0004ef1a92929dd4d2d5e5c16758654d8b0467d1998c6",
         "affectsGlobalScope": false
       },
       "./node_modules/@types/caseless/index.d.ts": {
@@ -1036,7 +1056,8 @@
         "./node_modules/@types/express/index.d.ts",
         "./src/helpers/logger.ts",
         "./src/helpers/safesend.ts",
-        "./src/index.ts"
+        "./src/index.ts",
+        "./src/models/pingmodel.ts"
       ],
       "./src/apis/query.ts": [
         "./node_modules/@types/express/index.d.ts",
@@ -1071,6 +1092,9 @@
       "./src/helpers/safesend.ts": [
         "./src/helpers/logger.ts"
       ],
+      "./src/helpers/throttler.ts": [
+        "./src/helpers/asynchelper.ts"
+      ],
       "./src/index.ts": [
         "./node_modules/@types/express-ws/index.d.ts",
         "./node_modules/@types/express/index.d.ts",
@@ -1085,6 +1109,7 @@
         "./src/apis/spotify.ts",
         "./src/apis/stock.ts",
         "./src/apis/widgets.ts",
+        "./src/config.ts",
         "./src/globals.ts",
         "./src/helpers/logger.ts",
         "./src/models/pageaccesslocaldisk.ts",
@@ -1103,7 +1128,8 @@
         "./src/models/servermodel.ts"
       ],
       "./src/models/pingmodel.ts": [
-        "./src/helpers/logger.ts"
+        "./src/helpers/logger.ts",
+        "./src/helpers/rest.ts"
       ],
       "./src/models/servermodel.ts": [
         "../common/dist/main/index.d.ts",
@@ -1126,6 +1152,7 @@
         "../common/dist/main/index.d.ts",
         "./src/helpers/asynchelper.ts",
         "./src/helpers/logger.ts",
+        "./src/helpers/throttler.ts",
         "./src/models/servermodel.ts"
       ],
       "./src/tests/general.test.ts": [
@@ -1142,8 +1169,16 @@
         "./src/models/servermodel.ts",
         "./src/tests/testhelpers.ts"
       ],
+      "./src/tests/stockmodel.test.ts": [
+        "./node_modules/@types/chai/index.d.ts",
+        "./src/models/stockmodel.ts"
+      ],
       "./src/tests/testhelpers.ts": [
         "./src/helpers/logger.ts"
+      ],
+      "./src/tests/throttler.test.ts": [
+        "./node_modules/@types/chai/index.d.ts",
+        "./src/helpers/throttler.ts"
       ]
     },
     "exportedModulesMap": {
@@ -1545,7 +1580,9 @@
         "./src/helpers/safesend.ts"
       ],
       "./src/models/stockmodel.ts": [
+        "../common/dist/main/index.d.ts",
         "./src/helpers/logger.ts",
+        "./src/helpers/throttler.ts",
         "./src/models/servermodel.ts"
       ],
       "./src/tests/pagecache.test.ts": [
@@ -1671,25 +1708,15 @@
       "./src/apis/spotify.ts",
       "./src/apis/stock.ts",
       "./src/apis/widgets.ts",
+      "./src/config.ts",
       "./src/globals.ts",
       "./src/helpers/asynchelper.ts",
       "./src/helpers/httpstuff.ts",
       "./src/helpers/logger.ts",
       "./src/helpers/rest.ts",
       "./src/helpers/safesend.ts",
-      [
-        "./src/index.ts",
-        [
-          {
-            "file": "./src/index.ts",
-            "start": 406,
-            "length": 10,
-            "messageText": "Cannot find module './config' or its corresponding type declarations.",
-            "category": 1,
-            "code": 2307
-          }
-        ]
-      ],
+      "./src/helpers/throttler.ts",
+      "./src/index.ts",
       "./src/models/pageaccesslocaldisk.ts",
       "./src/models/pagecache.ts",
       "./src/models/pingmodel.ts",
@@ -1699,7 +1726,9 @@
       "./src/tests/general.test.ts",
       "./src/tests/pageaccesslocaldisk.test.ts",
       "./src/tests/pagecache.test.ts",
-      "./src/tests/testhelpers.ts"
+      "./src/tests/stockmodel.test.ts",
+      "./src/tests/testhelpers.ts",
+      "./src/tests/throttler.test.ts"
     ]
   },
   "version": "3.9.9"

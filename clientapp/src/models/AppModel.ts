@@ -103,7 +103,7 @@ export class AppModel {
         this._dataChangeListener.addListener(ServerMessageType.transient_change, this.handleTransientChanges);
 
         setTimeout( ()=> { this.loadPage(pageName) },1)
-        setTimeout(this.validateLocalPageVersion,500)
+        setTimeout(this.validateLocalPageVersion,1000)
     }
 
     // -------------------------------------------------------------------
@@ -128,6 +128,10 @@ export class AppModel {
     // we don't want to accidental overwrite a newer version
     // -------------------------------------------------------------------
     validateLocalPageVersion = async () => {
+        if(!this.page) {
+            console.log("Page?")
+            return;
+        }
         const response = await this._api.restGet<ItemVersionResponse>(
             `query?type=pageversions&ids=${this.page.name}`, false);
         if(response.errorMessage)

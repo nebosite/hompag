@@ -284,8 +284,18 @@ body {
     margin: 2px;
 }
 
-.ServerActionItem .Name {
-    width: 150px;
+.ServerActionItem .testRow {
+    background: transparent;
+    display: flex;
+    align-content: stretch;
+}
+
+.ServerActionItem .name {
+    flex-grow: 1;
+}
+
+.ServerActionItem .deleteButton {
+    width: 20px;
 }
 
 .ServerActionItem .Name:hover {
