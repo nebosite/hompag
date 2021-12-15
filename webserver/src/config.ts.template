@@ -1,12 +1,12 @@
 // Copy this file to config.ts and edit the properties to match your system
 
 export const hompag_config = {
+    // The local store location should be specified from the command line.  e.g.: 
+    //      storepath='/path_to_my/dropbox/settingstuff/hompag'
     // The local store location can be any folder on your computer.
     // Ideally, this folder should be a cloud-backed folder so it replicates
-    // to your other machines.  Personally, I use a dropbox folder like this:  
-    // /path_to_my/dropbox/settingstuff/hompag
-    localStoreLocation: "_full_path_to_folder_"
-    spotify: {
+    // to your other machines.  
+    storePath: "_Specify On Command Line_",
         // To get spotify id and secret, go to https://developer.spotify.com/dashboard
         // Register your application with the following URLs whitelisted:
         // http://localhost:3200 

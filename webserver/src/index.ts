@@ -18,6 +18,19 @@ import { executeAction, getActionList } from './apis/actions';
 import { handlePingCommand } from './apis/ping';
 import { getStockData } from './apis/stock';
 
+// Process Arguments
+const args = process.argv.slice(2);
+for(let arg of args)
+{
+    const parts = arg.split('=',2);
+    switch(parts[0].toLowerCase()) {
+        case "killpath": killpath = parts[1]; break;
+        case "storepath": hompag_config.storePath = parts[1]; break;
+    }
+    if(parts[0].toLowerCase() === "killpath") {
+      killpath = parts[1];
+    }
+}
 
 // ---------------------------------------------------------------------------------
 // GLOBAL OBJECTS
@@ -26,7 +39,7 @@ export const app = express();
 const app_ws = express_ws(app);
 const logger = new Logger();
 const pageAccess = new PageCache(
-    new PageAccessLocalDisk(hompag_config.localStoreLocation, logger),
+    new PageAccessLocalDisk(hompag_config.storePath, logger),
     logger
 )
 export const serverModel = new ServerModel(hompag_config, pageAccess, logger);
@@ -35,16 +48,6 @@ logger.logLine("################################################################
 logger.logLine("## Starting hompag Server  v" + VERSION)
 
 var killpath = undefined;
-
-// Process Arguments
-const args = process.argv.slice(2);
-for(let arg of args)
-{
-    const parts = arg.split('=',2);
-    if(parts[0].toLowerCase() === "killpath") {
-      killpath = parts[1];
-    }
-}
 
 // Set up kill path as first processor.  Invoking the server with the killpath
 // specified allows testing logic to easily start and stop the server during tests
@@ -58,9 +61,6 @@ if(killpath) {
 }
 
 app.use(express.text({type: "application/json"}));
-// app.use(express.urlencoded({
-//   extended: true
-// }));
 
 // ---------------------------------------------------------------------------------
 // REST APIs / socket apis
