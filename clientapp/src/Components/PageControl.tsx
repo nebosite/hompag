@@ -153,6 +153,7 @@ interface PageControlState
     y1: number, 
     x2: number, 
     y2: number,
+    scale: number,
 }
 
 @inject("appModel")
@@ -163,8 +164,29 @@ extends React.Component<PageControlProps, PageControlState>
     constructor(props: PageControlProps)
     {
         super(props);
-        this.state = { draggingOK: true, dragging: false, x1:0, y1: 0, x2: 0, y2:0}
+        this.state = { draggingOK: true, dragging: false, x1:0, y1: 0, x2: 0, y2:0, scale: 1}
 
+    }
+
+    //--------------------------------------------------------------------------------------
+    // 
+    //--------------------------------------------------------------------------------------
+    componentDidMount(): void {
+        //const mainFrame = document.getElementById("thegridframe")
+
+        const adjustScaling = () => {
+            const theGrid = document.getElementById("theGrid")
+            const gridWidth = theGrid.clientWidth;
+            const windowWidth = window.innerWidth -5;
+            let scaleFactor = windowWidth/gridWidth; 
+            console.log(`Scale: ${windowWidth}/${gridWidth} => ${scaleFactor.toFixed(2)}`)
+            this.setState({scale: scaleFactor})
+            //scaleFactor =1;
+            //theGrid.style.transform = `transform-origin: top left; scale(${scaleFactor}); `
+
+        }
+        window.addEventListener('resize', (e) => adjustScaling())
+        adjustScaling();
     }
 
     // -------------------------------------------------------------------
@@ -295,7 +317,7 @@ extends React.Component<PageControlProps, PageControlState>
         
 
         return (
-            <div>
+            <div id="thegridframe">
                 {/* <div>Some Instructions here</div> */}
                 <PageSettingsControl pageModel={pageModel} />
                 <div id="theGrid" 
@@ -304,6 +326,8 @@ extends React.Component<PageControlProps, PageControlState>
                     onMouseMove={mouseMove}
                     onMouseUp={mouseUp}
                     style={{
+                        transform: `scale(${this.state.scale})`,
+                        transformOrigin: "top left",
                         width: `${pageModel.pageWidth}px`, 
                         height:"5000px", 
                         background: pageModel.colorTheme.color(ColorIndex.Background, ColorValue.V5_Lightened)}}

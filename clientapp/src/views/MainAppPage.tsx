@@ -21,7 +21,7 @@ extends React.Component<{appModel?: AppModel}>
     const {appModel} = this.props;
     GLOBALS.renderCount++;
     return ( 
-        <div className={styles.mainPage}>
+        <div className={styles.mainPage} id="__the_main_page__" >
             {appModel.recentError
                 ?   <Row>
                         <div style={{background: "red", color: "yellow"}}>Background Error: {appModel.recentError}</div>

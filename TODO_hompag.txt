@@ -59,6 +59,7 @@ WIDGET IDEAS
         [x] Open logs
         [x] Open explorer
         [x] Open Task manager
+    [ ] Always scale to fit the page width
     [ ] Debug page changes
         [ ] Show source location
     [ ] Make it work across machines

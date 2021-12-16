@@ -137,12 +137,12 @@
         "affectsGlobalScope": true
       },
       "./src/globals.ts": {
-        "version": "d1895d15c2cdcc3ee2a24974726ddbba1ed0e4ca305bef1947e5d97e2965cdee",
+        "version": "7bbcb0c23a7e5f22d42d9c0b9e7d59951845169641f272d7e06f2b2ca05e8b97",
         "signature": "91509b16027fd592850d017a90f69d2b4bfc7c23295ef0e855704728ba4d7a87",
         "affectsGlobalScope": false
       },
       "./src/config.ts": {
-        "version": "2fe5aa2ec706a4a1914cca1b67660cdb6b7c3236ce25d635ece4088e5d075a53",
+        "version": "ce25400ba02fbb8f9ce923b2a653509123afa35053e6e0752538739c2c215db2",
         "signature": "a398bba23a392980505e50aac33b0a1336f2417bc22814de3a3b0b74a7a4caa0",
         "affectsGlobalScope": false
       },
@@ -636,15 +636,25 @@
         "signature": "f761c91419d0a89422a0004ef1a92929dd4d2d5e5c16758654d8b0467d1998c6",
         "affectsGlobalScope": false
       },
-      "./node_modules/@types/caseless/index.d.ts": {
-        "version": "5343f3c160282dfbaab9af350119a0c3b59b7076ef0117bb5995a66e240dab28",
-        "signature": "5343f3c160282dfbaab9af350119a0c3b59b7076ef0117bb5995a66e240dab28",
-        "affectsGlobalScope": false
+      "./src/version.js": {
+        "version": "0f15fb37f2846aa2359feb0c8c49477c9071b0628bfe162e2bf9b000fb4b1796",
+        "signature": "a0ecc5a2863455fda60cfc6b0abfa04f8d33f5d1648434f657229b3f13c271f6",
+        "affectsGlobalScope": true
       },
       "./node_modules/@types/crypto-js/index.d.ts": {
         "version": "9764460948ab86a538eddf0dd7c98d41095ee2bc0bb092ec87e65ff799c98b78",
         "signature": "9764460948ab86a538eddf0dd7c98d41095ee2bc0bb092ec87e65ff799c98b78",
         "affectsGlobalScope": true
+      },
+      "./src/helpers/simpleencoder.js": {
+        "version": "f094183436425ca1c4fe8aa01aa3d0a2163ad8f938d9d8109027413749c7b001",
+        "signature": "1feefb01159aaa76a308c6e7ab89474fc5c35dc7cc0e663f91fffcf052d409ca",
+        "affectsGlobalScope": true
+      },
+      "./node_modules/@types/caseless/index.d.ts": {
+        "version": "5343f3c160282dfbaab9af350119a0c3b59b7076ef0117bb5995a66e240dab28",
+        "signature": "5343f3c160282dfbaab9af350119a0c3b59b7076ef0117bb5995a66e240dab28",
+        "affectsGlobalScope": false
       },
       "./node_modules/@types/request/node_modules/form-data/index.d.ts": {
         "version": "e91ad231af87f864b3f07cd0e39b1cf6c133988156f087c1c3ccb0a5491c9115",
@@ -685,6 +695,7 @@
         "lib.es2015.d.ts",
         "lib.es2015.d.ts"
       ],
+      "allowJs": true,
       "declaration": true,
       "sourceMap": true,
       "outDir": "./dist",
@@ -1091,6 +1102,9 @@
       ],
       "./src/helpers/safesend.ts": [
         "./src/helpers/logger.ts"
+      ],
+      "./src/helpers/simpleencoder.js": [
+        "./node_modules/@types/crypto-js/index.d.ts"
       ],
       "./src/helpers/throttler.ts": [
         "./src/helpers/asynchelper.ts"
@@ -1715,6 +1729,7 @@
       "./src/helpers/logger.ts",
       "./src/helpers/rest.ts",
       "./src/helpers/safesend.ts",
+      "./src/helpers/simpleencoder.js",
       "./src/helpers/throttler.ts",
       "./src/index.ts",
       "./src/models/pageaccesslocaldisk.ts",
@@ -1728,7 +1743,8 @@
       "./src/tests/pagecache.test.ts",
       "./src/tests/stockmodel.test.ts",
       "./src/tests/testhelpers.ts",
-      "./src/tests/throttler.test.ts"
+      "./src/tests/throttler.test.ts",
+      "./src/version.js"
     ]
   },
   "version": "3.9.9"
