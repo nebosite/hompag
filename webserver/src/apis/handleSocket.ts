@@ -60,7 +60,7 @@ export function handleSocket(socket: WebSocket, req: Request, logger: ILogger) {
         const listener = new WebSocketListener(name, socket, logger, ()=> {serverModel.unregisterListener(name)});
         serverModel.registerListener(listener);
 
-        socket.on('message', function (msgRaw:any) {
+        socket.onmessage = (msgRaw:any) => {
             try {
                 const jsonText = msgRaw.toString();
                 const msgParsed = JSON.parse(jsonText) as {type: ServerMessageType, data: StatePacket};
@@ -76,7 +76,11 @@ export function handleSocket(socket: WebSocket, req: Request, logger: ILogger) {
             {
                 logger.logError(`Messaging error: ${err}`)
             }
-        });
+        };
+
+        socket.onerror = err => {
+            logger.logError(`Websocket error: ${err}`)   
+        }
         
         socket.on('close', (reason) => { listener.close(); });
     } catch (e) {
