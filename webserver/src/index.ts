@@ -66,6 +66,7 @@ app.use(express.text({type: "application/json"}));
 // REST APIs / socket apis
 // ---------------------------------------------------------------------------------
 app.get("/api/am_i_healthy", showHealth);
+app.get("/api/die", ()=> process.exit(55))
 
 app.post("/api/pages/:id", storePage(logger))
 app.get("/api/pages/:id", getPage(logger))
