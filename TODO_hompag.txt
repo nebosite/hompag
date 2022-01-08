@@ -59,7 +59,8 @@ WIDGET IDEAS
         [x] Open logs
         [x] Open explorer
         [x] Open Task manager
-    [ ] Always scale to fit the page width
+    [x] Always scale to fit the page width
+    [ ] Page fit scaling messes with grid drag and drop
     [ ] Debug page changes
         [ ] Show source location
     [ ] Make it work across machines

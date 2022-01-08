@@ -28,7 +28,7 @@ type ComboboxProps = {
     placeholder?: string;
     menuWidth?: string;
     width?: string;
-    styleOverride?: any;
+    styleOverride?: React.CSSProperties;
     startOpened?: boolean; 
     onBlur?: ()=>void;
 };
