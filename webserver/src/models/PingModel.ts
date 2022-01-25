@@ -1,5 +1,5 @@
 import { ILogger, LoggerPrefixer } from "../helpers/logger";
-import { restCallText } from "../helpers/rest";
+import { restCallText } from "../helpers/rest"; 
 var ping = require ("net-ping");
 var dns = require('dns'); 
 
@@ -86,8 +86,9 @@ export class PingModel
         }
         else {
             let error:any = undefined;
-            return await this.pingServer(command.url).catch(err => error = err)
+            const result = await this.pingServer(command.url).catch(err => error = err)
             if(error) throw Error(error);
+            return result;
         }
     }
 

@@ -283,7 +283,7 @@ extends WidgetBase<{context: WidgetContainer}>
                         return <div key={p._id} onClick={()=>addPing(p)}>
                                     <Row style={{...itemStyle}} > 
                                     <div className={`${styles.pingColumn} ${styles.pingNameColumn}`} >{p.name}</div>
-                                    <div className={`${styles.pingColumn} ${styles.latencyColumn}`} >{p.latency}ms</div>
+                                    <div className={`${styles.pingColumn} ${styles.latencyColumn}`} >{`${p.latency}`}ms</div>
                                     <div className={`${styles.pingColumn} ${styles.uptimeColumn}`} >{p.spanText}</div>
                                 </Row>
                             </div> 
