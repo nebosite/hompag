@@ -179,11 +179,8 @@ extends React.Component<PageControlProps, PageControlState>
             const gridWidth = theGrid.clientWidth;
             const windowWidth = window.innerWidth -5;
             let scaleFactor = windowWidth/gridWidth; 
-            console.log(`Scale: ${windowWidth}/${gridWidth} => ${scaleFactor.toFixed(2)}`)
+            console.log(`Set Scale: ${windowWidth}/${gridWidth} => ${scaleFactor.toFixed(2)}`)
             this.setState({scale: scaleFactor})
-            //scaleFactor =1;
-            //theGrid.style.transform = `transform-origin: top left; scale(${scaleFactor}); `
-
         }
         window.addEventListener('resize', (e) => adjustScaling())
         adjustScaling();
@@ -197,11 +194,16 @@ extends React.Component<PageControlProps, PageControlState>
         const {pageModel} = this.props; 
         let {draggingOK, dragging, x1, y1, x2, y2} = this.state;
         const thresholdDistance = pageModel.columnWidth / 4;
+        const scale = this.state.scale ?? 1;
 
         const mouseCoords = (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             const gridElement = document.getElementById("theGrid") as HTMLCanvasElement; 
             var rect = gridElement.getBoundingClientRect();
-            return {x:e.clientX - rect.left, y: e.clientY - rect.top}
+
+            return {
+                x:e.clientX/scale - rect.left, 
+                y: e.clientY/scale - rect.top
+            }
         }
 
         const mouseDown =  (e:React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -210,6 +212,7 @@ extends React.Component<PageControlProps, PageControlState>
                 return;
             }
             const pos = mouseCoords(e);
+            
             for(const item of pageModel.widgetContainers)
             {
                 const ix = item.x * pageModel.columnWidth;
@@ -226,6 +229,7 @@ extends React.Component<PageControlProps, PageControlState>
                     return;
                 }
             }
+
             this.setState({ dragging: true, x1:pos.x, y1: pos.y, x2:pos.x, y2: pos.y})
             e.stopPropagation();
         }
@@ -237,7 +241,7 @@ extends React.Component<PageControlProps, PageControlState>
             }
             if(!dragging) return;
             const pos = mouseCoords(e);
-            this.setState({ x2:pos.x, y2: pos.y})
+            this.setState({ x2:pos.x, y2: pos.y}) 
             e.stopPropagation();
         }
 
@@ -338,6 +342,7 @@ extends React.Component<PageControlProps, PageControlState>
                         className={styles.dragArea} />
 
                     <ReactGridLayout 
+                        transformScale={scale}
                         className="layout" 
                         onDragStart={() => this.setState({draggingOK:false})}
                         onResizeStart={() => this.setState({draggingOK:false})}

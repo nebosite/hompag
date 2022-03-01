@@ -60,7 +60,7 @@ WIDGET IDEAS
         [x] Open explorer
         [x] Open Task manager
     [x] Always scale to fit the page width
-    [ ] Page fit scaling messes with grid drag and drop
+    [x] Page fit scaling messes with grid drag and drop
     [ ] Debug page changes
         [ ] Show source location
     [ ] Make it work across machines
@@ -98,6 +98,7 @@ WIDGET IDEAS
         
 
 NEW ==============================
+    [ ] Text editor widget on hompag?
     [ ] Convert to full flex layout
     [ ] An error in the actions file should show up on the page somehow
     [ ] Changing the actions file should cause a reload of actions config
@@ -111,6 +112,7 @@ BUGS ====================================
 IMPORTANT ==============================
    
 BACKLOG ==============================
+    [ ] Page fit scaling messes with grid drag and drop
     [ ] Perf: consider memoizing components
     [ ] Perf: Consider compressing server traffic
     [ ] Perf: try removing all inline function devs (they always defeat the stale check)

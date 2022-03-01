@@ -184,7 +184,7 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                     init={{
                         height: height + 18,
                         menubar: false,
-                        icons: 'small',
+                        //icons: 'small',
                         indentation: "10px",
                         toolbar: false,//'bold italic color | outdent indent | bullist numlist | code',
                         contextmenu: "bold italic link | code",
