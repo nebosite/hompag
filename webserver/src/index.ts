@@ -92,7 +92,9 @@ app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger));
 // ---------------------------------------------------------------------------------
 // app hosting
 // ---------------------------------------------------------------------------------
-const clientAppRoot = path.join(__dirname, "../../clientapp/build/")
+const clientAppRoot = process.env.ISDEV === "1"
+    ? path.join(__dirname, "../../clientapp/build/")
+    : "clientapp"
 
 logger.logLine(`Client root = ${clientAppRoot}`)
 

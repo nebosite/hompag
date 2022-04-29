@@ -39,9 +39,22 @@ hompag is meant to run as a mini web server on your local machine.  This makes y
 
 **Set it up to run whenever the computer starts**
 
-1. Set up a scheduled task (windows) or chron job (linux, macOS) to automatically start the server by executing the "start the app" step when the OS starts up
-2. Set your browser home page to http://localhost:8101/myhomepage
-3. Optional, install a tab changer in your browser and set all new tabs to open the same page as your home page. 
+Windows:  Create a schedule task with this action:
+
+```
+Action: Start Program
+Program/script: [hompag root]/webserver/scripts/hompagserver.vbs
+Arguments: "[path to your hompag store folder]"
+Start in: [hompag root]/webserver/scripts
+Trigger: At System Startup
+```
+
+Linux/IOS:  Create a chrontab item with these properties:
+
+```
+TBD.  Basically run this:
+npm startdev -- storepath=[path to your hompag store]
+```
 
 **What to do after you have it set up and running**
 
@@ -51,7 +64,10 @@ Now you have a magic home page that always opens with your browser.  You can fre
 
 To create a new widget, drag a box in the open area, then select the type of widget you want.  
 
+To make it your permanent home page:
 
+1. Set your browser home page to http://localhost:8101/myhomepage
+2. Optional, install a tab changer in your browser and set all new tabs to open the same page as your home page. 
 
 ## **How to dev**
 

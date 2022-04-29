@@ -1,3 +1,4 @@
 cd %~dp0\..
-mkdir \temp\logs
-npm run startdev -- storepath="F:/Documents/Dropbox/Settings/hompag/serverstore" >> /temp/logs/hompag.log 2>&1 &
+set LOGFOLDER=%1/logs
+mkdir %LOGFOLDER%
+npm run startdev -- storepath=%1 >> %LOGFOLDER%/hompag.log 2>&1 &
