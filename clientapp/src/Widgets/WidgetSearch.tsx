@@ -93,7 +93,6 @@ extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: bo
         if(data.focusOnMe) {
             setTimeout(()=>{
                 const inputElement =  document.getElementById(this.inputId)
-                console.log(`INPUT ${inputElement}`)
                 if(inputElement) {
                     inputElement.focus();
                 }
@@ -230,7 +229,6 @@ extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: bo
 
     renderConfigUI = () => {
         const data = this.props.context.ref_widget.data as WidgetSearchData; 
-
         return  <div>
             <Row>
                 <input 

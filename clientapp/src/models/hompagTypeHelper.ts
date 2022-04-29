@@ -21,6 +21,11 @@ export class hompagTypeHelper implements ITypeHelper
 {
     constructType(typeName: string): object {
         if(!typeName) throw Error("Missing type name.  Did you remember to call the register() function from the widgetLibrary?")
+        
+        // HACK
+        if(typeName === "WidgetRichTextTTData") typeName = "WidgetRichTextData"
+        // HACK
+        
         if(knownTypes.has(typeName)) {
             const output = knownTypes.get(typeName)(globalItems);
             if(!(output as any).__t) {

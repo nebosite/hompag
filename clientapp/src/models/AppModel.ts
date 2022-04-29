@@ -150,6 +150,8 @@ export class AppModel {
                 }
                 else if(version < this.page.version) {
                     action(()=>{this.recentError = `Local version (${Date.now() - this.page.version}) is newer than server version (${Date.now() - version})`})()
+                    await this.loadPage(this.page.name, false)
+                    action(()=>{this.safeToSave = true})()
                 }
                 else {
                     await this.loadPage(this.page.name, false)

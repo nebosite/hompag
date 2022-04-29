@@ -9,6 +9,9 @@
 
 .widgetEditor {
     color: black;
+    margin: 5px;
+    font-size: 110%;
+    height: 100%;
 }
 
 .editorCover {

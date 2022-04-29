@@ -46,7 +46,7 @@ Action: Start Program
 Program/script: [hompag root]/webserver/scripts/hompagserver.vbs
 Arguments: "[path to your hompag store folder]"
 Start in: [hompag root]/webserver/scripts
-Trigger: At System Startup
+Trigger: At Logon (for you)
 ```
 
 Linux/IOS:  Create a chrontab item with these properties:

@@ -63,7 +63,7 @@ WIDGET IDEAS
     [x] Page fit scaling messes with grid drag and drop
 
 
-    [ ] Play with TipTap: https://tiptap.dev/installation/react
+    [x] Play with TipTap: https://tiptap.dev/installation/react
         [x] Single spaces
         [x] Earlier bullet indent
         [x] single spaced bullets
@@ -77,10 +77,10 @@ WIDGET IDEAS
         [x] Lighter focus visual
         [x] Add links in comments to tiptap docs
         [x] links should not open a new tab
-        [ ] Check in what you have
-        [ ] Map both rich text types to the same control and make sure nothing breaks
-        [ ] Check in
-        [ ] Remove old rich text control
+        [x] Check in what you have
+        [x] Map both rich text types to the same control and make sure nothing breaks
+        [x] Check in
+        [x] Remove old rich text control
         
         
 
@@ -159,8 +159,8 @@ BACKLOG ==============================
     [ ] Clean up the scroll bars on the editor area so they are smaller and less clunky
 
 MAYBE NEVER ==============================
-    [ ] Perf:   ? ms    TinyMCE repeat loading of .css files
-    [ ] Perf: 100 ms    Replace Tinymce with your own editor 
+    [x] Perf:   ? ms    TinyMCxE repeat loading of .css files
+    [x] Perf: 100 ms    Replace Tinymcxe with your own editor 
     [ ] Perf:   ?       web sockets seem to load multiple times 
     [ ] Perf:   3 ms    AppStyles.module.css 
     [ ] Add a scalable option to put the site inside a page scaler
