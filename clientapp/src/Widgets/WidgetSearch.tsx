@@ -58,13 +58,17 @@ export class WidgetSearchData extends WidgetModelData
     set customTemplate(value:string) {
         if(value !== this._customTemplate) this.updateMe(()=>{this._customTemplate = value})
     }
+    
+    @observable  private _focusOnMe = false;
+    get focusOnMe() {return this._focusOnMe}
+    set focusOnMe(value) {
+        if(value !== this._focusOnMe) this.updateMe(()=>{this._focusOnMe = value})
+    }
 
     constructor() {
         super();
         makeObservable(this);
     }
-
-
 }
 
 @observer
@@ -72,12 +76,29 @@ export default class WidgetSearch
 extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: boolean, editingTemplate: boolean}> 
 {    
     state = {searchText: "", choosing: false, editingTemplate: false} 
+    inputId: string = "SearchField_" + Math.random();
 
     // -------------------------------------------------------------------
     // register
     // -------------------------------------------------------------------
     static register() {
         registerWidget(WidgetType.Search, c => <WidgetSearch context={c} />, "WidgetSearchData", () => new WidgetSearchData())
+    }
+
+    //--------------------------------------------------------------------------------------
+    // 
+    //--------------------------------------------------------------------------------------
+    componentDidMount(): void {
+        const data = this.props.context.ref_widget.data as WidgetSearchData; 
+        if(data.focusOnMe) {
+            setTimeout(()=>{
+                const inputElement =  document.getElementById(this.inputId)
+                console.log(`INPUT ${inputElement}`)
+                if(inputElement) {
+                    inputElement.focus();
+                }
+            },50)
+        }
     }
 
     // -------------------------------------------------------------------
@@ -195,6 +216,7 @@ extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: bo
                             className={appStyles.searchInput}
                             value={ this.state.searchText }
                             style={{width: `${pixelWidth - 22}px`}}
+                            id={this.inputId}
                             onClick={disableChoosing}
                             onKeyUp={navigateOnEnter}
                             onChange={(e) =>  this.setState({searchText: e.target.value}) }  />      
@@ -206,6 +228,18 @@ extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: bo
         );
     }; 
 
-    renderConfigUI = () => <div></div>
+    renderConfigUI = () => {
+        const data = this.props.context.ref_widget.data as WidgetSearchData; 
+
+        return  <div>
+            <Row>
+                <input 
+                    type="checkbox"
+                    checked={data.focusOnMe} 
+                    onChange={()=>{data.focusOnMe = !data.focusOnMe}} /> 
+                <div>Focus here on page load</div>
+            </Row>
+        </div>    
+    }
 }
 
