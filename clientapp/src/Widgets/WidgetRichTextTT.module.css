@@ -1,0 +1,60 @@
+
+.we_unstyled {
+    color: #999;
+    background: red;
+    font-family: 'Hoefler Text', Georgia, serif;
+    font-style: italic;
+    text-align: center;
+}
+
+.widgetEditor {
+    color: black;
+    margin: 5px;
+    font-size: 120%;
+    height: 100%;
+}
+
+.editorCover {
+    background: #00000000;
+    z-index: 2;
+    position: absolute;
+    width: 100%; /* Need a specific value to work */
+    height: 100%;
+    border-radius: 5px;
+}
+
+.we_makelinkDialog {
+    font-size: 14px;
+    position: absolute;
+    padding: 5px;
+    left: 0; 
+    right: 0; 
+    top:0;
+    bottom:0;
+    margin-left: auto; 
+    margin-right: auto; 
+    margin-top: auto; 
+    margin-bottom: auto; 
+    width: 90%; /* Need a specific value to work */
+    height: 100px;
+    box-shadow: 5px 5px 15px #00000080;
+}
+
+.we_makelinkDialog input{
+    font-size: 14px;
+    border: 0;
+}
+
+.we_makelinkDialog button {
+    font-size: 12px;
+    border: 0;
+    margin-left: 10px;
+}
+
+
+.we_makelinkBackground {
+    background-color: #00000060;  
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}

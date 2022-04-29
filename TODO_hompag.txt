@@ -61,6 +61,29 @@ WIDGET IDEAS
         [x] Open Task manager
     [x] Always scale to fit the page width
     [x] Page fit scaling messes with grid drag and drop
+
+
+    [ ] Play with TipTap: https://tiptap.dev/installation/react
+        [x] Single spaces
+        [x] Earlier bullet indent
+        [x] single spaced bullets
+        [x] Link text
+        [x] Smaller text, border marging
+        [x] Ctrl-K link
+        [x] Font color should match config
+        [x] Background color should match config
+        [x] context menu?
+        [x] Edit source?
+        [x] Lighter focus visual
+        [x] Add links in comments to tiptap docs
+        [x] links should not open a new tab
+        [ ] Check in what you have
+        [ ] Map both rich text types to the same control and make sure nothing breaks
+        [ ] Check in
+        [ ] Remove old rich text control
+        
+        
+
     [ ] Debug page changes
         [ ] Show source location
     [ ] Make it work across machines
