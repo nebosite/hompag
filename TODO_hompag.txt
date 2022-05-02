@@ -135,7 +135,7 @@ BUGS ====================================
 IMPORTANT ==============================
    
 BACKLOG ==============================
-    [ ] Page fit scaling messes with grid drag and drop
+    [x] Page fit scaling messes with grid drag and drop
     [ ] Perf: consider memoizing components
     [ ] Perf: Consider compressing server traffic
     [ ] Perf: try removing all inline function devs (they always defeat the stale check)
