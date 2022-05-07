@@ -3,6 +3,7 @@ import { trimChars } from "helpers/textHelpers";
 import { GetStartedModel } from "models/GetStartedModel";
 import { GetStartedPage } from "views/GetStartedPage";
 import { TheApp } from "TheApp";
+import "./index.css" 
 const packageInfo = require("../package.json");
 export class GLOBALS {
     static Version = packageInfo.version;

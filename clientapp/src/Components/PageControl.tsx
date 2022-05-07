@@ -179,7 +179,7 @@ extends React.Component<PageControlProps, PageControlState>
             const gridWidth = theGrid.clientWidth;
             const windowWidth = window.innerWidth -5;
             let scaleFactor = windowWidth/gridWidth; 
-            console.log(`Set Scale: ${windowWidth}/${gridWidth} => ${scaleFactor.toFixed(2)}`)
+            //console.log(`Set Scale: ${windowWidth}/${gridWidth} => ${scaleFactor.toFixed(2)}`)
             this.setState({scale: scaleFactor})
         }
         window.addEventListener('resize', (e) => adjustScaling())

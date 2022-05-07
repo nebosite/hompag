@@ -1,7 +1,6 @@
 import { registerType } from "models/hompagTypeHelper";
 import { WidgetContainer } from "models/WidgetContainer";
 import WidgetPicker from "Widgets/WidgetPicker";
-import WidgetRichText from "Widgets/WidgetRichText";
 import WidgetSearch from "Widgets/WidgetSearch";
 import WidgetSpotify from "Widgets/WidgetSpotify"
 import WidgetServerAction from "Widgets/WidgetServerAction";
@@ -9,6 +8,7 @@ import WidgetPinger from "Widgets/WidgetPinger";
 import { WidgetModel } from "models/WidgetModel";
 import WidgetDebug from "Widgets/Widget_DEBUG";
 import WidgetStockTicker from "Widgets/WidgetStockTicker";
+import WidgetRichText from "Widgets/WidgetRichText";
 
 // -------------------------------------------------------------------
 // registerWidgets - This is where we expose widget types to the framework
