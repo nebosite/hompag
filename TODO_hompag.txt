@@ -98,6 +98,20 @@ WIDGET IDEAS
         
 
 NEW ==============================
+    [ ] Find a free, small, WYSIWYG editor to replace the one you have
+        https://tiptap.dev/installation/react
+    [ ] hompag crash
+        2022/04/21 15:34:50.873] Closing socket: listener_148
+        Error [ERR_UNHANDLED_ERROR]: Unhandled error. (undefined)
+            at Session.emit (events.js:303:17)
+            at Session.EventEmitter.emit (domain.js:483:12)
+            at Session.onSocketError (F:\Git\hompag\webserver\node_modules\net-ping\index.js:249:7)
+            at Socket.emit (events.js:314:20)
+            at Socket.EventEmitter.emit (domain.js:483:12)
+            at Socket.onError (F:\Git\hompag\webserver\node_modules\raw-socket\index.js:79:7)
+            at SocketWrap.emit (events.js:314:20)
+            at SocketWrap.EventEmitter.emit (domain.js:483:12)
+        [31m[nodemon] app crashed - waiting for file changes before starting...[39m
     [ ] Text editor widget on hompag?
     [ ] Convert to full flex layout
     [ ] An error in the actions file should show up on the page somehow

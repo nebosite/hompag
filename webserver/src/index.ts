@@ -98,7 +98,7 @@ logger.logLine(`Client root = ${clientAppRoot}`)
 
 app.get('', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); })
 app.use('/', express.static(clientAppRoot));
-app.get('/*', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); })
+app.get('/*', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); }) 
 
 const handleShutdown = async (signal: any) => { 
     logger.logLine(`B'Bye: ${signal} `)
