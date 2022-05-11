@@ -19,21 +19,19 @@ import Bold from '@tiptap/extension-bold'
 import Italic from '@tiptap/extension-italic'
 import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
+import { makeObservable, observable } from "mobx";
 
 export class WidgetRichTextData extends WidgetModelData
 {
     __t = "WidgetRichTextData" // Help the serializer know the type when code is minimized
-    // Body should not be observable because it is only used for writing.  
-    // THe body state is kept by the editor itself
-    private _body: string;
+    @observable private _body =  'Enter formatted text here...';
     get body() {return this._body}
     set body(value: string) { this.updateMe(()=>{this._body = value})} 
 
-    // Nothing is observable, so this is not needed
-    // constructor() {
-    //     super();
-    //     makeObservable(this);
-    // }
+    constructor() {
+        super();
+        makeObservable(this);
+    }
 }
 
 @observer
@@ -41,6 +39,7 @@ export default class WidgetRichText
 extends WidgetBase<{context: WidgetContainer},{editor: any}> 
 {    
     resizeOberver: ResizeObserver
+    editor?: Editor;
 
     // -------------------------------------------------------------------
     // register
@@ -59,15 +58,14 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
         const widget = context.ref_widget;
         const data = widget.data as WidgetRichTextData
         const editorColor= context.colorTheme.color(context.foregroundColorIndex, context.foregroundColorValue);
-        let editor: Editor = null;
 
         // helper to change the a hyperlink reference value
         const setLink = () => {
-            const previousUrl = editor.getAttributes('link').href
+            const previousUrl = this.editor.getAttributes('link').href
             const url = window.prompt('URL', previousUrl)
             if (url === null) { return } // Cancelled
         
-            const range = editor.chain().focus().extendMarkRange('link')
+            const range = this.editor.chain().focus().extendMarkRange('link')
             if (url === '') {  return range.unsetLink().run() }
             else return range.setLink({ href: url, target: '_self' }).run()   
         }
@@ -81,27 +79,32 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
             }
         })
 
-        editor = new Editor({
-            extensions: [
-                BulletList,
-                HardBreak,
-                HorizontalRule,
-                ListItem,
-                OrderedList,
-                Document,
-                Paragraph,
-                Bold,
-                Italic,
-                CustomText,
-                Code,
-                Heading,
-                Link.configure({
-                    openOnClick: true,
-                })
-            ],
-            content:  data.body ?? 'Enter formatted text here...',
-            onUpdate: (props) => data.body = props.editor.getHTML()
-        })
+        console.log(`RENDER: ${data.body}`)
+        if(!this.editor) {
+            this.editor = new Editor({
+                extensions: [
+                    BulletList,
+                    HardBreak,
+                    HorizontalRule,
+                    ListItem,
+                    OrderedList,
+                    Document,
+                    Paragraph,
+                    Bold,
+                    Italic,
+                    CustomText,
+                    Code,
+                    Heading,
+                    Link.configure({
+                        openOnClick: true,
+                    })
+                ],
+                onUpdate: (props) => {
+                    data.body = props.editor.getHTML()
+                }
+            })            
+        }
+        this.editor.commands.setContent(data.body);
 
 
         const styleButton = (
@@ -109,20 +112,20 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                 isActive: boolean, 
                 onClick: (focus: ChainedCommands) => boolean
         ) =>  <button
-                onClick={() => onClick(editor.chain().focus())}
+                onClick={() => onClick(this.editor.chain().focus())}
                 className={isActive ? 'is-active' : ''}
             >
                 {label}
             </button>
 
-        const check = (n: string, a?: {}) => editor.isActive(n,a)
-        const focusAtEnd = ()=>  editor.commands.focus('end', {scrollIntoView: true}) 
+        const check = (n: string, a?: {}) => this.editor.isActive(n,a)
+        const focusAtEnd = ()=>  this.editor.commands.focus('end', {scrollIntoView: true}) 
         
         return <div 
                 className={`${styles.widgetEditor}`}
                 style={{color: editorColor}}
                 id={`container_${context.widgetId}`}>
-            {editor && <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={editor}>
+            {this.editor && <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={this.editor}>
                 {styleButton("Bold", check("bold"), (f) => f.toggleBold().run())}
                 {styleButton("Italic", check("bold"), (f) => f.toggleItalic().run())}
                 |
@@ -133,7 +136,7 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                 {styleButton("Bullets", check('bulletList'), (f) => f.toggleBulletList().run())}
             </BubbleMenu>}
 
-            <EditorContent editor={editor} />
+            <EditorContent editor={this.editor} />
             <div style={{height:"100%"}} onClick={focusAtEnd} />
         </div>
     };
