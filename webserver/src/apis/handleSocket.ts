@@ -62,7 +62,7 @@ export function handleSocket(socket: WebSocket, req: Request, logger: ILogger) {
 
         socket.onmessage = (msgRaw:any) => {
             try {
-                const jsonText = msgRaw.toString();
+                const jsonText = msgRaw.data;
                 const msgParsed = JSON.parse(jsonText) as {type: ServerMessageType, data: StatePacket};
                 const returnMessage = serverModel.handleMessage(msgParsed);
                 if(returnMessage) {
