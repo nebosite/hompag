@@ -557,7 +557,7 @@
         "affectsGlobalScope": false
       },
       "./src/apis/handlesocket.ts": {
-        "version": "93c4980d1b1b8b5dd248ddb2d7acede7700a6fcb6b9867146b62ab3a99a5c03f",
+        "version": "956e1a44f1b049550a5f0964c76a53023e4d7372da6eb33c83fa68468ad5a2b6",
         "signature": "c5294a2334fc0ff162af73c24d09d7b07a95cbe173f64ad6c3bd4d92ab971924",
         "affectsGlobalScope": false
       },
@@ -597,7 +597,7 @@
         "affectsGlobalScope": false
       },
       "./src/index.ts": {
-        "version": "e67bc67deb13eabd25cd15d1ca5a43302d18deb3478c7829bb6f093f1ab074be",
+        "version": "dc43106571e49e27993dca32f8f994276816673345c303f60ff6b7f3f87f8631",
         "signature": "d9e88ef7a28dd3119296e69a3b53cafe9ca34fc90afe89eddd383d106d3f5ead",
         "affectsGlobalScope": false
       },

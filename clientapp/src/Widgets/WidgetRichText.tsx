@@ -19,19 +19,20 @@ import Bold from '@tiptap/extension-bold'
 import Italic from '@tiptap/extension-italic'
 import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
-import { makeObservable, observable } from "mobx";
+//import { makeObservable, observable } from "mobx";
 
 export class WidgetRichTextData extends WidgetModelData
 {
     __t = "WidgetRichTextData" // Help the serializer know the type when code is minimized
-    @observable private _body =  'Enter formatted text here...';
+    //@observable  --- should NOT be observable because it moves the cursor to the end
+    private _body =  'Enter formatted text here...';
     get body() {return this._body}
     set body(value: string) { this.updateMe(()=>{this._body = value})} 
 
-    constructor() {
-        super();
-        makeObservable(this);
-    }
+    // constructor() {
+    //     super();
+    //     makeObservable(this);
+    // }
 }
 
 @observer
@@ -104,7 +105,7 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                 }
             })            
         }
-        this.editor.commands.setContent(data.body);
+        this.editor.commands.setContent(data.body, false, {preserveWhitespace: "full"});
 
 
         const styleButton = (
