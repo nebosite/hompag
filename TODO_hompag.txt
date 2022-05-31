@@ -82,6 +82,7 @@ WIDGET IDEAS
         [x] Check in
         [x] Remove old rich text control
         
+    [x] Bug: Editor jumps to end while typing
         
 
     [ ] Debug page changes
@@ -121,7 +122,7 @@ WIDGET IDEAS
         
 
 NEW ==============================
-    [ ] Bug: Editor jumps to end while typing
+    [ ] homehome rerenders after 1 sec with new dimensions and widgets
     [ ] Corner tag on settings is unreachable for items on the right of the page
     [ ] Find a free, small, WYSIWYG editor to replace the one you have
         https://tiptap.dev/installation/react

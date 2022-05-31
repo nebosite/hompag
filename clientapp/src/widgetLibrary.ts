@@ -17,7 +17,6 @@ let _widgetRegisterTask: Promise<void>
 export function registerWidgets()
 {
     if(_widgetRegisterTask) {
-        console.log("++ Already registering widgets")
         return _widgetRegisterTask
     }
 

@@ -81,11 +81,9 @@ export class WidgetStockTickerData extends WidgetModelData
             }
         })
 
-        console.log("setting timout")
         setTimeout(() => {
-            console.log(`inside timeout: ${this.subscriptions.length}`)
             this.subscriptions.forEach(s => this.startServerPing(s.name))
-        },1000)
+        },100)
     }
 
     // -------------------------------------------------------------------

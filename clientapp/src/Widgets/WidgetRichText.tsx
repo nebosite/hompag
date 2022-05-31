@@ -80,7 +80,6 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
             }
         })
 
-        console.log(`RENDER: ${data.body}`)
         if(!this.editor) {
             this.editor = new Editor({
                 extensions: [
