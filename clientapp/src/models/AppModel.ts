@@ -157,6 +157,7 @@ export class AppModel {
                     await this.loadPage(this.page.name, false)
                     action(()=>{this.safeToSave = true})()
                 }
+                console.log(`Done Validating Page Version: ${version}`)
             }
         }
     }
@@ -246,6 +247,11 @@ export class AppModel {
             try {
                 action(()=>{
                     const loadedPage = this._serializer.parse<PageModel>(pageData.data.data);
+                    if(loadedPage.name !== name) {
+                        console.log(`Warning Page Name mismatch.  Got ${loadedPage.name} but expected ${name}.  Fixing...`)
+                        loadedPage.name = name; 
+                        setTimeout(() => loadedPage.save(),1500)
+                    }
                     this.page = loadedPage;
                     this.page.version = pageData.data.version;
                     //console.log(`Page loaded: ${this.page.name}.${this.page.version} [${this.page.widgetIds.join(',')}]`)

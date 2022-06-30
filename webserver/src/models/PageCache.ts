@@ -127,7 +127,7 @@ export class PageCache implements IItemStore{
         const info:CacheInfo = {itemType, id, isLatest:true, version, data}
         itemCache.set(id, info);
         this._recentUpdates.set(`${itemType}:${id}`,info);
-        this._logger.logLine(`Update Queue is now: ${this._recentUpdates.size}`)
+        this._logger.logLine(`Update Queue is now: ${this._recentUpdates.size}  (${itemType} ${id} ${version})`)
     }
 
     //------------------------------------------------------------------------------------------

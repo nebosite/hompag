@@ -149,6 +149,7 @@ export class PageAccessLocalDisk implements IItemStore
     // ---------------------------------------------------------------------------------
     async storeItem(itemType: hompagItemType, id: string, version: number, data: string)
     {
+        this._logger.logLine(`Storing ${itemType} ${id} ${version}`)
         return new Promise<void>((resolve, reject) => {
             const itemFolder = this.ensureItemFolder(itemType, id);
 
@@ -159,10 +160,10 @@ export class PageAccessLocalDisk implements IItemStore
                     }
                     this._logger.logLine(`Stored item at: ${fileName}`)
 
-                    resolve()
+                    resolve() 
                 }
             )              
-        })
+        }) 
     }
 
     // ---------------------------------------------------------------------------------

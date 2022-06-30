@@ -127,6 +127,7 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     async getPage(pageId: string, version: number | undefined = undefined) 
     {
+        this.logger.logLine(`GetPage: ${pageId} @ ${version}`)
         return await this._pageAccess.getItem(hompagItemType.page, pageId, version);
     }
 

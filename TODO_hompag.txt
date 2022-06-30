@@ -83,6 +83,7 @@ WIDGET IDEAS
         [x] Remove old rich text control
         
     [x] Bug: Editor jumps to end while typing
+    [x] Bug: Double versions of page loading. (Naming mismatch issue)
         
 
     [ ] Debug page changes
