@@ -1,10 +1,6 @@
-// import express from 'express';
 import express_ws from 'express-ws';
 import * as path from 'path';
 import { getPage, getPages, storePage } from './apis/pages';
-// import { showHealth } from './apis/showHealth';
-// import { Logger } from './helpers/logger';
-// import { PageAccessLocalDisk } from './models/PageAccessLocalDisk';
 import { ServerModel } from './models/ServerModel';
 import {hompag_config} from './config'
 import { PageCache } from './models/PageCache';
@@ -20,25 +16,19 @@ import { handleLoginResponse } from './apis/loginResponder';
 import { handlePingCommand } from './apis/ping';
 import { getStockData } from './apis/stock';
 import { handleSocket } from './apis/handleSocket';
-// import { getWidget, storeWidget } from './apis/widgets';
-// import { handleSocket } from './apis/handleSocket';
 import { listening_port, VERSION } from './GLOBALS';
-// import { PageCache } from './models/PageCache';
-// import { handleQueries } from './apis/query';
-// import { handleSpotifyCommand } from './apis/spotify';
-// import { handleLoginResponse } from './apis/loginResponder';
-// import { executeAction, getActionList } from './apis/actions';
-// import { handlePingCommand } from './apis/ping';
-// import { getStockData } from './apis/stock';
 
 // Process Arguments
 const args = process.argv.slice(2);
 for(let arg of args)
 {
     const parts = arg.split('=',2);
+    const name = parts[0].toLowerCase()
+    console.log(`Processing argument ${name} ${parts[1]}`)
     switch(parts[0].toLowerCase()) {
         case "killpath": killpath = parts[1]; break;
         case "storepath": hompag_config.storePath = parts[1]; break;
+        default: throw Error(`bad argument: ${arg}`)
     }
     if(parts[0].toLowerCase() === "killpath") {
       killpath = parts[1];
