@@ -3,7 +3,7 @@ import { objectToUriParams } from "../helpers/httpStuff";
 import { ILogger, LoggerPrefixer } from "../helpers/logger";
 import { restCall } from "../helpers/rest";
 import { PageResponse, UserError } from "../helpers/SafeSend";
-var querystring = require('querystring');
+import * as querystring from "querystring"
 
 const spotifyTokenEndpoint = "https://accounts.spotify.com/api/token"
 const spotifyAuthEndpoint =  'https://accounts.spotify.com/authorize'

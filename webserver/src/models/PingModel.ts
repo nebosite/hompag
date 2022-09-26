@@ -1,7 +1,8 @@
 import { ILogger, LoggerPrefixer } from "../helpers/logger";
 import { restCallText } from "../helpers/rest"; 
-var ping = require ("net-ping");
-var dns = require('dns'); 
+import * as ping from "ping"
+import * as dns from "dns"
+
 
 export interface PingCommand 
 {
@@ -53,18 +54,18 @@ export class PingModel
         if(pingError) throw Error("DNS: " + pingError);
 
         let pingTime = 0;
+        const start = Date.now()
         await new Promise<void>((resolve) => {
-            var session = ping.createSession ();
-
-            session.pingHost (resolvedAddress, (error:any, target:any, sent:number, rcvd:number) => {
-                if (error) {
-                    pingError = error;
-                }                               
-                else {
-                    pingTime = rcvd - sent;
-                }
-                resolve();
-            });                            
+            ping.promise.probe(resolvedAddress, { timeout: 10, min_reply: 1 })
+                .then(function (res) {
+                    if(!res.alive) {
+                        pingError = "Server is no alive"
+                    }
+                    pingTime = Date.now() - start;
+                })
+                .catch((err:any) => {
+                    pingError = `${err}`;
+                }) 
         })
 
         if(pingError) throw Error("PingHost: " + pingError);
@@ -79,6 +80,7 @@ export class PingModel
         if(command.url.toLowerCase().startsWith("http")) {
             const startTime = Date.now();
             const response = (await restCallText("GET", undefined, command.url));
+            if(!response) throw Error("Ping got back null response")
             if(command.regex && command.regex.trim() != "") {
                 if(!response.match(command.regex)) throw("Ping text did not match")
             }

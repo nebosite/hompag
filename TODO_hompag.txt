@@ -85,6 +85,47 @@ WIDGET IDEAS
     [x] Bug: Editor jumps to end while typing
     [x] Bug: Double versions of page loading. (Naming mismatch issue)
         
+    
+        
+
+NEW ==============================
+    [ ] hompag - clickable links on the ping page
+    [ ] homehome rerenders after 1 sec with new dimensions and widgets
+    [ ] Corner tag on settings is unreachable for items on the right of the page
+    [ ] Find a free, small, WYSIWYG editor to replace the one you have
+        https://tiptap.dev/installation/react
+    [ ] hompag crash
+        2022/04/21 15:34:50.873] Closing socket: listener_148
+        Error [ERR_UNHANDLED_ERROR]: Unhandled error. (undefined)
+            at Session.emit (events.js:303:17)
+            at Session.EventEmitter.emit (domain.js:483:12)
+            at Session.onSocketError (F:\Git\hompag\webserver\node_modules\net-ping\index.js:249:7)
+            at Socket.emit (events.js:314:20)
+            at Socket.EventEmitter.emit (domain.js:483:12)
+            at Socket.onError (F:\Git\hompag\webserver\node_modules\raw-socket\index.js:79:7)
+            at SocketWrap.emit (events.js:314:20)
+            at SocketWrap.EventEmitter.emit (domain.js:483:12)
+        [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+    [ ] Text editor widget on hompag?
+    [ ] Convert to full flex layout
+    [ ] An error in the actions file should show up on the page somehow
+    [ ] Changing the actions file should cause a reload of actions config
+    [ ] Be able to start a playlist from spotify widget
+    [ ] Document how to start hompag from task scheduler
+
+        
+        
+BUGS ====================================
+
+IMPORTANT ==============================
+   
+BACKLOG ==============================
+    [ ] Widget cleanup page
+        [ ] Get a list of all widgets 
+            id
+            pagesThatReference
+        [ ] Selecting a widget shows a little render of it
+        [ ] Delete widget action
 
     [ ] Debug page changes
         [ ] Show source location
@@ -119,40 +160,6 @@ WIDGET IDEAS
         [ ] Weather server:  https://openweathermap.org/api  (API key is a secret)
         - include space weather http://sws-data.sws.bom.gov.au/
         - Nasa APIs: https://api.nasa.gov/
-    
-        
-
-NEW ==============================
-    [ ] homehome rerenders after 1 sec with new dimensions and widgets
-    [ ] Corner tag on settings is unreachable for items on the right of the page
-    [ ] Find a free, small, WYSIWYG editor to replace the one you have
-        https://tiptap.dev/installation/react
-    [ ] hompag crash
-        2022/04/21 15:34:50.873] Closing socket: listener_148
-        Error [ERR_UNHANDLED_ERROR]: Unhandled error. (undefined)
-            at Session.emit (events.js:303:17)
-            at Session.EventEmitter.emit (domain.js:483:12)
-            at Session.onSocketError (F:\Git\hompag\webserver\node_modules\net-ping\index.js:249:7)
-            at Socket.emit (events.js:314:20)
-            at Socket.EventEmitter.emit (domain.js:483:12)
-            at Socket.onError (F:\Git\hompag\webserver\node_modules\raw-socket\index.js:79:7)
-            at SocketWrap.emit (events.js:314:20)
-            at SocketWrap.EventEmitter.emit (domain.js:483:12)
-        [31m[nodemon] app crashed - waiting for file changes before starting...[39m
-    [ ] Text editor widget on hompag?
-    [ ] Convert to full flex layout
-    [ ] An error in the actions file should show up on the page somehow
-    [ ] Changing the actions file should cause a reload of actions config
-    [ ] Be able to start a playlist from spotify widget
-    [ ] Document how to start hompag from task scheduler
-
-        
-        
-BUGS ====================================
-
-IMPORTANT ==============================
-   
-BACKLOG ==============================
     [x] Page fit scaling messes with grid drag and drop
     [ ] Perf: consider memoizing components
     [ ] Perf: Consider compressing server traffic

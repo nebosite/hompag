@@ -1,4 +1,4 @@
-var fetch = require('node-fetch')
+import fetch from 'cross-fetch';
 
 //------------------------------------------------------------------------------------------
 // restCall
@@ -30,9 +30,8 @@ export async function restCallText(
     const options = {method,headers,body}
 
     return fetch(endpoint, options)
-            .then((response:any) =>  {
+            .then(async (response) =>  {
                 if(response.status === 204) return null;
-                return response.text() as string
-            } ) as string
-
+                return (await response.text()) as string
+            } ) ?? ""
 }
