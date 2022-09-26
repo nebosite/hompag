@@ -14,6 +14,7 @@ interface CacheInfo
 
 export interface fooInterface {
     count: number
+    name: string
 }
 
 export class sqlFoo implements fooInterface {
