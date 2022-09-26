@@ -12,6 +12,9 @@ interface CacheInfo
     data: string
 }
 
+export interface fooInterface {
+    count: number
+}
 
 export class PageCache implements IItemStore{
 
