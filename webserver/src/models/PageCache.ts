@@ -16,6 +16,10 @@ export interface fooInterface {
     count: number
 }
 
+export class sqlFoo implements fooInterface {
+    count = 22;
+}
+
 export class PageCache implements IItemStore{
 
     _deepStore: IItemStore;
