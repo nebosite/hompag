@@ -4,8 +4,8 @@ import { ILogger } from "../helpers/logger";
 import { Throttler } from "../helpers/Throttler";
 import { ICache } from "./ServerModel";
 
-var axios = require("axios").default;
-
+import * as axios_lib from "axios"
+const axios = axios_lib.default;
 
 function estHour(date: Date) {
     const dateString = date.toLocaleString("en-US", {timeZone: "America/New_York", hour12: false});   

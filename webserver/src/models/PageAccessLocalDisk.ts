@@ -1,8 +1,8 @@
 import { ServerConfigType } from "hompag-common";
 import { ILogger } from "../helpers/logger";
 import { hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
-const fs = require('fs')
-const path = require('path'); 
+import * as fs from "fs"
+import * as path from "path"
 
 export class PageAccessLocalDisk implements IItemStore
 {
@@ -58,7 +58,7 @@ export class PageAccessLocalDisk implements IItemStore
                 resolve([])
             }
 
-            fs.readdir(typeFolder,  (err: string, files: any[]) => {
+            fs.readdir(typeFolder!,  (err: any, files: any[]) => {
                 if (err) {
                     this._logger.logError('Unable to scan directory: ' + err)
                     resolve([])
@@ -76,7 +76,7 @@ export class PageAccessLocalDisk implements IItemStore
         return new Promise<number[]>((resolve, reject) => {
             const itemFolder = this.ensureItemFolder(itemType, id);
             
-            fs.readdir(itemFolder,  (err: string, files: any[]) => {
+            fs.readdir(itemFolder as string,  (err: any, files: any[]) => {
                 
                 if (err) {
                     this._logger.logError(`Cannot load Item '${itemType}/${id}': ` + err)
@@ -153,7 +153,7 @@ export class PageAccessLocalDisk implements IItemStore
         return new Promise<void>((resolve, reject) => {
             const itemFolder = this.ensureItemFolder(itemType, id);
 
-            const fileName = path.join(itemFolder, `${version}.json`)
+            const fileName = path.join(itemFolder as string, `${version}.json`)
             fs.writeFile(fileName, data, (err: any) => {
                     if (err) {
                         reject (Error(`Error writing '${fileName}': ${err}`))

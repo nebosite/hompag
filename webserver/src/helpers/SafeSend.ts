@@ -1,3 +1,4 @@
+import { Response } from "express";
 import { ILogger } from "./logger";
 
 export interface RestResult 
@@ -74,7 +75,7 @@ export class PageResponse {
 // ---------------------------------------------------------------------------------
 // Pack up the data and send it back
 // ---------------------------------------------------------------------------------
-export async function safeSend(res: SimpleResponse, logger: ILogger, label: string, getData: ()=>Promise<any>)
+export async function safeSend(res: Response, logger: ILogger, label: string, getData: ()=>Promise<any>)
 {
     try {
         const data = await getData();

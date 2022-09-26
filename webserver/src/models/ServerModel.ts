@@ -2,7 +2,6 @@
 
 import { ILogger } from "../helpers/logger";
 import moment from "moment";
-import { VERSION } from "../GLOBALS";
 import { SpotifyModel } from "./SpotifyModel";
 import { ServerConfigType, ServerMessageType, StatePacket, StockData } from "hompag-common";
 import {exec} from "child_process"
@@ -251,7 +250,7 @@ export class ServerModel {
     //------------------------------------------------------------------------------------------
     // getHealth
     //------------------------------------------------------------------------------------------
-    getHealth() {
+    getHealth(version: string) {
         let upTime = moment().valueOf() - this._startTime.valueOf();
 
         const spanText = (span: number) => {
@@ -268,7 +267,7 @@ export class ServerModel {
         }
     
         return {
-            version: VERSION,
+            version,
             uptime: spanText(upTime),
         };
     
