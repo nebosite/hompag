@@ -13,6 +13,10 @@ export class Logger implements ILogger
         console.error(this.getCurrentDateString() + "] ##################################################################################");
     }
 
+    blah() {
+        console.log("flfldslkdfj")
+    }
+
     // ---------------------------------------------------------------------------------
     // Get now formatted as YYYY/MM/DD HH:MM:SS.fff
     // ---------------------------------------------------------------------------------
