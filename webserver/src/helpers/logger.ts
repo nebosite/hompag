@@ -13,7 +13,7 @@ export class Logger implements ILogger
         console.error(this.getCurrentDateString() + "] ##################################################################################");
     }
 
-    blah() {
+    Forbius() {
         console.log("flfldslkdfj")
     }
 
