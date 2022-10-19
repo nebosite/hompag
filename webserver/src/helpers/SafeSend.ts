@@ -57,6 +57,7 @@ export class MockResponse implements SimpleResponse
     }
 }
 
+// needs a comment here
 export class PageResponse {
     responseCode = 400
     content: string
