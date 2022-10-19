@@ -22,7 +22,7 @@ export class Logger implements ILogger
     // ---------------------------------------------------------------------------------
     getCurrentDateString()
     {
-        // need a d here
+        // need a d here more comment
         var d = new Date();
 
         return `${d.getUTCFullYear()}`
