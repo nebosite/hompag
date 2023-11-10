@@ -49,46 +49,18 @@ WIDGET IDEAS
 =========== TODO                                                                   ===========
 ==============================================================================================
 
-    [x] Unit test throttling
-    [x] Spacers are a little wrong on the stock graph
-        Just use regular time and drop spacers when the hour/day/week/month changes
-    [x] Allow ping tool to take http urls and simply try to access them
-        - need this for clusterfun
-        
-    [x] Actions:    
-        [x] Open logs
-        [x] Open explorer
-        [x] Open Task manager
-    [x] Always scale to fit the page width
-    [x] Page fit scaling messes with grid drag and drop
-
-
-    [x] Play with TipTap: https://tiptap.dev/installation/react
-        [x] Single spaces
-        [x] Earlier bullet indent
-        [x] single spaced bullets
-        [x] Link text
-        [x] Smaller text, border marging
-        [x] Ctrl-K link
-        [x] Font color should match config
-        [x] Background color should match config
-        [x] context menu?
-        [x] Edit source?
-        [x] Lighter focus visual
-        [x] Add links in comments to tiptap docs
-        [x] links should not open a new tab
-        [x] Check in what you have
-        [x] Map both rich text types to the same control and make sure nothing breaks
-        [x] Check in
-        [x] Remove old rich text control
-        
-    [x] Bug: Editor jumps to end while typing
-    [x] Bug: Double versions of page loading. (Naming mismatch issue)
-        
     
+    [ ] Ctrl-Z doesn't work in the editor
+    [ ] Hompag: refresh button to refresh from file System
+        - auto-refresh with file watcher
+    [ ] hompag: turn off spell check
         
 
 NEW ==============================
+    [ ] Rollback 
+    [ ] Hompag: auto-bold most visited links
+    [ ] hompag:  Save off a pure HTML version of the page some place for when the site goes down
+
     [ ] hompag - clickable links on the ping page
     [ ] homehome rerenders after 1 sec with new dimensions and widgets
     [ ] Corner tag on settings is unreachable for items on the right of the page
@@ -226,6 +198,42 @@ MAYBE NEVER ==============================
 
 
 -- DONE ---------------------------------------------------------------------
+    [x] Unit test throttling
+    [x] Spacers are a little wrong on the stock graph
+        Just use regular time and drop spacers when the hour/day/week/month changes
+    [x] Allow ping tool to take http urls and simply try to access them
+        - need this for clusterfun
+        
+    [x] Actions:    
+        [x] Open logs
+        [x] Open explorer
+        [x] Open Task manager
+    [x] Always scale to fit the page width
+    [x] Page fit scaling messes with grid drag and drop
+
+
+    [x] Play with TipTap: https://tiptap.dev/installation/react
+        [x] Single spaces
+        [x] Earlier bullet indent
+        [x] single spaced bullets
+        [x] Link text
+        [x] Smaller text, border marging
+        [x] Ctrl-K link
+        [x] Font color should match config
+        [x] Background color should match config
+        [x] context menu?
+        [x] Edit source?
+        [x] Lighter focus visual
+        [x] Add links in comments to tiptap docs
+        [x] links should not open a new tab
+        [x] Check in what you have
+        [x] Map both rich text types to the same control and make sure nothing breaks
+        [x] Check in
+        [x] Remove old rich text control
+        
+    [x] Bug: Editor jumps to end while typing
+    [x] Bug: Double versions of page loading. (Naming mismatch issue)
+        
 
     [x] Add debug widget that shows stats such as:
             render frequency

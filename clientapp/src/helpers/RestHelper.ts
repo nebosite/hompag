@@ -40,7 +40,7 @@ export interface IRestHelper
 //------------------------------------------------------------------------------
 export class RestHelper implements IRestHelper
 {
-    _headers: string[][] = [];
+    _headers: [string, string][] = [];
     apiRoot: string;
     _cache: ILocalStorage | undefined;
 
@@ -59,6 +59,8 @@ export class RestHelper implements IRestHelper
         this.apiRoot = apiRoot
         this._callPrefix = callPrefix;
         this.addHeader("Content-Type", "application/json")
+        this.addHeader("Access-Control-Allow-Origin", "*")
+        this.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
     }
 
     //------------------------------------------------------------------------------

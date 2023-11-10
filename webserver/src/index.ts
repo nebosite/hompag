@@ -17,6 +17,7 @@ import { handlePingCommand } from './apis/ping';
 import { getStockData } from './apis/stock';
 import { handleSocket } from './apis/handleSocket';
 import { listening_port, VERSION } from './GLOBALS';
+import cors from 'cors'
 
 // Process Arguments
 const args = process.argv.slice(2);
@@ -40,6 +41,7 @@ for(let arg of args)
 // ---------------------------------------------------------------------------------
 export const app = express();
 const app_ws = express_ws(app);
+app.use(cors());
 const logger = new Logger();
 const pageAccess = new PageCache(
     new PageAccessLocalDisk(hompag_config.storePath, logger),
