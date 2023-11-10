@@ -1,6 +1,6 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const pathRewrite = (p) =>  { console.log(`HIT ${p}`); return p }
+const pathRewrite = (p) => p;// { console.log(`HIT ${p}`); return p }
 
 
 module.exports = function(app) {

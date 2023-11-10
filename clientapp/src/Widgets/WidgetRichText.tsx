@@ -19,6 +19,7 @@ import Bold from '@tiptap/extension-bold'
 import Italic from '@tiptap/extension-italic'
 import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
+import History from '@tiptap/extension-history'
 //import { makeObservable, observable } from "mobx";
 
 export class WidgetRichTextData extends WidgetModelData
@@ -95,6 +96,7 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                     CustomText,
                     Code,
                     Heading,
+                    History,
                     Link.configure({
                         openOnClick: true,
                     })
