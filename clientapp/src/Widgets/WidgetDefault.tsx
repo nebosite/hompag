@@ -2,7 +2,7 @@ import { WidgetContainer } from "models/WidgetContainer";
 import WidgetBase from "./WidgetBase";
 
 export default class WidgetDefault 
-extends WidgetBase<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer, scale: number}> 
 {    
     // -------------------------------------------------------------------
     // renderContent

@@ -210,7 +210,7 @@ class AnimatedValue {
 // --------------------------------------------------------------------------------------------------------------------------------------
 @observer
 export default class WidgetDebug 
-extends WidgetBase<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer, scale: number}> 
 {    
     st: DebugTransientState;
 
@@ -219,13 +219,13 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     static register() {
         // eslint-disable-next-line react/jsx-pascal-case
-        registerWidget(WidgetType.Debug, c => <WidgetDebug context={c} />, "WidgetDebugData", () => new WidgetDebugData())
+        registerWidget(WidgetType.Debug, (c,s) => <WidgetDebug context={c} scale={s} />, "WidgetDebugData", () => new WidgetDebugData())
     }
 
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(props: {context: WidgetContainer})
+    constructor(props: {context: WidgetContainer, scale: number})
     {
         super(props);
         this.st = new DebugTransientState(props.context.parentPage.ref_App, props.context.widgetId, props.context.getStateMaker())

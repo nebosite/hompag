@@ -8,13 +8,13 @@ export class WidgetPickerData { }
 
 @observer
 export default class WidgetPicker 
-extends WidgetBase<{context: WidgetContainer}>  
+extends WidgetBase<{context: WidgetContainer, scale: number}>  
 {    
     // -------------------------------------------------------------------
     // register
     // -------------------------------------------------------------------
     static register() {
-        registerWidget(WidgetType.Picker, c => <WidgetPicker context={c} />, "WidgetPickerData", () => new WidgetPickerData())
+        registerWidget(WidgetType.Picker, (c,s) => <WidgetPicker context={c} scale={s} />, "WidgetPickerData", () => new WidgetPickerData())
     }
 
     // -------------------------------------------------------------------

@@ -103,7 +103,7 @@ export class ServerActionTransientState
 // --------------------------------------------------------------------------------------------------------------------------------------
 @observer
 export default class WidgetServerAction 
-extends WidgetBase<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer, scale: number}> 
 {    
     transientState: ServerActionTransientState;
 
@@ -112,13 +112,13 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     static register() {
         // eslint-disable-next-line react/jsx-pascal-case
-        registerWidget(WidgetType.ServerAction, c => <WidgetServerAction context={c} />, "WidgetServerActionData", () => new WidgetServerActionData())
+        registerWidget(WidgetType.ServerAction, (c,s) => <WidgetServerAction context={c} scale={s} />, "WidgetServerActionData", () => new WidgetServerActionData())
     }
 
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(props: {context: WidgetContainer})
+    constructor(props: {context: WidgetContainer, scale: number})
     {
         super(props);
         this.transientState = new ServerActionTransientState(props.context.widgetId, props.context.getStateMaker())

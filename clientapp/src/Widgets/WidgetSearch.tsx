@@ -73,7 +73,7 @@ export class WidgetSearchData extends WidgetModelData
 
 @observer
 export default class WidgetSearch
-extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: boolean, editingTemplate: boolean}> 
+extends WidgetBase<{context: WidgetContainer, scale: number}, {searchText: string, choosing: boolean, editingTemplate: boolean}> 
 {    
     state = {searchText: "", choosing: false, editingTemplate: false} 
     inputId: string = "SearchField_" + Math.random();
@@ -82,7 +82,7 @@ extends WidgetBase<{context: WidgetContainer}, {searchText: string, choosing: bo
     // register
     // -------------------------------------------------------------------
     static register() {
-        registerWidget(WidgetType.Search, c => <WidgetSearch context={c} />, "WidgetSearchData", () => new WidgetSearchData())
+        registerWidget(WidgetType.Search, (c,s) => <WidgetSearch context={c} scale={s} />, "WidgetSearchData", () => new WidgetSearchData())
     }
 
     //--------------------------------------------------------------------------------------

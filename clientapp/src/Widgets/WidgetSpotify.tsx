@@ -129,7 +129,7 @@ export class SpotifyTransientState
 
 @observer
 export default class WidgetSpotify 
-extends WidgetBase<{context: WidgetContainer}>  
+extends WidgetBase<{context: WidgetContainer, scale: number}>  
 {   
     private _transientState: SpotifyTransientState
 
@@ -137,13 +137,13 @@ extends WidgetBase<{context: WidgetContainer}>
     // register
     // -------------------------------------------------------------------
     static register() {
-        registerWidget(WidgetType.Spotify, c => <WidgetSpotify context={c} />, "SpotifyData", () => new SpotifyData())    
+        registerWidget(WidgetType.Spotify, (c,s) => <WidgetSpotify context={c} scale={s} />, "SpotifyData", () => new SpotifyData())    
     }
 
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(props: {context: WidgetContainer})
+    constructor(props: {context: WidgetContainer, scale: number})
     {
         super(props);
 

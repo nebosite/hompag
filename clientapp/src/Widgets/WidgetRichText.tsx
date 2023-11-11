@@ -38,16 +38,17 @@ export class WidgetRichTextData extends WidgetModelData
 
 @observer
 export default class WidgetRichText 
-extends WidgetBase<{context: WidgetContainer},{editor: any}> 
+extends WidgetBase<{context: WidgetContainer, scale: number},{editor: any}> 
 {    
-    resizeOberver: ResizeObserver
     editor?: Editor;
+    lastMouseX = 0;
+    lastMouseY = 0;
 
     // -------------------------------------------------------------------
     // register
     // -------------------------------------------------------------------
     static register() {
-        registerWidget(WidgetType.RichText, c => <WidgetRichText context={c} />, "WidgetRichTextData", () => new WidgetRichTextData())
+        registerWidget(WidgetType.RichText, (c,s) => <WidgetRichText context={c} scale={s} />, "WidgetRichTextData", () => new WidgetRichTextData())
     }
 
     // -------------------------------------------------------------------
@@ -104,7 +105,7 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                 onUpdate: (props) => {
                     data.body = props.editor.getHTML()
                 }
-            })            
+            })     
         }
         this.editor.commands.setContent(data.body, false, {preserveWhitespace: "full"});
 
@@ -123,14 +124,27 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
         const check = (n: string, a?: {}) => this.editor.isActive(n,a)
         const focusAtEnd = ()=>  this.editor.commands.focus('end', {scrollIntoView: true}) 
         
+        console.log("HELP")
         const getReferenceClientRect = () => {
-            const selectedElement = this.editor.view.dom.querySelector(".is-selected")
-            if(selectedElement){
-              return selectedElement.getBoundingClientRect()
+            const selection = window.getSelection();
+            if(selection) {
+                const range = selection.getRangeAt(0); //get the text range
+                const selectedRect = range.getBoundingClientRect();
+                const container = document.getElementById(`container_${context.widgetId}`)
+                const containerRect = container.getBoundingClientRect();
+                const x = containerRect.x / this.props.scale;
+                const y = selectedRect.y / this.props.scale;
+                const width = containerRect.width / this.props.scale
+                const height = 50 / this.props.scale
+                const returnMe = new DOMRect( x,y,width, height )
+
+                return returnMe;
+    
             } else {
+                console.log(`HERE???`)
               return posToDOMRect(this.editor!.view,0,0)
             }
-          };
+        };
 
         return <div 
                 className={`${styles.widgetEditor}`}
@@ -147,7 +161,7 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                 {styleButton("Bullets", check('bulletList'), (f) => f.toggleBulletList().run())}
             </BubbleMenu>}
 
-            <EditorContent editor={this.editor} spellCheck="false"/>
+            <EditorContent editor={this.editor} spellCheck="false" onMouseDown={(e) => {this.lastMouseX = e.clientX; this.lastMouseY = e.clientY}}/>
             <div style={{height:"100%"}} onClick={focusAtEnd} />
         </div>
     };

@@ -6,7 +6,7 @@ import { WidgetFrame } from "../Components/WidgetFrame";
 // --------------------------------------------------------------------------------------------------------------------------------------
 // WidgetBase - Common functionality for all widgets
 // --------------------------------------------------------------------------------------------------------------------------------------
-export default abstract class WidgetBase<T extends {context: WidgetContainer}, StateT = {}>
+export default abstract class WidgetBase<T extends {context: WidgetContainer, scale: number}, StateT = {}>
 extends React.Component<T, StateT > 
 {     
     abstract renderContent(): JSX.Element 

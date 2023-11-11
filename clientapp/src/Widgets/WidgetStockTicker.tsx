@@ -366,7 +366,7 @@ extends React.Component<StockComponentProps>
 // --------------------------------------------------------------------------------------------------------------------------------------
 @observer
 export default class WidgetStockTicker 
-extends WidgetBase<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer, scale: number}> 
 {    
     transientState: StockTickerTransientState;
 
@@ -377,7 +377,7 @@ extends WidgetBase<{context: WidgetContainer}>
         // eslint-disable-next-line react/jsx-pascal-case
         registerWidget(
             WidgetType.StockTicker, 
-            c => <WidgetStockTicker context={c} />, 
+            (c,s) => <WidgetStockTicker context={c} scale={s} />, 
             "WidgetStockTickerData", 
             (bag) => new WidgetStockTickerData(bag.get("theApp")))
         registerType("TickerSubscription", () => new TickerSubscription())
@@ -386,7 +386,7 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(props: {context: WidgetContainer})
+    constructor(props: {context: WidgetContainer, scale: number})
     {
         super(props);
         this.transientState = new StockTickerTransientState(props.context.widgetId, props.context.getStateMaker())

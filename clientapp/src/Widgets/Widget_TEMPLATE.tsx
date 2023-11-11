@@ -83,7 +83,7 @@ export class _TEMPLATE_TransientState
 // --------------------------------------------------------------------------------------------------------------------------------------
 @observer
 export default class Widget_TEMPLATE_ 
-extends WidgetBase<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer, scale: number}> 
 {    
     transientState: _TEMPLATE_TransientState;
 
@@ -94,7 +94,7 @@ extends WidgetBase<{context: WidgetContainer}>
         // eslint-disable-next-line react/jsx-pascal-case
         registerWidget(
             WidgetType._TEMPLATE_, 
-            c => <Widget_TEMPLATE_ context={c} />,
+            (c,s) => <Widget_TEMPLATE_ context={c} scale={s} />,
             "Widget_TEMPLATE_Data", 
             (bag) => new Widget_TEMPLATE_Data(bag.get("theApp"))
         )
@@ -103,7 +103,7 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(props: {context: WidgetContainer})
+    constructor(props: {context: WidgetContainer, scale: number})
     {
         super(props);
         this.transientState = new _TEMPLATE_TransientState(props.context.widgetId, props.context.getStateMaker())

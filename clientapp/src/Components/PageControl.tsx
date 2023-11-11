@@ -298,7 +298,7 @@ extends React.Component<PageControlProps, PageControlState>
         const resizeHandle = <div className={styles.widgetFrameResizeHandle}>╝</div>
 
         const renderPageItem = (container: WidgetContainer) => { 
-            const widgetControl = renderWidget(container.ref_widget?.widgetType, container) ?? <WidgetDefault context={container} />
+            const widgetControl = renderWidget(container.ref_widget?.widgetType, container, this.state.scale) ?? <WidgetDefault context={container} scale={this.state.scale} />
             if(!draggingOK) return <div style={{opacity: .5}}>{widgetControl}</div>
             else return widgetControl
         } 

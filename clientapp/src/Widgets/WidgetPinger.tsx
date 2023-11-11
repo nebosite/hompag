@@ -176,7 +176,7 @@ export class PingerTransientState
 // --------------------------------------------------------------------------------------------------------------------------------------
 @observer
 export default class WidgetPinger 
-extends WidgetBase<{context: WidgetContainer}> 
+extends WidgetBase<{context: WidgetContainer, scale: number}> 
 {    
     transientState: PingerTransientState;
 
@@ -185,14 +185,14 @@ extends WidgetBase<{context: WidgetContainer}>
     // -------------------------------------------------------------------
     static register() {
         // eslint-disable-next-line react/jsx-pascal-case
-        registerWidget(WidgetType.Pinger, c => <WidgetPinger context={c} />, "WidgetPingerData", (bag) => new WidgetPingerData(bag.get("theApp")))
+        registerWidget(WidgetType.Pinger, (c,s) => <WidgetPinger context={c} scale={s} />, "WidgetPingerData", (bag) => new WidgetPingerData(bag.get("theApp")))
         registerType("PingThing", ()=>new PingThing())
     }
 
     // -------------------------------------------------------------------
     // ctor
     // -------------------------------------------------------------------
-    constructor(props: {context: WidgetContainer})
+    constructor(props: {context: WidgetContainer, scale: number})
     {
         super(props);
         this.transientState = new PingerTransientState(props.context.widgetId, props.context.getStateMaker())

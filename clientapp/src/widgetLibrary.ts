@@ -57,11 +57,11 @@ export enum WidgetType
 const knownDataTypes = new Map<WidgetType, string>()
 export const dataTypeForWidgetType = (widgetType: WidgetType) => knownDataTypes.get(widgetType);
 
-const knownComponents = new Map<WidgetType, (context: WidgetContainer) => JSX.Element>()
+const knownComponents = new Map<WidgetType, (context: WidgetContainer, scale: number) => JSX.Element>()
 
 export function registerWidget(
     type: WidgetType, 
-    render:(context: WidgetContainer) => JSX.Element,
+    render:(context: WidgetContainer, scale: number) => JSX.Element,
     dataTypeName: string | undefined,  
     dataTypeFactory:  (itemBag: Map<string,any>) => any | undefined)
 {
@@ -72,10 +72,10 @@ export function registerWidget(
     }    
 }
 
-export function renderWidget(type: WidgetType, context: WidgetContainer)
+export function renderWidget(type: WidgetType, context: WidgetContainer, scale:number)
 {
     const render = knownComponents.get(type);
     if(!render) return null;
-    return render(context); 
+    return render(context, scale); 
 }
 
