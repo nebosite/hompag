@@ -52,7 +52,7 @@ WIDGET IDEAS
     
     [x] Ctrl-Z doesn't work in the editor
     [x] Hompag: refresh button to refresh from file System
-    [ ] hompag: turn off spell check
+    [x] hompag: turn off spell check
         
 
 NEW ==============================
@@ -78,8 +78,6 @@ NEW ==============================
             at SocketWrap.emit (events.js:314:20)
             at SocketWrap.EventEmitter.emit (domain.js:483:12)
         [31m[nodemon] app crashed - waiting for file changes before starting...[39m
-    [ ] Text editor widget on hompag?
-    [ ] Convert to full flex layout
     [ ] An error in the actions file should show up on the page somehow
     [ ] Changing the actions file should cause a reload of actions config
     [ ] Be able to start a playlist from spotify widget
@@ -106,7 +104,7 @@ BACKLOG ==============================
             https://github.com/paulmillr/chokidar
         [ ] A connected client has a visible page + widgets
         [ ] Push an update to the client any page or widgets change
-    [ ] Make a no-compile deployment
+    [ ] Make a no-compile deployment For people who just want to run it
     [ ] Make sure deployment instructions are correct
         - a build script would be perfect
         - start checking versions into github
