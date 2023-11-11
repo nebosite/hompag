@@ -50,13 +50,13 @@ WIDGET IDEAS
 ==============================================================================================
 
     
-    [ ] Ctrl-Z doesn't work in the editor
-    [ ] Hompag: refresh button to refresh from file System
-        - auto-refresh with file watcher
+    [x] Ctrl-Z doesn't work in the editor
+    [x] Hompag: refresh button to refresh from file System
     [ ] hompag: turn off spell check
         
 
 NEW ==============================
+    [ ] auto-refresh with file watcher
     [ ] Rollback 
     [ ] Hompag: auto-bold most visited links
     [ ] hompag:  Save off a pure HTML version of the page some place for when the site goes down

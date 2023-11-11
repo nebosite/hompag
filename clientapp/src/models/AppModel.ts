@@ -47,6 +47,11 @@ interface PostResponse
     data: any;
     errorMessage: string;
 }
+interface GenericResponse<T>
+{
+    data?: T;
+    errorMessage?: string;
+}
 
 export interface StockItem {
     date: number,
@@ -104,6 +109,14 @@ export class AppModel {
 
         setTimeout( ()=> { this.loadPage(pageName) },1)
         setTimeout(this.validateLocalPageVersion,1000)
+    }
+
+    //--------------------------------------------------------------------------------------
+    // 
+    //--------------------------------------------------------------------------------------
+    forceRefresh() {
+        this._localStorage.clear();
+        this._api.restGet<GenericResponse<string>>("refresh", false);
     }
 
     // -------------------------------------------------------------------

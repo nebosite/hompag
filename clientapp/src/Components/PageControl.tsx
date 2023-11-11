@@ -66,6 +66,11 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
             pageModel.colorTheme = new ColorTool(theme)
         }
 
+        const forceRefresh = () => {
+            pageModel.forceRefresh();
+            setTimeout(()=>{location.reload()}, 1000);
+        }
+
         const numbersSource = (numbers: number[]) => {
             return numbers.map(n => {
                 return {
@@ -133,6 +138,9 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
 
                             </Row>
 
+                        </Row>
+                        <Row>
+                            <button onClick={forceRefresh}>Force Server Refresh</button>
                         </Row>
                     </div>
 

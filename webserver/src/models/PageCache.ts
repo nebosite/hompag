@@ -49,6 +49,18 @@ export class PageCache implements IItemStore{
         setTimeout(()=> this.backgroundWriter(), 1000)
     }
 
+    //--------------------------------------------------------------------------------------
+    // 
+    //--------------------------------------------------------------------------------------
+    refresh(): void {
+        this._logger.logLine(`PageCache.refresh (${this._cache.size})`);
+        
+        this.flushRecents(0,Date.now());
+        Array.from(this._cache.values()).forEach(cacheList => {
+            cacheList.clear()
+        });
+    }
+
     //------------------------------------------------------------------------------------------
     // backgroundWriter
     //------------------------------------------------------------------------------------------

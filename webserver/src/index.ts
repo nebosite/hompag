@@ -18,6 +18,7 @@ import { getStockData } from './apis/stock';
 import { handleSocket } from './apis/handleSocket';
 import { listening_port, VERSION } from './GLOBALS';
 import cors from 'cors'
+import { handleRefresh } from './apis/refresh';
 
 // Process Arguments
 const args = process.argv.slice(2);
@@ -77,6 +78,8 @@ app.get("/api/die", ()=> process.exit(55))
 app.post("/api/pages/:id", storePage(logger))
 app.get("/api/pages/:id", getPage(logger))
 app.get("/api/pages", getPages(logger))
+
+app.get("/api/refresh", handleRefresh(logger))
 
 app.post("/api/widgets/:id", storeWidget(logger))
 app.get("/api/widgets/:id", getWidget(logger))

@@ -37,6 +37,7 @@ export interface IItemStore
     getIdList(itemType: hompagItemType): Promise<string[]>;
     storeItem(itemType: hompagItemType, id: string, version: number, data: string): Promise<void>;
     getConfig(configType: ServerConfigType): Promise<string>;
+    refresh(): void;
 }
 
 export interface IListener{
@@ -103,6 +104,13 @@ export class ServerModel {
             }
             ,stockAlerter
         )
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Refresh the pages from disk
+    //--------------------------------------------------------------------------------------
+    refresh() {
+        this._pageAccess.refresh();
     }
 
     //------------------------------------------------------------------------------------------

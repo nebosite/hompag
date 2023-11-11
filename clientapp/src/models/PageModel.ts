@@ -65,6 +65,10 @@ export class PageModel
         )
     }
 
+    forceRefresh() {
+        this.ref_App.forceRefresh();
+    }
+
     // -------------------------------------------------------------------
     // save - save this page to the server 
     // -------------------------------------------------------------------
