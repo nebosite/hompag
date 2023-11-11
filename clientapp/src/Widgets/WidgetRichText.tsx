@@ -5,7 +5,7 @@ import styles from './WidgetRichText.module.css';
 import { WidgetModelData } from "models/WidgetModel"; 
 import { registerWidget, WidgetType } from "widgetLibrary";
 import WidgetBase from "./WidgetBase";
-import { BubbleMenu, ChainedCommands, Editor, EditorContent } from '@tiptap/react'
+import { BubbleMenu, ChainedCommands, Editor, EditorContent, posToDOMRect } from '@tiptap/react'
 import BulletList from "@tiptap/extension-bullet-list"
 import HardBreak from "@tiptap/extension-hard-break"
 import HorizontalRule from "@tiptap/extension-horizontal-rule"
@@ -123,11 +123,20 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
         const check = (n: string, a?: {}) => this.editor.isActive(n,a)
         const focusAtEnd = ()=>  this.editor.commands.focus('end', {scrollIntoView: true}) 
         
+        const getReferenceClientRect = () => {
+            const selectedElement = this.editor.view.dom.querySelector(".is-selected")
+            if(selectedElement){
+              return selectedElement.getBoundingClientRect()
+            } else {
+              return posToDOMRect(this.editor!.view,0,0)
+            }
+          };
+
         return <div 
                 className={`${styles.widgetEditor}`}
                 style={{color: editorColor}}
                 id={`container_${context.widgetId}`}>
-            {this.editor && <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100 }} editor={this.editor}>
+            {this.editor && <BubbleMenu className="bubble-menu" tippyOptions={{ duration: 100, getReferenceClientRect }} editor={this.editor}>
                 {styleButton("Bold", check("bold"), (f) => f.toggleBold().run())}
                 {styleButton("Italic", check("bold"), (f) => f.toggleItalic().run())}
                 |
@@ -138,7 +147,7 @@ extends WidgetBase<{context: WidgetContainer},{editor: any}>
                 {styleButton("Bullets", check('bulletList'), (f) => f.toggleBulletList().run())}
             </BubbleMenu>}
 
-            <EditorContent editor={this.editor} />
+            <EditorContent editor={this.editor} spellCheck="false"/>
             <div style={{height:"100%"}} onClick={focusAtEnd} />
         </div>
     };
