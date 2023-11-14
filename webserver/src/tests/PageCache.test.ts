@@ -34,6 +34,9 @@ export class MockStore implements IItemStore
         throw new Error("Method not implemented.");
     }
 
+    refresh(): void {
+        
+    }
     
 
 }
