@@ -1,6 +1,6 @@
 
 import { Request, Response } from "express";
-import { serverModel } from "..";
+import { serverModel } from "../index";
 import { ILogger } from "../helpers/logger";
 import { safeSend } from "../helpers/SafeSend";
 
