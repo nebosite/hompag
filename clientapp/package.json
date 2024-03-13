@@ -24,6 +24,7 @@
         ]
     },
     "dependencies": {
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@okta/okta-auth-js": "^4.5.0",
         "@okta/okta-react": "^4.1.0",
         "@okta/okta-signin-widget": "^5.4.3",
