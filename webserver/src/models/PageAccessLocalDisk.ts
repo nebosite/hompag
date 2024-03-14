@@ -4,12 +4,19 @@ import { hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
 import * as fs from "fs"
 import * as path from "path"
 
+interface FileChangeItem {
+    time: number;
+    fullName: string;
+}
 export class PageAccessLocalDisk implements IItemStore
 {
+    public handleFileChange: (type: string, name: string, isExternal: boolean) => void = (t,n) => { this._logger.logLine(`UNHANDLED FILE CHANGE: ${t} on file ${n}`)}
     private _logger: ILogger;
     private _storeLocation: string;
 
     private _folders = new Map<string, string>();
+    private _activeChanges: FileChangeItem[] = [];
+    private _alertedFiles: FileChangeItem[] = [];
 
     // ---------------------------------------------------------------------------------
     // ctor
@@ -35,8 +42,43 @@ export class PageAccessLocalDisk implements IItemStore
         addFolder("config");
         addFolder("cache");
 
-        fs.watch( this._storeLocation, (eventType: any, filename:any) => {
-            console.log(`  >> FILE CHANGE: ${eventType} ${filename}`);
+        fs.watch( this._storeLocation, {recursive: true}, (eventType: any, fileName:any) => {
+            const recentActiveChanges:FileChangeItem[] = [];
+            const recentAlerts:FileChangeItem[] = [];
+
+            // Figure out if this change happened outside of the server
+            let isExternal = true;
+            this._activeChanges.forEach(fc => {
+                // Five second window to see a file change started by this server
+                if(Date.now() - fc.time < 5000) {
+                    recentActiveChanges.push(fc);
+                    const matchIndex = fc.fullName.indexOf(fileName)
+                    if(matchIndex > -1)  {
+                        isExternal = false;
+                    }
+                }
+            })
+
+            // Alert only once on identical changes that come in rapid succession. 
+            const key = `${eventType}~${fileName}`
+            let foundAlert: FileChangeItem | undefined = undefined;
+            this._alertedFiles.forEach(af => {
+                // Five second window to see a file change started by this server
+                if(Date.now() - af.time < 500) {
+                    recentAlerts.push(af);
+                    if(af.fullName === key) {
+                        foundAlert = af;
+                    }
+                }
+            })
+
+            if(!foundAlert) {
+                recentAlerts.push({time: Date.now(), fullName: key})
+                this.handleFileChange(`${eventType}`, `${fileName}`, isExternal);
+            }
+
+            this._alertedFiles = recentAlerts;
+            this._activeChanges = recentActiveChanges;
         })
     }
 
@@ -154,13 +196,15 @@ export class PageAccessLocalDisk implements IItemStore
     // ---------------------------------------------------------------------------------
     // storeItem
     // ---------------------------------------------------------------------------------
-    async storeItem(itemType: hompagItemType, id: string, version: number, data: string)
+    storeItem = async (itemType: hompagItemType, id: string, version: number, data: string) =>
     {
         this._logger.logLine(`Storing ${itemType} ${id} ${version}`)
-        return new Promise<void>((resolve, reject) => {
-            const itemFolder = this.ensureItemFolder(itemType, id);
+        const itemFolder = this.ensureItemFolder(itemType, id);
 
-            const fileName = path.join(itemFolder as string, `${version}.json`)
+        const fileName = path.join(itemFolder as string, `${version}.json`);
+        this._activeChanges.push({time: Date.now(), fullName: fileName});
+
+        return new Promise<void>((resolve, reject) => {
             fs.writeFile(fileName, data, (err: any) => {
                     if (err) {
                         reject (Error(`Error writing '${fileName}': ${err}`))

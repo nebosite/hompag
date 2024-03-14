@@ -19,6 +19,9 @@ extends React.Component<{}>
         console.log("###### Construct TheApp")
         super(props);
         this.appModel = new AppModel(pageName, makeLocalStorage());
+        this.appModel.onServerRefresh = ()=> {
+            setTimeout(()=>{location.reload()}, 100);
+        }
     }
 
     // -------------------------------------------------------------------

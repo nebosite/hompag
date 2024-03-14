@@ -14,6 +14,7 @@ import Combobox from "./ComboBox";
 import Row from "./Row";
 import WidgetDefault from "Widgets/WidgetDefault";
 import { renderWidget } from "widgetLibrary";
+import { GLOBALS } from "index";
 
 
 interface PageSettingsControlProps 
@@ -95,7 +96,7 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
                     background: pageModel.colorTheme.color(ColorIndex.Background, ColorValue.V7_ExtraBright),
                 }}>
                     <div className={styles.closeButton} onClick={()=> this.setState({showSettings: false})}><CgCloseR /></div>
-                    <div><b>Page Settings</b></div>
+                    <div><b>Page Settings</b> (v{GLOBALS.Version})</div> 
                     <div style={{margin:"5px", fontSize: "70%"}}>
                         <Row >
                             <div>Color Theme: </div>

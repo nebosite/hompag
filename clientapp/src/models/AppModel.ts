@@ -75,6 +75,8 @@ export class AppModel {
     @observable recentError?: string;
     @observable safeToSave = false;
 
+    public onServerRefresh = ()=>{};
+
     private _localStorage:ILocalStorage;
     private _api:RestHelper;
     private _serializer: BruteForceSerializer;
@@ -106,9 +108,17 @@ export class AppModel {
         this._dataChangeListener = new WebSocketListener();
         this._dataChangeListener.addListener(ServerMessageType.item_change, this.handleItemChanges)
         this._dataChangeListener.addListener(ServerMessageType.transient_change, this.handleTransientChanges);
+        this._dataChangeListener.addListener(ServerMessageType.refresh, this.handleServerRefresh);
 
         setTimeout( ()=> { this.loadPage(pageName) },1)
         setTimeout(this.validateLocalPageVersion,1000)
+    }
+
+    // -------------------------------------------------------------------
+    // Handle a request from the server to refresh the client
+    // -------------------------------------------------------------------
+    handleServerRefresh = async(data: StatePacket) => {
+        this.onServerRefresh();  
     }
 
     //--------------------------------------------------------------------------------------

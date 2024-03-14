@@ -50,10 +50,6 @@ WIDGET IDEAS
 ==============================================================================================
 
     
-    [x] Ctrl-Z doesn't work in the editor
-    [x] Hompag: refresh button to refresh from file System
-    [x] hompag: turn off spell check
-        
 
 NEW ==============================
     [ ] Bug: clickable links don't work when bold
@@ -197,6 +193,18 @@ MAYBE NEVER ==============================
 
 
 -- DONE ---------------------------------------------------------------------
+Version 0.4.0
+    [x] Ctrl-Z doesn't work in the editor
+    [x] Hompag: refresh button to refresh from file System
+    [x] hompag: turn off spell check
+
+    [x] Monitor files and refresh
+        [x] Instead of a massive refresh, use the already existing widge refresh
+        [x] Invalidate particular files in the cache as they are marked changed and refresh themi in the cache
+        [x] Invalidate the cached item on the server
+        [x] Make sure client requests new content
+        
+Version 0.3.1
     [x] Unit test throttling
     [x] Spacers are a little wrong on the stock graph
         Just use regular time and drop spacers when the hour/day/week/month changes

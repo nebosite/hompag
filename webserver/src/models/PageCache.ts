@@ -1,7 +1,7 @@
 import { ServerConfigType } from "hompag-common";
 import { doNothing } from "../helpers/asyncHelper";
 import { ILogger } from "../helpers/logger";
-import { hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
+import { getItemDescriptor, hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
 
 interface CacheInfo
 {
@@ -14,6 +14,18 @@ interface CacheInfo
 
 
 export class PageCache implements IItemStore{
+
+    get handleFileChange() { return this._deepStore.handleFileChange}
+    set handleFileChange(value) { 
+        this._deepStore.handleFileChange = (type: string, name: string, isExternal: boolean) => {
+            const {itemType, id, version } = getItemDescriptor(name);
+            if(type === "change" && isExternal && version) {
+                this.clearItem(itemType as hompagItemType, id);
+            }
+
+            value(type,name,isExternal);
+        }
+    }
 
     _deepStore: IItemStore;
 
@@ -66,7 +78,7 @@ export class PageCache implements IItemStore{
     //------------------------------------------------------------------------------------------
     async backgroundWriter()
     {
-        const FLUSHING_AGE_MS = 60 * 1000;
+        const FLUSHING_AGE_MS = 30 * 1000;
         while(true)
         {
             await doNothing(1000);
@@ -82,7 +94,7 @@ export class PageCache implements IItemStore{
     }
 
     //------------------------------------------------------------------------------------------
-    // Write widgets to 
+    //  
     //------------------------------------------------------------------------------------------
     async flushRecents(minAge_ms: number, now: number) {
 

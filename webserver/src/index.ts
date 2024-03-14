@@ -44,6 +44,7 @@ export const app = express();
 const app_ws = express_ws(app);
 app.use(cors());
 const logger = new Logger();
+
 const pageAccess = new PageCache(
     new PageAccessLocalDisk(hompag_config.storePath, logger),
     logger

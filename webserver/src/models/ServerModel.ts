@@ -33,6 +33,7 @@ export enum hompagItemType
 
 export interface IItemStore
 {
+    handleFileChange: (type: string, name: string, isExternal: boolean) => void;
     getItem(itemType: hompagItemType, id: string, version: number | undefined): Promise<ItemReturn | null>;
     getIdList(itemType: hompagItemType): Promise<string[]>;
     storeItem(itemType: hompagItemType, id: string, version: number, data: string): Promise<void>;
@@ -61,6 +62,16 @@ export interface ICache {
     storeItem(id: string, data: string): Promise<void>
 }
 
+//--------------------------------------------------------------------------------------
+// take a name like this:  itemtype/itemid/filename.ext  
+// and break it into type, id, and version
+//--------------------------------------------------------------------------------------
+export const getItemDescriptor = (name: string) => {
+    const [itemType, id, fileName] = name.replace(/\\/g, "/").split("/")
+    const version: string | undefined = fileName?.split(".")[0];
+    return {itemType, id, version};
+}
+
 //------------------------------------------------------------------------------------------
 // The state of the server overall
 //------------------------------------------------------------------------------------------
@@ -68,6 +79,7 @@ export class ServerModel {
 
     //------------------------------------------------------------------------------------------
     logger: ILogger
+    onRefresh = () => {};
     private _startTime = Date.now();
     private _pageAccess: IItemStore;
     private _listeners = new Map<string, IListener>();
@@ -104,6 +116,23 @@ export class ServerModel {
             }
             ,stockAlerter
         )
+
+        let handlingChange= false;
+        pageAccess.handleFileChange = (type, name, isExternal) => {
+            if(!handlingChange) {
+                handlingChange = true;
+                const {itemType, id, version } = getItemDescriptor(name);
+
+                if(type === "change" 
+                    && isExternal 
+                    && version !== undefined
+                ) {
+                    this.logger.logLine(`EXTERNAL FILE CHANGE: ${type}:${isExternal} [${itemType} ${id} ${version}]`)
+                    this.sendAlert({type: ServerMessageType.item_change, data: {type: itemType, itemId: id, version}})
+                }
+                handlingChange = false;
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -111,6 +140,7 @@ export class ServerModel {
     //--------------------------------------------------------------------------------------
     refresh() {
         this._pageAccess.refresh();
+        this.onRefresh();
     }
 
     //------------------------------------------------------------------------------------------

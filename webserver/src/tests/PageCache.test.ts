@@ -8,6 +8,8 @@ import { MockLogger } from "./testHelpers";
 
 export class MockStore implements IItemStore
 {
+    handleFileChange: (type: string, name: string) => void = ()=>{}
+    
     calls:string[] = [];
     returnThisItem: ItemReturn | null = null;
     returnThisIdList: string[] = [];
