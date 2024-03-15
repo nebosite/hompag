@@ -78,7 +78,7 @@ export class PageCache implements IItemStore{
     //------------------------------------------------------------------------------------------
     async backgroundWriter()
     {
-        const FLUSHING_AGE_MS = 30 * 1000;
+        const FLUSHING_AGE_MS = 20 * 1000;
         while(true)
         {
             await doNothing(1000);
