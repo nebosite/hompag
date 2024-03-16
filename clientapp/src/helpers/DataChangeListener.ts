@@ -39,12 +39,12 @@ export class WebSocketListener implements IDataChangeListener {
         this._websocket = new WebSocket(url, []);
 
         this._websocket.addEventListener("open", (ev) => {
-            console.log("socket opened")
+            console.log("Connection with hompag server opened")
             this.isOpen = true;
         });
 
         this._websocket.addEventListener("close", (ev) => {
-            console.log("socket closed")
+            console.log(`Connection with hompag server connection was closed (code: ${ev.code})`)
             this.isClosed = true;
             this.closeCode = ev.code;
         })

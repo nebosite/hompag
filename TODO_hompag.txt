@@ -49,20 +49,17 @@ WIDGET IDEAS
 =========== TODO                                                                   ===========
 ==============================================================================================
 
-    [ ] auto-refresh with file watcher
-        [ ] Mac OS 12.1 and later forces Files on Demand, so you have to keep poling open files.
-    [ ] After onedrive finishes syncing, make sure file detect updates
-    [ ] Re-establish lost websockets for server restarts  (maybe just auto-refresh on focus)
+    [x] auto-refresh with file watcher
+        [x] Mac OS 12.1 and later forces Files on Demand, so you have to keep poling open files.
+    [x] Re-establish lost websockets for server restarts  (maybe just auto-refresh on focus)
     [ ] hompag:  Save off a pure HTML version of the page some place for when the site goes down
         - use the ReactDOMServer.renderToStaticMarkup method from the react-dom/server package. This method generates HTML content from your React component without the additional React-specific data attributes. 
     [ ] Rollback 
+    [ ] Set font and point size on the widget settings
 
 NEW ==============================
-    [ ] Set font and point size on the widget settings
-    [ ] Remove files from checklist that are not the latest version
+    [ ] In the file polling code, Remove files from checklist that are not the latest version
 
-    [x] Find a free, small, WYSIWYG editor to replace the one you have
-        https://tiptap.dev/installation/react
         
         
 BUGS ====================================
@@ -208,6 +205,8 @@ Version 0.4.0
         [x] Make sure client requests new content
         
 Version 0.3.1
+    [x] Find a free, small, WYSIWYG editor to replace the one you have
+        https://tiptap.dev/installation/react
     [x] Unit test throttling
     [x] Spacers are a little wrong on the stock graph
         Just use regular time and drop spacers when the hour/day/week/month changes

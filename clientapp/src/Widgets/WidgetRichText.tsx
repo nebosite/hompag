@@ -124,7 +124,6 @@ extends WidgetBase<{context: WidgetContainer, scale: number},{editor: any}>
         const check = (n: string, a?: {}) => this.editor.isActive(n,a)
         const focusAtEnd = ()=>  this.editor.commands.focus('end', {scrollIntoView: true}) 
         
-        console.log("HELP")
         const getReferenceClientRect = () => {
             const selection = window.getSelection();
             if(selection) {

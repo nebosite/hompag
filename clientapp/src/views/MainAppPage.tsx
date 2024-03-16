@@ -28,6 +28,12 @@ extends React.Component<{appModel?: AppModel}>
                         <button onClick={()=>appModel.recentError = undefined}>dismiss</button>
                     </Row>
                 : null}
+            {appModel.lostConnection
+                ?   <Row>
+                        <div style={{background: "red", color: "yellow"}}>Lost connection with server {appModel.recentError}</div>
+                        <button onClick={()=>appModel.connectToServer()}>Reconnect</button>
+                    </Row>
+                : null}
             {appModel.page 
                 ? <PageControl pageModel={appModel.page} />
                 : <div>Loading... </div>}
