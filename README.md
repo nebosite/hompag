@@ -22,6 +22,11 @@ hompag is meant to run as a mini web server on your local machine.  This makes y
 **To set up hompag**
 
 1. Clone this repo:  `git clone https://github.com/nebosite/hompag.git`
+2. Create a folder to store hompag files.
+
+   1. If you want hompag to sync between computers, choose a path that is managed by cloud storage (e.g.: OneDrive, DropBox, etc.)
+
+      **NOTE**:   Most cloud storage services default to offline storage, and MacOS forces offline files for cloud storage.  Therefore, in order to make sure clients stay in sync across computers, hompag poles for file changes every 30 seconds.  This costs about 1 millisecond each time, so the overhead is low.   
 
 3. In the root of the hompag repo (`cd hompag`)
    1. Create a config file:  `cp webserver/src/config.ts.template webserver/src/config.ts`
@@ -35,7 +40,7 @@ hompag is meant to run as a mini web server on your local machine.  This makes y
 **Running hompag**
 
 1. In the root of the hompag repo
-2. `node webserver/dist/index.js`
+2. `node webserver/dist/index.js storepath=[path to your hompag store]`
 
 **Set it up to run whenever the computer starts**
 

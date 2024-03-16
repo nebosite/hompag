@@ -3,11 +3,13 @@ import { ILogger } from "../helpers/logger";
 import { hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
 import * as fs from "fs"
 import * as path from "path"
+import { stat } from 'fs/promises';
 
 interface FileChangeItem {
     time: number;
     fullName: string;
 }
+
 export class PageAccessLocalDisk implements IItemStore
 {
     public handleFileChange: (type: string, name: string, isExternal: boolean) => void = (t,n) => { this._logger.logLine(`UNHANDLED FILE CHANGE: ${t} on file ${n}`)}
@@ -17,6 +19,7 @@ export class PageAccessLocalDisk implements IItemStore
     private _folders = new Map<string, string>();
     private _activeChanges: FileChangeItem[] = [];
     private _alertedFiles: FileChangeItem[] = [];
+    private _filesToWatch = new Map<string, number>();
 
     // ---------------------------------------------------------------------------------
     // ctor
@@ -42,10 +45,14 @@ export class PageAccessLocalDisk implements IItemStore
         addFolder("config");
         addFolder("cache");
 
+        // --------------------- 
+        // File change watcher
+        // ---------------------
         fs.watch( this._storeLocation, {recursive: true}, (eventType: any, fileName:any) => {
             const recentActiveChanges:FileChangeItem[] = [];
             const recentAlerts:FileChangeItem[] = [];
 
+            console.log(`  FILE SYSTEM EVENT: ${eventType} ${fileName}`);
             // Figure out if this change happened outside of the server
             let isExternal = true;
             this._activeChanges.forEach(fc => {
@@ -80,6 +87,36 @@ export class PageAccessLocalDisk implements IItemStore
             this._alertedFiles = recentAlerts;
             this._activeChanges = recentActiveChanges;
         })
+
+        //-------------------------------------------------------
+        // File Poling - because macOS insists on offline files
+        //-------------------------------------------------------
+        setInterval(async ()=> {
+            const fileNames = Array.from(this._filesToWatch.keys());
+            let diffCount = 0;
+            const allChecks = fileNames.map(async(fileName) => {
+                return new Promise<void>(async (resolve) => {
+                    try {
+                        const stats = await stat(fileName);
+                        const modified = this._filesToWatch.get(fileName);
+                        if(modified != stats.mtime.valueOf()) {
+                            diffCount++;
+                            console.log(`    Diff: ${modified?.valueOf()}  ${stats.mtime.valueOf()}`)
+                            this._filesToWatch.set(fileName, stats.mtime.valueOf());
+                        }                        
+                    } catch (error) {
+                        console.error('Error getting file details:', error);
+                    }  
+                    resolve();                  
+                })
+
+            });
+
+            const start = Date.now();
+            await Promise.all(allChecks);
+            const end = Date.now();
+            console.log(`File check: ${allChecks.length} files  (${end-start} ms)  ${diffCount > 0 ? `${diffCount} DIFFS` : ""}`)
+        },5000)
     }
 
     //--------------------------------------------------------------------------------------
@@ -161,6 +198,9 @@ export class PageAccessLocalDisk implements IItemStore
         }
 
         const fileName = path.join(this._storeLocation, `${itemType}/${id}/${version}.json`)
+        if(!this._filesToWatch.has(fileName)) {
+            this._filesToWatch.set(fileName, 0)
+        }
 
         return new Promise<ItemReturn | null>((resolve, reject) => {
 
@@ -203,6 +243,9 @@ export class PageAccessLocalDisk implements IItemStore
 
         const fileName = path.join(itemFolder as string, `${version}.json`);
         this._activeChanges.push({time: Date.now(), fullName: fileName});
+        if(!this._filesToWatch.has(fileName)) {
+            this._filesToWatch.set(fileName, 0)
+        }
 
         return new Promise<void>((resolve, reject) => {
             fs.writeFile(fileName, data, (err: any) => {

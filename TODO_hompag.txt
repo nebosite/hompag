@@ -49,20 +49,33 @@ WIDGET IDEAS
 =========== TODO                                                                   ===========
 ==============================================================================================
 
-    
+    [ ] auto-refresh with file watcher
+        [ ] Mac OS 12.1 and later forces Files on Demand, so you have to keep poling open files.
+    [ ] After onedrive finishes syncing, make sure file detect updates
+    [ ] Re-establish lost websockets for server restarts  (maybe just auto-refresh on focus)
+    [ ] hompag:  Save off a pure HTML version of the page some place for when the site goes down
+        - use the ReactDOMServer.renderToStaticMarkup method from the react-dom/server package. This method generates HTML content from your React component without the additional React-specific data attributes. 
+    [ ] Rollback 
 
 NEW ==============================
+
+    [x] Find a free, small, WYSIWYG editor to replace the one you have
+        https://tiptap.dev/installation/react
+        
+        
+BUGS ====================================
     [ ] Bug: clickable links don't work when bold
-    [ ] auto-refresh with file watcher
-    [ ] Rollback 
+    [ ] Bug: Column changes don't auto-update the layout - requires a refresh
+
+IMPORTANT ==============================
+   
+BACKLOG ==============================
+    [ ] An error in the actions file should show up on the page somehow
+    [ ] Changing the actions file should cause a reload of actions config
+    [ ] Be able to start a playlist from spotify widget
     [ ] Hompag: auto-bold most visited links
-    [ ] hompag:  Save off a pure HTML version of the page some place for when the site goes down
 
     [ ] hompag - clickable links on the ping page
-    [ ] homehome rerenders after 1 sec with new dimensions and widgets
-    [ ] Corner tag on settings is unreachable for items on the right of the page
-    [ ] Find a free, small, WYSIWYG editor to replace the one you have
-        https://tiptap.dev/installation/react
     [ ] hompag crash
         2022/04/21 15:34:50.873] Closing socket: listener_148
         Error [ERR_UNHANDLED_ERROR]: Unhandled error. (undefined)
@@ -75,24 +88,12 @@ NEW ==============================
             at SocketWrap.emit (events.js:314:20)
             at SocketWrap.EventEmitter.emit (domain.js:483:12)
         [31m[nodemon] app crashed - waiting for file changes before starting...[39m
-    [ ] An error in the actions file should show up on the page somehow
-    [ ] Changing the actions file should cause a reload of actions config
-    [ ] Be able to start a playlist from spotify widget
-    [ ] Document how to start hompag from task scheduler
-
-        
-        
-BUGS ====================================
-
-IMPORTANT ==============================
-   
-BACKLOG ==============================
     [ ] Widget cleanup page
         [ ] Get a list of all widgets 
             id
             pagesThatReference
         [ ] Selecting a widget shows a little render of it
-        [ ] Delete widget action
+        [ ] Delete widget 
 
     [ ] Debug page changes
         [ ] Show source location
