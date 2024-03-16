@@ -115,8 +115,12 @@ export class PageAccessLocalDisk implements IItemStore
             const start = Date.now();
             await Promise.all(allChecks);
             const end = Date.now();
-            console.log(`File check: ${allChecks.length} files  (${end-start} ms)  ${diffCount > 0 ? `${diffCount} DIFFS` : ""}`)
-        },5000)
+
+            if(diffCount > 0) { 
+                console.log(`File check: ${allChecks.length} files  (${end-start} ms)  ${diffCount > 0 ? `DIFFS: ${diffCount} ` : ""}`)
+            }
+
+        },30000)
     }
 
     //--------------------------------------------------------------------------------------

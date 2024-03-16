@@ -19,7 +19,7 @@ export class PageCache implements IItemStore{
     set handleFileChange(value) { 
         this._deepStore.handleFileChange = (type: string, name: string, isExternal: boolean) => {
             const {itemType, id, version } = getItemDescriptor(name);
-            if(type === "change" && isExternal && version) {
+            if(isExternal && version) {
                 this.clearItem(itemType as hompagItemType, id);
             }
 

@@ -123,8 +123,7 @@ export class ServerModel {
                 handlingChange = true;
                 const {itemType, id, version } = getItemDescriptor(name);
 
-                if(type === "change" 
-                    && isExternal 
+                if(isExternal 
                     && version !== undefined
                 ) {
                     this.logger.logLine(`EXTERNAL FILE CHANGE: ${type}:${isExternal} [${itemType} ${id} ${version}]`)
