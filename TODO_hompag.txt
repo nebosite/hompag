@@ -49,11 +49,6 @@ WIDGET IDEAS
 =========== TODO                                                                   ===========
 ==============================================================================================
 
-    [x] auto-refresh with file watcher
-        [x] Mac OS 12.1 and later forces Files on Demand, so you have to keep poling open files.
-    [x] Re-establish lost websockets for server restarts  (maybe just auto-refresh on focus)
-    [ ] hompag:  Save off a pure HTML version of the page some place for when the site goes down
-        - use the ReactDOMServer.renderToStaticMarkup method from the react-dom/server package. This method generates HTML content from your React component without the additional React-specific data attributes. 
     [ ] Rollback 
     [ ] Set font and point size on the widget settings
 
@@ -193,6 +188,14 @@ MAYBE NEVER ==============================
 
 
 -- DONE ---------------------------------------------------------------------
+
+Version 0.5.0
+    [x] auto-refresh with file watcher
+        [x] Mac OS 12.1 and later forces Files on Demand, so you have to keep poling open files.
+    [x] Re-establish lost websockets for server restarts  (maybe just auto-refresh on focus)
+    [x] hompag:  Save off a pure HTML version of the page some place for when the site goes down
+        - use the ReactDOMServer.renderToStaticMarkup method from the react-dom/server package. This method generates HTML content from your React component without the additional React-specific data attributes. 
+
 Version 0.4.0
     [x] Ctrl-Z doesn't work in the editor
     [x] Hompag: refresh button to refresh from file System

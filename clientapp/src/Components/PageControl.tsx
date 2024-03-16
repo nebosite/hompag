@@ -72,6 +72,30 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
             setTimeout(()=>{location.reload()}, 1000);
         }
 
+        const SaveAsHtml = () => {
+            this.setState({showSettings: false});
+            setTimeout(()=>{
+                const htmlContent = document.documentElement.outerHTML
+                    .replace(/contenteditable=\"true\"/g, "")
+                    .replace(/height: 5000px;/g,"");
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                
+                // Create a link to trigger the download
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = `hompag_snapshot_${pageModel.name}.html`;
+                
+                // Append the link to the document, trigger the download, and then remove the link
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                // Clean up the blob URL
+                URL.revokeObjectURL(url);
+            },500)
+        }
+
         const numbersSource = (numbers: number[]) => {
             return numbers.map(n => {
                 return {
@@ -142,6 +166,9 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
                         </Row>
                         <Row>
                             <button onClick={forceRefresh}>Force Server Refresh</button>
+                        </Row>
+                        <Row>
+                            <button onClick={SaveAsHtml}>Save as HTML</button>
                         </Row>
                     </div>
 
