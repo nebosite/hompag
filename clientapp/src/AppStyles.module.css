@@ -304,3 +304,10 @@ body {
     cursor: pointer;
     box-shadow: 5px 5px 25px #FFFFFFD0;
 }
+
+.settingButton {
+    font-size: 110%;
+    margin: 15px;
+    border: 1px solid #00000080;
+    background: #ffffff80;
+}

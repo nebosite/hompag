@@ -41,8 +41,8 @@ export class PageModel
     version: number = -999;
     @observable widgetContainers: WidgetContainer[] = observable<WidgetContainer>([])
     @observable columnCount = 24;
-    @observable columnWidth = 50;
-    @observable rowHeight = 50;
+    @observable columnWidth = 30;
+    @observable rowHeight = 30;
     get pageWidth() {return this.columnCount * this.columnWidth}; 
     @observable colorTheme: ColorTool;  
 

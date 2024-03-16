@@ -165,10 +165,8 @@ extends React.Component<PageSettingsControlProps,{showSettings: boolean, windowW
 
                         </Row>
                         <Row>
-                            <button onClick={forceRefresh}>Force Server Refresh</button>
-                        </Row>
-                        <Row>
-                            <button onClick={SaveAsHtml}>Save as HTML</button>
+                            <button className={styles.settingButton} onClick={forceRefresh}>Force Server Refresh</button>
+                            <button className={styles.settingButton} onClick={SaveAsHtml}>Save as HTML</button>
                         </Row>
                     </div>
 

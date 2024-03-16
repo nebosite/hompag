@@ -30,6 +30,7 @@ type ComboboxProps = {
     width?: string;
     styleOverride?: React.CSSProperties;
     startOpened?: boolean; 
+    className?: string;
     onBlur?: ()=>void;
 };
 
@@ -80,10 +81,10 @@ export default function Combobox(props: ComboboxProps) {
     const customStyles = {
         control: (styles: any) => ({ 
              ...styles, 
-             ...props.styleOverride,
              minHeight: '16px',
              margin: '1px',
              width: props.width ?? '100%',
+             ...props.styleOverride,
     
         }),
         indicatorsContainer: (styles: any) => ({
@@ -94,6 +95,7 @@ export default function Combobox(props: ComboboxProps) {
         }),
         valueContainer: (styles: any) => ({
              ...styles, 
+             fontSize: "200%",
              ...props.styleOverride,
              //padding:'0px',
             // height: '16px',
