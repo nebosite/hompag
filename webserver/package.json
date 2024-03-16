@@ -1,6 +1,6 @@
 {
   "name": "hompag-server",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "hompag client",
   "main": "dist/index.js",
   "scripts": {
