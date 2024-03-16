@@ -101,11 +101,10 @@ export class PageAccessLocalDisk implements IItemStore
                         const modified = this._filesToWatch.get(fileName);
                         if(modified != stats.mtime.valueOf()) {
                             diffCount++;
-                            console.log(`    Diff: ${modified?.valueOf()}  ${stats.mtime.valueOf()}`)
                             this._filesToWatch.set(fileName, stats.mtime.valueOf());
                         }                        
                     } catch (error) {
-                        console.error('Error getting file details:', error);
+                        console.error(`Error getting file details on ${fileName}:`, error);
                     }  
                     resolve();                  
                 })

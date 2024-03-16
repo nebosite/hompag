@@ -72,8 +72,17 @@ export interface StockResponse {
 export class AppModel {
     @observable serverStatus:any = null;
     @observable page: PageModel;
-    @observable recentError?: string;
     @observable safeToSave = false;
+
+    @observable  private _lostConnection = false;
+    get lostConnection() {return this._lostConnection}
+    set lostConnection(value) {action(()=>{this._lostConnection = value})()}
+    
+
+    @observable  private _recentError:string | undefined = undefined;
+    get recentError() {return this._recentError}
+    set recentError(value) {action(()=>{this._recentError = value})()}
+    
 
     public onServerRefresh = ()=>{};
 
@@ -84,6 +93,8 @@ export class AppModel {
     private _dataChangeListener: IDataChangeListener
     private _savePageThrottler = new ThrottledAction(500)
     private _transientHandlers = new Map<string, Map<string, TransientStateHandler<unknown>[]>>()
+    private _lastConnectAttemptTime = 0;
+
 
     get trafficCounts() {
         return {
@@ -105,13 +116,23 @@ export class AppModel {
         registerGlobalItem("theApp", this);
         this._typeHelper = new hompagTypeHelper();
         this._serializer = new BruteForceSerializer(this._typeHelper)
+        this.connectToServer();
+
+        setTimeout( ()=> { this.loadPage(pageName) },1)
+        setTimeout(this.validatePageVersion,1000)
+        setInterval(this.maintainServerContact,2000)
+    }
+
+    //--------------------------------------------------------------------------------------
+    // 
+    //--------------------------------------------------------------------------------------
+    connectToServer = () => {
+        this._lastConnectAttemptTime = Date.now();
         this._dataChangeListener = new WebSocketListener();
         this._dataChangeListener.addListener(ServerMessageType.item_change, this.handleItemChanges)
         this._dataChangeListener.addListener(ServerMessageType.transient_change, this.handleTransientChanges);
         this._dataChangeListener.addListener(ServerMessageType.refresh, this.handleServerRefresh);
-
-        setTimeout( ()=> { this.loadPage(pageName) },1)
-        setTimeout(this.validateLocalPageVersion,1000)
+        this.lostConnection = this._dataChangeListener.isOpen;
     }
 
     // -------------------------------------------------------------------
@@ -147,14 +168,28 @@ export class AppModel {
     }
 
     // -------------------------------------------------------------------
-    // Make sure we don't have an old version of the page because
-    // we don't want to accidental overwrite a newer version
+    // Make sure we are kosher and insync with server
     // -------------------------------------------------------------------
-    validateLocalPageVersion = async () => {
+    maintainServerContact = async () => {
+        if(this._dataChangeListener.isClosed) {
+            this.lostConnection = true; 
+            if(Date.now() - this._lastConnectAttemptTime < 5000) {
+                // console.log("Waiting to autoconnect...")
+            } else {
+                this.connectToServer();
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------
+    // Make sure we are kosher and insync with server
+    // -------------------------------------------------------------------
+    validatePageVersion = async () => {
         if(!this.page) {
             console.log("Page?")
             return;
         }
+
         const response = await this._api.restGet<ItemVersionResponse>(
             `query?type=pageversions&ids=${this.page.name}`, false);
         if(response.errorMessage)
