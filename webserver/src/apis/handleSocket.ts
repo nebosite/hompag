@@ -83,7 +83,7 @@ export function handleSocket(socket: WebSocket, req: Request, logger: ILogger) {
         }
         
         socket.on('close', (reason) => { listener.close(); });
-    } catch (e) {
+    } catch (e: any) {
         logger.logError(e)
         socket.close(CLOSECODE_POLICY_VIOLATION);
         return;

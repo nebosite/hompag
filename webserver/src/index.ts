@@ -1,31 +1,34 @@
-import express from 'express';
 import express_ws from 'express-ws';
 import * as path from 'path';
 import { getPage, getPages, storePage } from './apis/pages';
-import { showHealth } from './apis/showHealth';
-import { Logger } from './helpers/logger';
-import { PageAccessLocalDisk } from './models/PageAccessLocalDisk';
 import { ServerModel } from './models/ServerModel';
 import {hompag_config} from './config'
-import { getWidget, storeWidget } from './apis/widgets';
-import { handleSocket } from './apis/handleSocket';
-import { listening_port, VERSION } from './GLOBALS';
 import { PageCache } from './models/PageCache';
+import { PageAccessLocalDisk } from './models/PageAccessLocalDisk';
+import { Logger } from './helpers/logger';
+import express from 'express';
+import { showHealth } from './apis/showHealth';
+import { getWidget, storeWidget } from './apis/widgets';
 import { handleQueries } from './apis/query';
+import { executeAction, getActionList } from './apis/actions';
 import { handleSpotifyCommand } from './apis/spotify';
 import { handleLoginResponse } from './apis/loginResponder';
-import { executeAction, getActionList } from './apis/actions';
 import { handlePingCommand } from './apis/ping';
 import { getStockData } from './apis/stock';
+import { handleSocket } from './apis/handleSocket';
+import { listening_port, VERSION } from './GLOBALS';
 
 // Process Arguments
 const args = process.argv.slice(2);
 for(let arg of args)
 {
     const parts = arg.split('=',2);
+    const name = parts[0].toLowerCase()
+    console.log(`Processing argument ${name} ${parts[1]}`)
     switch(parts[0].toLowerCase()) {
         case "killpath": killpath = parts[1]; break;
         case "storepath": hompag_config.storePath = parts[1]; break;
+        default: throw Error(`bad argument: ${arg}`)
     }
     if(parts[0].toLowerCase() === "killpath") {
       killpath = parts[1];
@@ -53,8 +56,9 @@ var killpath = undefined;
 // specified allows testing logic to easily start and stop the server during tests
 if(killpath) {
     logger.logLine("**** Setting kill path to /" + killpath + " **** ")
-    app.get("/" + killpath, (req, res) => {
+    app.get("/" + killpath, (req: any, res: any) => {
         logger.logLine("Server was killed with killpath")
+        
         res.end("Arrrgh!")
         process.exit(0);
     });
@@ -92,15 +96,15 @@ app_ws.app.ws('/subscribe', (req, res) => handleSocket(req, res, logger));
 // ---------------------------------------------------------------------------------
 // app hosting
 // ---------------------------------------------------------------------------------
+const __dirname = path.resolve();
 const clientAppRoot = process.env.ISDEV === "1"
-    ? path.join(__dirname, "../../clientapp/build/")
+    ? path.join(__dirname, "../clientapp/build/")
     : "clientapp"
 
 logger.logLine(`Client root = ${clientAppRoot}`)
-
-app.get('', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); })
+app.get('', (req: any, res: any) => { res.sendFile(`${clientAppRoot}/index.html`); })
 app.use('/', express.static(clientAppRoot));
-app.get('/*', (req, res) => { res.sendFile(`${clientAppRoot}/index.html`); }) 
+app.get('/*', (req: any, res: any) => { res.sendFile(`${clientAppRoot}/index.html`); }) 
 
 const handleShutdown = async (signal: any) => { 
     logger.logLine(`B'Bye: ${signal} `)
@@ -115,10 +119,10 @@ process.on('SIGINT', handleShutdown);
 process.on('SIGHUP', handleShutdown);
 process.on('SIGUSR2', handleShutdown);
 
-// process.on('exit', async () => {
+process.on('exit', async () => {
    
-//     setTimeout(()=> process.exit(0), 3000)
-// });
+    setTimeout(()=> process.exit(0), 3000)
+});
 
 
 // ---------------------------------------------------------------------------------
