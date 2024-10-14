@@ -155,7 +155,7 @@ export class StockModel
     cache: ICache;
     private _reportStateChange: (state: StockData) => void = ()=>{}
     private _pingList: StockPing[] = []
-    private _pingInterval_ms = 60 * 1000 * 10 // 10 minutes
+    private _pingInterval_ms = ONE_HOUR * 8 // 8 hours
     logger: ILogger
     private _collectingCount = 0;
 
