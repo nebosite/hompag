@@ -52,7 +52,6 @@ export class PageAccessLocalDisk implements IItemStore
             const recentActiveChanges:FileChangeItem[] = [];
             const recentAlerts:FileChangeItem[] = [];
 
-            console.log(`  FILE SYSTEM EVENT: ${eventType} ${fileName}`);
             // Figure out if this change happened outside of the server
             let isExternal = true;
             this._activeChanges.forEach(fc => {
