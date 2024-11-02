@@ -53,6 +53,8 @@ WIDGET IDEAS
     [ ] Set font and point size on the widget settings
 
 NEW ==============================
+    [ ] Alias a command to find running instances
+         Get-WmiObject Win32_Process | Where-Object { $_.CommandLine -match 'hompag' } | Select-Object ProcessId, Name
     [ ] In the file polling code, Remove files from checklist that are not the latest version
 
         

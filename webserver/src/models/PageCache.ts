@@ -1,6 +1,6 @@
 import { ServerConfigType } from "hompag-common";
 import { doNothing } from "../helpers/asyncHelper";
-import { ILogger } from "../helpers/logger";
+import { ILogger, LoggerPrefixer } from "../helpers/logger";
 import { getItemDescriptor, hompagItemType, IItemStore, ItemReturn } from "./ServerModel";
 
 interface CacheInfo
@@ -40,7 +40,7 @@ export class PageCache implements IItemStore{
     constructor(deepStore: IItemStore, logger: ILogger)
     {
         this._deepStore = deepStore;
-        this._logger = logger;
+        this._logger = new LoggerPrefixer(logger, "PageCache");
         this._cache.set(hompagItemType.page, new Map<string, CacheInfo>())
         this._cache.set(hompagItemType.widget, new Map<string, CacheInfo>())
         this._cache.set(hompagItemType.cache, new Map<string, CacheInfo>())

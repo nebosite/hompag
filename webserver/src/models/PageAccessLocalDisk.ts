@@ -210,7 +210,7 @@ export class PageAccessLocalDisk implements IItemStore
                 if (err) {
                     reject (`Error reading file '${fileName}': ${err}`)
                 }
-                this._logger.logLine(`Loaded file: ${fileName}`)
+                //this._logger.logLine(`Loaded file: ${fileName}`)
 
                 resolve({type: itemType, id, version: version!, data})
             } )                             

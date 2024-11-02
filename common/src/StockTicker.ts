@@ -1,6 +1,6 @@
 export interface StockDetail {
     date: number,
-    values: number[],
+    values: number[],  // close, low, high, volume (M), open
 }
 
 export interface StockData {

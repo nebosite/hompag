@@ -360,6 +360,9 @@ export class ServerModel {
     async getStockData(symbol: string) {
         this.logger.logLine(`Stock post: ${symbol}`)
         this.stock.getData(symbol)
+        // Note: stock data is delivered via push, so we don't return
+        // the stock data here.  Looks in the constructore for "stockAlerter"
+        // to see how the data is pushed.
         return "OK" 
     }
 }

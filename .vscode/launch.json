@@ -5,11 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-chrome",
+            "name": "npm run startdev (eric)",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3200",
-            "webRoot": "${workspaceFolder}"
+            "runtimeArgs": [
+                "run",
+                "startdev",
+                "--",
+                "storepath=F:/Documents/Dropbox/Settings/hompag/serverstore"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}/webserver",
+            "type": "node",
+            "console": "integratedTerminal"
         }
     ]
 }
