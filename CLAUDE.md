@@ -37,14 +37,26 @@ All commands assume you are at the repo root unless noted.
    API key, store path) — it is gitignored, never commit it.
 2. `node build-all.js` — installs and builds all three packages in order.
 
-**Run (production-style)**
-- `node webserver/dist/index.js storepath=[path to your hompag store]`
-- Server listens on port **8101** (override with `PORT`). Open
-  `http://localhost:8101/anypagename` — pages are created on demand by URL.
+**Sanity check before committing — REQUIRED**
+Always build and run the app and hand the user a local URL for a visual check
+**before committing any change**. Steps (verified working on current Node):
+1. Build the client: `cd clientapp && npm run build` (outputs `clientapp/build`).
+2. Ensure `webserver/src/config.ts` exists with a valid `storePath` (a scratch
+   folder is fine for a sanity check; pages are created on demand).
+3. From the `webserver` dir, with env `ISDEV=1`, run the server via tsx:
+   `npx tsx src/index.ts storepath=<path>`. `ISDEV=1` makes it serve
+   `../clientapp/build`; it listens on **8101**.
+4. Confirm `GET http://localhost:8101/api/am_i_healthy` returns JSON, then give
+   the user a page URL such as `http://localhost:8101/home`.
+
+Use `tsx`, not the legacy start scripts: `npm run startdev` and
+`node dist/index.js` rely on `--loader ts-node/esm` /
+`--experimental-specifier-resolution=node`, which are removed in Node 18+ and
+fail on Node 26. (Modernizing the build/run targets is a tracked improvement.)
 
 **Active client development** (hot reload)
-- `cd webserver && npm run startdev` (server on 8101, runs TS directly via ts-node/ESM)
-- `cd clientapp && npm start` (CRA dev server on 3200, proxies API to 8101)
+- Run the server with the tsx command above (server on 8101).
+- `cd clientapp && npm start` (CRA dev server on 3200, proxies API to 8101).
 - Use `http://localhost:3200/dev`. Build the client with `npm run build` when done.
 
 **Tests**
