@@ -8,7 +8,7 @@
     "startdev_old": "genversion src/version.js && env-cmd -f .env.dev nodemon src/index.ts",
     "start": "genversion src/version.js && node dist/index.js",
     "build": "genversion src/version.js && tsc",
-    "test": "mocha -exit -r ts-node/register src/**/*.test.ts",
+    "test": "mocha",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
     "tessa-npm-plugin": "tessa-npm-plugin update"
   },
@@ -42,10 +42,14 @@
     "chai": "^4.3.4",
     "env-cmd": "^10.1.0",
     "genversion": "^2.3.1",
-    "mocha": "^10.0.0",
+    "mocha": "^11.7.6",
     "nodemon": "^2.0.4",
     "nyc": "^15.1.0",
     "ts-node": "^10.8.0",
+    "tsx": "^4.22.4",
     "typescript": "^4.1.2"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
   }
 }

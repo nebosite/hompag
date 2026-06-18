@@ -5,17 +5,17 @@ import { StockModel } from "../models/StockModel";
 
 describe('StockModel.getCacheResponse', async () => {
 
-    const assert = (date: Date, lastTime: number, qsize: number, reportFromCache: boolean, reason: string) =>
+    const assert = (date: Date, lastTime: number, qsize: number, shouldReportFromCache: boolean, reason: string) =>
     {
         const result = StockModel.getCacheResponse(date, lastTime, qsize, 1000);
-        expect(result).deep.equal({reportFromCache, reason})
+        expect(result).deep.equal({shouldReportFromCache, reason})
     }
 
     it('should cache when queue is full', async () => {
         const now = new Date(Date.parse("2021/11/17 12:00:00 GMT-0800"))
         assert(now, 0, 0, false, "")
-        assert(now, 0, 3, false, "")
-        assert(now, 0, 4, true, "Request queue is full")
+        assert(now, 0, 10, false, "")
+        assert(now, 0, 11, true, "Request queue is full")
     });
     
     it('should cache when data is fresh', async () => {
