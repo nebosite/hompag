@@ -169,37 +169,13 @@ Picker (the "what am I?" type chooser placeholder for new widgets).
 A candid review of general, codebase-wide improvements. None are urgent; they are
 ordered roughly by leverage.
 
-1. **Pin the toolchain and modernize dependencies.** React 17, MobX 6, CRA 5
-   (`react-scripts`), draft-js *and* TipTap both present, Okta packages, `strapi`,
-   `jira-client`, enzyme + RTL side by side. Several of these look unused or
-   superseded. Auditing and removing dead deps (e.g. draft-js if TipTap won, Okta
-   if no longer used) would shrink install size and CVE surface. The three packages
-   also pin **different TypeScript majors** (common on TS3.9, others on TS4) — align them.
 
-2. **Client test coverage is essentially zero.** The serializer
-   (`BruteForceSerializer`), the color math (`ColorTool`), and the model save/load
-   logic are exactly the kind of pure logic that is cheap to unit-test and easy to
-   break silently. The server's test pattern (Mocha) is a good model to extend, or
-   lean on the Jest setup that already ships with CRA.
 
 3. **Replace `build-all.js` with a real build orchestrator.** Its own comment asks
    for this. A workspaces setup (npm/pnpm/yarn workspaces or Turborepo/Nx) would
    give you ordered builds, shared `node_modules`, `common` watch-on-change during
    dev (today editing `common` requires a manual rebuild), and parallelism.
 
-4. **Shell action execution is an injection risk.** `apis/actions.ts` runs
-   user-config shell strings via `exec`. Since it's local-only and self-authored
-   that's acceptable, but document the trust boundary clearly and consider
-   `execFile` with an args array to avoid accidental shell-expansion surprises.
-
-5. **No auth on the local server.** Fine for `localhost`, but anything bound to a
-   non-loopback interface exposes file read/write and arbitrary command execution
-   on the LAN. Worth an explicit bind-to-127.0.0.1 default and a note in config.
-
-6. **Timestamp-as-version can collide and never garbage-collects.** `Date.now()`
-   versions are written as separate `{version}.json` files per save; rapid saves
-   within the same millisecond can collide, and old versions appear to accumulate
-   forever on disk. Consider a monotonic counter and a retention/cleanup policy.
 
 7. **`any` at the boundaries.** `StatePacket.data` and several serializer paths are
    `any`. Tightening these (discriminated unions on `ServerMessageType`, generics on
