@@ -33,9 +33,13 @@ async function installAndBuild(cwd) {
     await promisifySingleStep("npm run build", cwd);
 }
 
-// Main work
+// Main work.  common must be built first: the others depend on it.
 (async function() {
     await installAndBuild('./common');
     await installAndBuild('./clientapp');
     await installAndBuild('./webserver');
-})();
+    await installAndBuild('./launcher');
+})().catch(err => {
+    console.error(err.message);
+    process.exit(1);
+});

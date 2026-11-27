@@ -28,3 +28,6 @@ node_modules
 # Porter
 .porter*
 porter
+
+# Release packaging output (scripts/package-release.mjs)
+release/

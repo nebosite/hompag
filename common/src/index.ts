@@ -5,3 +5,4 @@ export * from './Spotify';
 export * from './StockTicker';  
 export * from './RandomHelper';  
 export * from './config';  
+export * from './ExitCodes';  

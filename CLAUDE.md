@@ -14,35 +14,39 @@ so an edit on one browser shows up instantly on every other open page.
 This codebase is hand-written by a single author. Favor clarity and small,
 surgical changes that match the existing style over large rewrites.
 
-## Repository layout (monorepo, three packages)
+## Repository layout (monorepo, four packages)
 
 | Package | Path | Stack | Role |
 |---|---|---|---|
 | `hompag-common` | `common/` | TypeScript lib | Shared client/server contract: WebSocket message types, data interfaces, helpers |
 | `hompag` (client) | `clientapp/` | React 17 + MobX 6 + TypeScript (CRA) | The editable page UI |
 | `hompag-server` | `webserver/` | Express + express-ws + TypeScript (ESM) | Local server, persistence, integrations |
+| `hompag-launcher` | `launcher/` | TypeScript, bundled to one `hompag.mjs` | Installer, autostart, crash supervisor, `hompag` CLI |
 
 `common` is consumed by both via a `file:../common` dependency, so it **must be
 built before** the client or server. `build-all.js` builds them in the required
-order: `common` → `clientapp` → `webserver`.
+order: `common` → `clientapp` → `webserver` → `launcher`.
 
 ## Build, run, test
 
 All commands assume you are at the repo root unless noted.
 
 **First-time setup**
-1. `cp webserver/src/config.ts.template webserver/src/config.ts` and edit it
-   (see [webserver/src/config.ts.template](webserver/src/config.ts.template)).
-   `config.ts` is required to build the server and holds secrets (Spotify, stock
-   API key, store path) — it is gitignored, never commit it.
-2. `node build-all.js` — installs and builds all three packages in order.
+1. `node build-all.js` — installs and builds all four packages in order.
+2. Config is read at **runtime**, never compiled in: a JSON file named by
+   `HOMPAG_CONFIG=<file>` or `config=<file>` (`{storePath, port, spotify, axios}`,
+   see [RuntimeConfig.ts](webserver/src/helpers/RuntimeConfig.ts)), plus
+   `storepath=<folder>` on the command line. A gitignored legacy
+   `webserver/src/config.ts` is still honored as the lowest-precedence default but
+   is optional. Never commit secrets.
 
 **Sanity check before committing — REQUIRED**
 Always build and run the app and hand the user a local URL for a visual check
 **before committing any change**. Steps (verified working on current Node):
 1. Build the client: `cd clientapp && npm run build` (outputs `clientapp/build`).
-2. Ensure `webserver/src/config.ts` exists with a valid `storePath` (a scratch
-   folder is fine for a sanity check; pages are created on demand).
+2. Pick a scratch store folder for `storepath=` (pages are created on demand).
+   The user's own hompag may already be on 8101: if so, set `PORT=8191`, and never
+   call `/api/die` on a server you didn't start.
 3. From the `webserver` dir, with env `ISDEV=1`, run the server via tsx:
    `npx tsx src/index.ts storepath=<path>`. `ISDEV=1` makes it serve
    `../clientapp/build`; it listens on **8101**.
@@ -52,7 +56,21 @@ Always build and run the app and hand the user a local URL for a visual check
 Use `tsx`, not the legacy start scripts: `npm run startdev` and
 `node dist/index.js` rely on `--loader ts-node/esm` /
 `--experimental-specifier-resolution=node`, which are removed in Node 18+ and
-fail on Node 26. (Modernizing the build/run targets is a tracked improvement.)
+fail on Node 26. Releases instead run a single esbuild bundle
+(`webserver/scripts/bundle.mjs` → `dist-bundle/index.mjs`).
+
+**Installer / supervisor** (`launcher/`)
+- `cd launcher && npm run build` → `launcher/dist/hompag.mjs` (one dependency-free file).
+- `node scripts/package-release.mjs` assembles `release/` (server bundle + client
+  build + launcher + `SHA256SUMS`). Tagging `v<version>` publishes it via
+  `.github/workflows/release.yml`.
+- To try an install without touching the real one: set `HOMPAG_HOME=<scratch dir>`
+  and pass `--yes --no-autostart --no-path --port 8191`, e.g.
+  `node release/hompag.mjs install --mode prod --from-source . --data <dir>`. Remove
+  it afterwards with `uninstall --yes` under the same `HOMPAG_HOME`.
+- Server ↔ supervisor contract: exit codes in `common/src/ExitCodes.ts`; graceful
+  stop is an IPC `{cmd:'shutdown'}` message (Windows has no SIGTERM), handled by
+  `webserver/src/helpers/ShutdownCoordinator.ts`.
 
 **Active client development** (hot reload)
 - Run the server with the tsx command above (server on 8101).
@@ -62,6 +80,8 @@ fail on Node 26. (Modernizing the build/run targets is a tracked improvement.)
 **Tests**
 - Server: `cd webserver && npm test` (Mocha + Chai, files in `webserver/src/tests/`).
 - Client: `cd clientapp && npm test` (react-scripts/Jest).
+- Launcher: `cd launcher && npm test` (Mocha; includes Supervisor tests that drive
+  a fake server process through crash → restart → give-up).
 - Per global practice: run the relevant tests after each build and before every
   commit. The server has the meaningful unit tests (PageCache, PageAccessLocalDisk,
   StockModel, Throttler); the client is largely untested (see Improvements).

@@ -1,4 +1,10 @@
-// Copy this file to config.ts and edit the properties to match your system
+// LEGACY: the installer now writes a runtime config.json instead (see README).
+// The server reads it from HOMPAG_CONFIG=<file> or config=<file>, so builds and
+// releases never contain secrets.  For a quick dev run without the installer,
+// pass storepath=<folder> on the command line.
+//
+// If you prefer, you can still copy this file to config.ts (gitignored); its
+// values are used as defaults underneath config.json and the command line.
 
 export const hompag_config = {
     // The local store location can be any folder on your computer.

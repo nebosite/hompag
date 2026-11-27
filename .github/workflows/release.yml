@@ -1,0 +1,54 @@
+name: Release
+
+# Push a tag like v0.6.0 to publish a release.  The installer scripts download
+# hompag.mjs and SHA256SUMS from the latest release, and the launcher downloads
+# hompag-<version>.tar.gz.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the tag matches the package versions
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          for pkg in webserver clientapp launcher; do
+            version=$(node -p "require('./$pkg/package.json').version")
+            if [ "$version" != "$tag" ]; then
+              echo "::error::$pkg/package.json is $version but the tag is $GITHUB_REF_NAME"
+              exit 1
+            fi
+          done
+
+      - name: Build all packages
+        run: node build-all.js
+
+      - name: Test
+        run: |
+          (cd webserver && npm test)
+          (cd launcher && npm test)
+          (cd clientapp && npm test)
+
+      - name: Package
+        run: node scripts/package-release.mjs
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "release/hompag-${GITHUB_REF_NAME#v}.tar.gz" \
+            release/hompag.mjs \
+            release/SHA256SUMS \
+            --title "hompag ${GITHUB_REF_NAME#v}" \
+            --generate-notes

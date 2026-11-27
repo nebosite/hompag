@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build-test-install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build all packages
+        run: node build-all.js
+
+      - name: Server tests
+        run: cd webserver && npm test
+
+      - name: Launcher tests
+        run: cd launcher && npm test
+
+      - name: Client tests
+        run: cd clientapp && npm test
+
+      - name: Package a release
+        run: node scripts/package-release.mjs
+
+      # Install the packaged release into a throwaway home, check that the server
+      # answers, then uninstall.  Autostart and PATH changes are skipped on CI.
+      - name: Install smoke test
+        env:
+          HOMPAG_HOME: ${{ runner.temp }}/hompag-home
+        run: |
+          node release/hompag.mjs install --yes --mode prod --from-source . \
+            --data "$RUNNER_TEMP/hompag-data" --port 8191 --no-autostart --no-path
+          curl -fsS http://localhost:8191/api/am_i_healthy
+          curl -fsS -o /dev/null http://localhost:8191/home
+          node "$HOMPAG_HOME/hompag.mjs" status
+          node "$HOMPAG_HOME/hompag.mjs" uninstall --yes

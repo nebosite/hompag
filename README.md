@@ -23,55 +23,78 @@ hompag is meant to run as a mini web server on your local machine.  This makes y
 
 **Prerequisites**
 
-1. git command line
-2. nodejs v12 or later
+* [Node.js](https://nodejs.org) 20 or later
+* For developer mode only: git (and optionally the [GitHub CLI](https://cli.github.com), so the installer can fork the repo for you)
 
-**To set up hompag**
+### Install
 
-1. Clone the hompag repo:  `git clone https://github.com/nebosite/hompag.git`
+Windows (PowerShell):
 
-2. Somewhere on your computer, Create a folder to store hompag files.
-   If you want hompag to sync between computers, choose a path that is managed by cloud storage (e.g.: a folder inside your OneDrive or DropBox folder.)
-
-   **NOTE**:   Most cloud storage services default to offline storage, and MacOS actually forces offline files for cloud storage.  Therefore, in order to make sure clients stay in sync across computers, hompag must poll for file changes, which is does every 30 seconds.  This costs about 1 millisecond each time, so the overhead is low.   
-
-3. Before you can build, you need to create a config file:
-
-   1. Go to the root of the hompag repo (`cd [root of hompag]`)
-   2. Create a config file:  `cp webserver/src/config.ts.template webserver/src/config.ts`
-   3. Edit config.ts and follow all the instructions in the comments
-
-
-**Building hompag for the first time**
-
-1. Go to the root of the hompag repo  (`cd [root of hompag]`)
-2. `node build-all.js`
-
-**Running hompag**
-
-1. In the root of the hompag repo
-2. `node webserver/dist/index.js storepath=[path to your hompag store]`
-
-**Set it up to run whenever the computer starts**
-
-Windows:  Create a schedule task with this action:
-
-```
-Action: Start Program
-Program/script: [hompag root]/webserver/scripts/hompagserver.vbs
-Arguments: "[path to your hompag store folder]"
-Start in: [hompag root]/webserver/scripts
-Trigger: At Logon (for you)
+```powershell
+irm https://raw.githubusercontent.com/nebosite/hompag/master/install.ps1 | iex
 ```
 
-Linux/IOS:  Create a chrontab item with these properties:
+macOS / Linux:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/nebosite/hompag/master/install.sh | sh
+```
+
+The installer walks you through:
+
+1. **Mode**
+   * **Production** (recommended) downloads a ready-made, versioned release. Updating is `hompag update`.
+   * **Developer** clones the repo, or forks it if you don't have push access, and builds it. Each time hompag starts it fast-forwards your branch (only when your working tree is clean) and rebuilds just the packages that changed.
+2. **Data folder** is where your pages live. To see the same page on all of your computers, choose a folder that a cloud service syncs (OneDrive, Dropbox, Google Drive, iCloud...). The installer looks for these and suggests a `hompag` folder inside them. Pick the same folder on each machine; if it already has hompag pages, the new machine simply shares them.
+
+   **NOTE**: Most cloud storage services default to offline storage, and macOS forces offline files for cloud storage. So hompag polls for file changes every 30 seconds to keep computers in sync. Each poll takes about 1 millisecond, so the overhead is low.
+3. **API keys** (optional) for the Spotify and stock widgets. You can skip these and add them later by re-running the installer.
+4. **Autostart**: hompag starts automatically when you log in. It uses a per-user Run entry on Windows, a LaunchAgent on macOS, and a systemd user service (or XDG autostart entry) on Linux. None of these need admin rights.
+
+When it finishes, point your browser's home page and new tab page at `http://localhost:8101/home`.
+
+Re-running the installer is safe: it repairs or reconfigures in place. Installer options include `--mode prod|dev`, `--data <folder>`, `--port <n>`, `--yes`, `--no-autostart`, and more; run `hompag help` to see them all. To pass options through the one-line installers:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/nebosite/hompag/master/install.ps1))) --mode dev
+```
+```sh
+curl -fsSL https://raw.githubusercontent.com/nebosite/hompag/master/install.sh | sh -s -- --mode dev
+```
+
+### Managing hompag
 
 ```
-TBD.  I haven't figured out how to set this up to run automatically on Mac or Linux yet. 
-
-This is what needs to run:
-node [hompag root]webserver/dist/index.js storepath=[path to your hompag store]
+hompag status      is it running? where are the data and logs?
+hompag stop | start | restart
+hompag logs        recent log lines
+hompag open        open your home page
+hompag update      install the latest release (developer mode: pull + rebuild)
+hompag report      open a prefilled GitHub issue with recent logs
+hompag uninstall   remove hompag (your pages are kept)
 ```
+
+Settings, logs, and installed releases live in `%LOCALAPPDATA%\hompag` (Windows), `~/Library/Application Support/hompag` (macOS), or `~/.local/share/hompag` (Linux). API keys are kept there in `config.json`, outside your synced data folder.
+
+### Crash protection
+
+A small supervisor process runs the hompag server and watches it:
+
+* If the server crashes or stops responding, the supervisor restarts it, waiting a little longer after each crash (1s, 2s, 4s ... up to 30s). Page data is flushed to disk on every shutdown path.
+* While the server is down, the supervisor shows a status page at the hompag address, so you'll see it in your browser. The page refreshes itself and returns to your home page when the server is back.
+* After 5 crashes in 15 minutes it stops retrying. The status page and a desktop notification then offer **Restart** and **Report issue on GitHub**. The report opens a prefilled issue with recent logs (secrets and your home folder path are redacted) for you to review and submit. A full crash report is saved in the logs folder.
+
+### Building from source
+
+1. `git clone https://github.com/nebosite/hompag.git` and `cd hompag`
+2. `node build-all.js` builds `common`, `clientapp`, `webserver`, and `launcher`, in that order.
+3. Then either:
+   * install in developer mode against this checkout: `node launcher/dist/hompag.mjs install --mode dev --repo-dir .`, or
+   * package and install a production release: `node scripts/package-release.mjs`, then `node release/hompag.mjs install --from-source .`
+
+Releases are published by pushing a `v<version>` tag (see `.github/workflows/release.yml`).
+
+**Upgrading from a manual setup**: earlier versions of this README had you create a Task Scheduler task that runs `webserver/scripts/hompagserver.vbs`. When the installer turns on autostart, it finds that task and offers to disable it. Your existing store folder works as-is; give it to the installer as the data folder. Settings from an old `webserver/src/config.ts` are still read in developer mode, but the installer's `config.json` takes precedence.
 
 ## **How to use hompag**
 
