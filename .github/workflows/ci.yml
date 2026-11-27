@@ -25,16 +25,16 @@ jobs:
         run: node build-all.js
 
       - name: Server tests
-        run: cd webserver && npm test
+        run: node scripts/ci-run.mjs "Server tests" "cd webserver && npm test"
 
       - name: Launcher tests
-        run: cd launcher && npm test
+        run: node scripts/ci-run.mjs "Launcher tests" "cd launcher && npm test"
 
       - name: Client tests
-        run: cd clientapp && npm test
+        run: node scripts/ci-run.mjs "Client tests" "cd clientapp && npm test"
 
       - name: Package a release
-        run: node scripts/package-release.mjs
+        run: node scripts/ci-run.mjs "Package" "node scripts/package-release.mjs"
 
       # Install the packaged release into a throwaway home, check that the server
       # answers, then uninstall.  Autostart and PATH changes are skipped on CI.

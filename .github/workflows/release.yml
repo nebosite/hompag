@@ -35,12 +35,12 @@ jobs:
 
       - name: Test
         run: |
-          (cd webserver && npm test)
-          (cd launcher && npm test)
-          (cd clientapp && npm test)
+          node scripts/ci-run.mjs "Server tests" "cd webserver && npm test"
+          node scripts/ci-run.mjs "Launcher tests" "cd launcher && npm test"
+          node scripts/ci-run.mjs "Client tests" "cd clientapp && npm test"
 
       - name: Package
-        run: node scripts/package-release.mjs
+        run: node scripts/ci-run.mjs "Package" "node scripts/package-release.mjs"
 
       - name: Publish
         env:
