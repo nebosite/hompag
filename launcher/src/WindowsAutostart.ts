@@ -15,7 +15,7 @@ export class WindowsAutostart implements Autostart {
 
     constructor(private runner = new CommandRunner()) {}
 
-    static scriptPath(spec: AutostartSpec) { return path.join(spec.appHome, "hompag-autostart.vbs"); }
+    static scriptPath(spec: AutostartSpec) { return path.win32.join(spec.appHome, "hompag-autostart.vbs"); }
 
     static renderScript(spec: AutostartSpec) {
         const q = (s: string) => s.replace(/"/g, '""');
